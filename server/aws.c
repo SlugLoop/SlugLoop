@@ -15,7 +15,7 @@
 // #include "aws.h"
 // #include "strlog.h"
 
-#define POST_URL "http://172.17.128.1:3000/ping"
+#define POST_URL "https://slugloop.azurewebsites.net/ping"
 
 // void error_and_close(const char *err_msg)
 // {
@@ -75,6 +75,6 @@ void aws_post_coordinates(
 
 int main(int argc, char *argv[])
 {
-    aws_post_coordinates("1", "2", "3", "4");
+    aws_post_coordinates("Test Bus", "Route 1", "36.99", "-122.06");
     return 0;
 }
