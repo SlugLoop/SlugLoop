@@ -1,12 +1,14 @@
 var express = require('express');
 var router = express.Router();
+require('dotenv').config();
 
 var admin = require('firebase-admin');
-admin.initializeApp({
+
+let defaultApp = admin.initializeApp({
   credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_KEY)),
 });
 
-let defaultDatabase = admin.getFirestore(defaultApp);
+let defaultDatabase = admin.firestore(defaultApp);
 
 /* GET home page. */
 router.get('/', function (req, res) {
