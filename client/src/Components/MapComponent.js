@@ -12,6 +12,8 @@ export default function MapComponent({center, zoom}) {
       center,
       zoom,
     });
+
+    // Initial load of markers
     getAllBusses().then((busses) => {
       busses.forEach((bus) => {
         markerRef.current[bus.id] = new window.google.maps.Marker({
@@ -29,6 +31,8 @@ export default function MapComponent({center, zoom}) {
       getAllBusses().then((busses) => {
         busses.forEach((bus) => {
           console.log(bus);
+
+          // Create marker if it doesn't exist
           if (!markerRef.current[bus.id]) {
             markerRef.current[bus.id] = new window.google.maps.Marker({
               position: {lat: bus.lastLatitude, lng: bus.lastLongitude},
