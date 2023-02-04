@@ -19,16 +19,18 @@ export default function Contact() {
       noValidate
       autoComplete="off"
     >
-      <Stack direction="column" spacing={1.3}>
+      <Stack direction="column" spacing={1.3} padding="6vh">
         <Typography variant="h4" component="div">
           Contact Us
         </Typography>
-        <Typography variant="h6" component="div">
-          let us know what you think
+        <Typography component="div">
+          Slug Loop is helping students get to where they need to go. If you
+          have any questions or concerns, please contact us.
         </Typography>
-        <TextField id="Name" label="Name" variant="outlined" />
-        <TextField id="Email" label="Email" variant="outlined" />
-        <TextField id="Message" label="Message" variant="outlined" />
+
+        <TextField required id="Name" label="Name" variant="outlined" />
+        <TextField required id="Email" label="Email" variant="outlined" />
+        <TextField required id="Message" label="Message" variant="outlined" />
 
         <Button
           variant="contained"
