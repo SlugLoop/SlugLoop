@@ -1,10 +1,8 @@
-import './App.css';
-import About from './Components/About';
+import "./App.css";
+import Contact from "./Components/Contact";
 
 function App() {
-  return (
-    <About />
-  );
+  return <Contact />;
 }
 
 export default App;
