@@ -13,8 +13,7 @@
 #include <curl/curl.h>
 #include "strlog.h"
 
-#define POST_URL "https://slugloop.azurewebsites.net/"
-
+#define POST_URL "https://slugloop.azurewebsites.net/ping"
 
 // void error_and_close(const char *err_msg)
 // {
@@ -63,7 +62,7 @@ void aws_post_coordinates(
     if ((curl_code = curl_easy_perform(h)) != 0)
     {
         fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(curl_code));
-        strlog("curl_easy_perform() returns %d", (int) curl_code);
+        strlog("curl_easy_perform() returns %d", (int)curl_code);
     }
 
     curl_easy_cleanup(h);
