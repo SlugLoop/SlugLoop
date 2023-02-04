@@ -6,50 +6,42 @@
 //  Test with
 //  curl -XGET  ec2-54-67-127-40.us-west-1.compute.amazonaws.com/location/get
 
-#include <curl/easy.h>
 #include <endian.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <curl/curl.h>
 
-//#include "aws.h"
-//#include "strlog.h"
+// #include "aws.h"
+// #include "strlog.h"
 
-//#define AWS_POST_URL \
-    "http://bts.ucsc.edu:8082/location/ping"
-
-
-#define POST_URL \ 
-    "http://"
+#define POST_URL "http://172.17.128.1:3000/ping"
 
 // void error_and_close(const char *err_msg)
 // {
 
 // }
 
-void aws_post_coordinates
-(
+void aws_post_coordinates(
     const char *bus_id,
     const char *route_name,
     const char *latitude,
-    const char *longitude
-)
+    const char *longitude)
 {
-    
+
     char buffer[1000];
     CURL *h;
     CURLcode curl_code;
 
-    //Init winstock
+    // Init winstock
     curl_global_init(CURL_GLOBAL_ALL);
 
-    if ((h = curl_easy_init()) == NULL) // Creates a handle 
+    if ((h = curl_easy_init()) == NULL) // Creates a handle
     {
         fprintf(stderr, "curl_easy_init() returns NULL\n");
         exit(1);
-        //printf("curl_easy_init() returns NULL\n");
-        //strlog_and_exit("curl_easy_init() returns NULL\n");
+        // printf("curl_easy_init() returns NULL\n");
+        // strlog_and_exit("curl_easy_init() returns NULL\n");
     }
 
     // Prevent buffer overflow.
@@ -59,24 +51,30 @@ void aws_post_coordinates
         strlen(longitude) > 100)
     {
         printf("Parameter Too Long\n");
-        //strlog_and_exit("parameter too long");
+        // strlog_and_exit("parameter too long");
     }
 
     sprintf(buffer,
-            "data=[{\"id\":\"%s\",\"lat\":%s,\"lon\":%s,\"type\":\"%s\"}]",
+            "data=[{\"id\":\"%s\",\"lat\":%s,\"lon\":%s,\"route\":\"%s\"}]",
             bus_id, latitude, longitude, route_name);
 
-    //curl_easy_setopt(h, CURLOPT_URL,            AWS_POST_URL);
-    curl_easy_setopt(h, CURLOPT_URL,            POST_URL);
+    // curl_easy_setopt(h, CURLOPT_URL,            AWS_POST_URL);
+    curl_easy_setopt(h, CURLOPT_URL, POST_URL);
     curl_easy_setopt(h, CURLOPT_COPYPOSTFIELDS, buffer);
 
     if ((curl_code = curl_easy_perform(h)) != 0)
     {
         fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(curl_code));
         exit(1);
-        //printf("curl_easy_perform() returns %d", (int) curl_code);
-        //strlog("curl_easy_perform() returns %d", (int) curl_code);
+        // printf("curl_easy_perform() returns %d", (int) curl_code);
+        // strlog("curl_easy_perform() returns %d", (int) curl_code);
     }
-    
-    //curl_easy_cleanup(h);
+
+    curl_easy_cleanup(h);
+}
+
+int main(int argc, char *argv[])
+{
+    aws_post_coordinates("1", "2", "3", "4");
+    return 0;
 }
