@@ -36,9 +36,9 @@ void aws_post_coordinates(
     if ((h = curl_easy_init()) == NULL) // Creates a handle
     {
         fprintf(stderr, "curl_easy_init() returns NULL\n");
-        exit(1);
+        //exit(1);
         // printf("curl_easy_init() returns NULL\n");
-        // strlog_and_exit("curl_easy_init() returns NULL\n");
+        strlog_and_exit("curl_easy_init() returns NULL\n");
     }
 
     // Prevent buffer overflow.
@@ -49,8 +49,8 @@ void aws_post_coordinates(
     {
         printf("Parameter Too Long\n");
         curl_easy_cleanup(h);
-        return;
-        // strlog_and_exit("parameter too long");
+        //return;
+        strlog_and_exit("parameter too long");
     }
 
     sprintf(buffer,
@@ -65,7 +65,7 @@ void aws_post_coordinates(
     {
         fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(curl_code));
         // printf("curl_easy_perform() returns %d", (int) curl_code);
-        // strlog("curl_easy_perform() returns %d", (int) curl_code);
+        strlog("curl_easy_perform() returns %d", (int) curl_code);
     }
 
     curl_easy_cleanup(h);
