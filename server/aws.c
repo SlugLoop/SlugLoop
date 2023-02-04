@@ -72,8 +72,8 @@ void aws_post_coordinates(
     return;
 }
 
-// int main(int argc, char *argv[])
-// {
-//     aws_post_coordinates("1", "2", "3", "4");
-//     return 0;
-// }
+int main(int argc, char *argv[])
+{
+    aws_post_coordinates("1", "2", "3", "4");
+    return 0;
+}
