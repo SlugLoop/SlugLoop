@@ -15,6 +15,23 @@ router.get('/', function (req, res) {
   res.render('index', {title: 'Express Server Test!'});
 });
 
+router.get('/buses', function (req, res) {
+  let bussesRef = defaultDatabase.collection('busses');
+  bussesRef
+    .get()
+    .then((snapshot) => {
+      let busses = [];
+      snapshot.forEach((doc) => {
+        busses.push(doc.data());
+      });
+      res.status(200).send(busses);
+    })
+    .catch((err) => {
+      console.log('Error getting documents', err);
+      res.status(500).send('Error getting documents');
+    });
+});
+
 router.get('/ping', function (req, res) {
   res.send('OK');
 });
