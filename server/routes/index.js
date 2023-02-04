@@ -36,6 +36,7 @@ router.post('/ping', function (req, res) {
     lastLongitude: data.lon,
     lastLatitude: data.lat,
     route: data.route,
+    id: data.id,
   });
 
   // Send a response to the base station
