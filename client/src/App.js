@@ -1,8 +1,9 @@
-import "./App.css";
-import Contact from "./Components/Contact";
+import logo from './logo.svg';
+import './App.css';
+import Map from './Components/Map';
 
 function App() {
-  return <Contact />;
+  return <Map />;
 }
 
 export default App;
