@@ -12,7 +12,7 @@
 #include <string.h>
 #include <curl/curl.h>
 
-#define POST_URL "https://slugloop.azurewebsites.net/"
+#define POST_URL "https://slugloop.azurewebsites.net/ping"
 
 // void error_and_close(const char *err_msg)
 // {
@@ -74,6 +74,11 @@ void aws_post_coordinates(
 
 int main(int argc, char *argv[])
 {
-    aws_post_coordinates("1", "2", "3", "4");
+    // Cowell
+    // aws_post_coordinates("Test Bus 2", "Route 2", "36.99749089119584", "-122.05506229535541");
+    // College 9
+    // aws_post_coordinates("Test Bus 2", "Route 2", "36.99992904135921", "-122.05831007378065");
+    // Carson
+    aws_post_coordinates("Test Bus 2", "Route 2", "36.99060884891997", "-122.0661073461559");
     return 0;
 }
