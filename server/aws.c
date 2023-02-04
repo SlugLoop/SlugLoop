@@ -1,10 +1,10 @@
-//  Purpose:    Post data to an AWS server.
+//  Purpose:    Post data to an Express Server
 //
 //  On basestation, execute
 //  sudo apt-get install libcurl4-openssl-dev
 //
 //  Test with
-//  curl -XGET  ec2-54-67-127-40.us-west-1.compute.amazonaws.com/location/get
+//  curl -XGET  https://slugloop.azurewebsites.net/
 
 #include <endian.h>
 #include <stdio.h>
@@ -12,10 +12,7 @@
 #include <string.h>
 #include <curl/curl.h>
 
-// #include "aws.h"
-// #include "strlog.h"
-
-#define POST_URL "https://slugloop.azurewebsites.net/ping"
+#define POST_URL "https://slugloop.azurewebsites.net/"
 
 // void error_and_close(const char *err_msg)
 // {
@@ -51,6 +48,8 @@ void aws_post_coordinates(
         strlen(longitude) > 100)
     {
         printf("Parameter Too Long\n");
+        curl_easy_cleanup(h);
+        return;
         // strlog_and_exit("parameter too long");
     }
 
@@ -65,16 +64,16 @@ void aws_post_coordinates(
     if ((curl_code = curl_easy_perform(h)) != 0)
     {
         fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(curl_code));
-        exit(1);
         // printf("curl_easy_perform() returns %d", (int) curl_code);
         // strlog("curl_easy_perform() returns %d", (int) curl_code);
     }
 
     curl_easy_cleanup(h);
+    return;
 }
 
-int main(int argc, char *argv[])
-{
-    aws_post_coordinates("Test Bus", "Route 1", "36.99", "-122.06");
-    return 0;
-}
+// int main(int argc, char *argv[])
+// {
+//     aws_post_coordinates("1", "2", "3", "4");
+//     return 0;
+// }
