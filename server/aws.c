@@ -75,10 +75,10 @@ void aws_post_coordinates(
 int main(int argc, char *argv[])
 {
     // Cowell
-    // aws_post_coordinates("Test Bus 2", "Route 2", "36.99749089119584", "-122.05506229535541");
+    // aws_post_coordinates("Test Bus 1", "Route 1", "36.99749089119584", "-122.05506229535541");
     // College 9
-    // aws_post_coordinates("Test Bus 2", "Route 2", "36.99992904135921", "-122.05831007378065");
+    //  aws_post_coordinates("Test Bus 2", "Route 2", "36.99992904135921", "-122.05831007378065");
     // Carson
-    aws_post_coordinates("Test Bus 2", "Route 2", "36.99060884891997", "-122.0661073461559");
+    // aws_post_coordinates("Test Bus 4", "Route 5", "36.99060884891997", "-122.0661073461559");
     return 0;
 }
