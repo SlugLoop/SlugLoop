@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 
-var app = express();
+var app = express(3001);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -13,7 +13,7 @@ export default function Contact() {
 
   const handleSubmit = () => {
     // Send a post request to the backend
-    fetch('https://slugloop.azurewebsites.net/contact', {
+    fetch('http://localhost:3001/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 require('dotenv').config();
 
+// Add cors
+var cors = require('cors');
+router.use(cors());
+
 var admin = require('firebase-admin');
 
 let defaultApp = admin.initializeApp({
@@ -57,6 +61,23 @@ router.post('/ping', function (req, res) {
   });
 
   // Send a response to the base station
+  res.send('OK');
+});
+
+// For the contact us form
+router.post('/contact', function (req, res) {
+  let data = req.body;
+  // Get a database reference to the collection of responses
+  let responsesRef = defaultDatabase.collection('responses');
+
+  // Add a new document in collection "responses"
+  responsesRef.add({
+    name: data.name,
+    email: data.email,
+    message: data.message,
+  });
+
+  // Send a response to the client
   res.send('OK');
 });
 
