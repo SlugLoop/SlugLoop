@@ -1,10 +1,12 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { Button, Stack } from "@mui/material";
-import Typography from "@mui/material/Typography";
+import React from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import {Button, Stack} from '@mui/material';
+import Typography from '@mui/material/Typography';
+import {useNavigate} from 'react-router-dom';
 
 export default function Contact() {
+  const navigate = useNavigate();
   return (
     <Box
       display="flex"
@@ -12,9 +14,9 @@ export default function Contact() {
       height="100vh"
       component="form"
       sx={{
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
       }}
       noValidate
       autoComplete="off"
@@ -35,13 +37,19 @@ export default function Contact() {
         <Button
           variant="contained"
           onClick={() => {
-            alert("clicked");
+            alert('clicked');
           }}
         >
           Submit
         </Button>
       </Stack>
-      <Button>Back to Map</Button>
+      <Button
+        onClick={() => {
+          navigate('/');
+        }}
+      >
+        Back to Map
+      </Button>
     </Box>
   );
 }
