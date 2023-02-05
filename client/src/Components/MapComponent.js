@@ -7,7 +7,7 @@ export default function MapComponent({ center, zoom }) {
   const ref = useRef();
   const mapRef = useRef();
   const [busColors, setBusColors] = useState({});
-  let currentFreeColor = 1;
+  const currentFreeColor = useRef(1);
 
 
   useEffect(() => {
@@ -23,17 +23,15 @@ export default function MapComponent({ center, zoom }) {
 
         if (busColors[bus.route] === undefined) {
           // Set marker to next free color
-          console.log(bus);
-          console.log(currentFreeColor);
-          setBusColors({ ...busColors, [bus.route]: currentFreeColor });
+          setBusColors({ ...busColors, [bus.route]: currentFreeColor.current });
           markerRef.current[bus.id] = new window.google.maps.Marker({
             position: { lat: bus.lastLatitude, lng: bus.lastLongitude },
             map: mapRef.current,
             title: bus.name,
-            icon: `${currentFreeColor}.ico`,
+            icon: `${currentFreeColor.current}.ico`,
           });
-          currentFreeColor = currentFreeColor + 1;
-          // Increment the value of currentFreeColor by 1
+          currentFreeColor.current = currentFreeColor.current + 1;
+          // Increment the value of currentFreeColor.current by 1
         }
         else {
           markerRef.current[bus.id] = new window.google.maps.Marker({
@@ -57,8 +55,8 @@ export default function MapComponent({ center, zoom }) {
           if (!markerRef.current[bus.id]) {
             if (busColors[bus.route] === undefined) {
               // Generate random color
-              setBusColors({ ...busColors, [bus.route]: currentFreeColor });
-              currentFreeColor = currentFreeColor + 1;
+              setBusColors({ ...busColors, [bus.route]: currentFreeColor.current });
+              currentFreeColor.current = currentFreeColor.current + 1;
             }
             
             markerRef.current[bus.id] = new window.google.maps.Marker({
@@ -66,7 +64,7 @@ export default function MapComponent({ center, zoom }) {
               map: mapRef.current,
               title: bus.name,
 
-              icon: `${currentFreeColor}.ico`,
+              icon: `${currentFreeColor.current}.ico`,
             });
 
           } else {
