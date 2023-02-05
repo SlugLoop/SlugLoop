@@ -1,5 +1,7 @@
 # SlugLoop
 
+[Demo Link](https://slugloop.tech/)
+
 ### Contributors:
 
  1.	bill.zhang.0902@gmail.com
@@ -22,19 +24,19 @@ For many students, the only source of transportation on and off the campus is th
 ## How SlugLoops was built 
 
  - The development process involved researching frameworks and tools to provide accurate and up-to-date data to students.
- - Utilizing existing hardware on loop buses and permission obtained.
- - Raw data processed and stored on a Firebase database
- - Frontend UI interact with server using Express JS framework hosted on Azure .
+ - Utilizing existing gps emitting hardware on loop busses. These hardware were installed by the school to track the location of the buses.
+ - Raw data processed in ExpressJS and stored on a Firebase database
+ - Frontend UI pulls bus location data from Firebase and displays it on a map.
  - User interface built with React and Node JS to provide a seamless user experience.
 
 ## Challenges
 
  - Difficulty in obtaining data from relay stations on campus.
- - Three out of five stations were functioning.
+ - Only Three out of five gps stations were functioning.
  - Access to servers gained through communication with UCSC staff.
- - Data transferred from receivers to server using LibCurl library.
+ - Data transferred from receivers to server using LibCurl library and C.
  - Technical issue with hosting service temporarily prevented project progress.
- - Limited data availability from loop buses due to limited operating hours.
+ - Limited data availability from loop buses due to limited operating hours on weekends.
 
 ## Accomplishments
 
