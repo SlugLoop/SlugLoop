@@ -41,6 +41,7 @@ export default function Contact() {
           Submit
         </Button>
       </Stack>
+      <Button>Back to Map</Button>
     </Box>
   );
 }

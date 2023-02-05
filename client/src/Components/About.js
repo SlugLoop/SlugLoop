@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, ListItem } from "@mui/material";
+import { Box, Button, ListItem, List } from "@mui/material";
 import { Typography } from "@mui/material";
 
 export default function About() {
@@ -41,12 +41,20 @@ export default function About() {
           </Typography>
 
           <Typography>
-            <ul>
-              <li>Bill</li>
-              <li>Annie</li>
-              <li>Alex</li>
-              <li>Nick </li>
-            </ul>
+            <List
+              sx={{
+                listStyleType: "disc",
+                pl: 2,
+                "& .MuiListItem-root": {
+                  display: "list-item",
+                },
+              }}
+            >
+              <ListItem>Bill</ListItem>
+              <ListItem>Annie</ListItem>
+              <ListItem>Alex</ListItem>
+              <ListItem>Nick </ListItem>
+            </List>
           </Typography>
 
           <Typography
@@ -59,12 +67,21 @@ export default function About() {
           </Typography>
           <Typography>
             Many thanks to the people who inspired us, including:
-            <ul>
-              <li>Professor Veenstra</li>
-              <li>Past contributors of BTS 2.0</li>
-            </ul>
+            <List
+              sx={{
+                listStyleType: "disc",
+                pl: 2,
+                "& .MuiListItem-root": {
+                  display: "list-item",
+                },
+              }}
+            >
+              <ListItem>Professor Veenstra</ListItem>
+              <ListItem>Past contributors of BTS 2.0</ListItem>
+            </List>
           </Typography>
         </Box>
+        <Button>Back to Map</Button>
       </Box>
     </div>
   );
