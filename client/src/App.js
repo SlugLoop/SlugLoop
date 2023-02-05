@@ -6,12 +6,14 @@ import {
 } from "react-router-dom";
 import About from './Components/About';
 import Contact from './Components/Contact';
+import AboutButton from "./Components/AboutButton";
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Map />,
+    element: <><Map /><AboutButton />
+    </>,
   },
   {
     path: "/about",

@@ -9,6 +9,7 @@ export default function MapComponent({ center, zoom }) {
   const [busColors, setBusColors] = useState({});
   let currentFreeColor = 1;
 
+
   useEffect(() => {
     if (mapRef.current) return;
     mapRef.current = new window.google.maps.Map(ref.current, {
@@ -19,6 +20,7 @@ export default function MapComponent({ center, zoom }) {
     // Initial load of markers
     getAllBusses().then((busses) => {
       busses.forEach((bus) => {
+
         if (busColors[bus.route] === undefined) {
           // Set marker to next free color
           console.log(bus);
@@ -50,6 +52,7 @@ export default function MapComponent({ center, zoom }) {
     const interval = setInterval(() => {
       getAllBusses().then((busses) => {
         busses.forEach((bus) => {
+
           // Create marker if it doesn't exist
           if (!markerRef.current[bus.id]) {
             if (busColors[bus.route] === undefined) {
@@ -57,11 +60,12 @@ export default function MapComponent({ center, zoom }) {
               setBusColors({ ...busColors, [bus.route]: currentFreeColor });
               currentFreeColor = currentFreeColor + 1;
             }
-
+            
             markerRef.current[bus.id] = new window.google.maps.Marker({
               position: { lat: bus.lastLatitude, lng: bus.lastLongitude },
               map: mapRef.current,
               title: bus.name,
+
               icon: `${currentFreeColor}.ico`,
             });
 
@@ -78,5 +82,7 @@ export default function MapComponent({ center, zoom }) {
     return () => clearInterval(interval);
   }, [center]);
 
+
   return <div ref={ref} id="map" style={{ height: '100vh', width: '100vw' }} />;
+
 }
