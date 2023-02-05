@@ -129,7 +129,9 @@ export default function Contact() {
           label="Message"
           variant="outlined"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => setMessage(e.target.value)
+          }
+          multiline
         />
 
         <Button
