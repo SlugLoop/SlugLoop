@@ -1,5 +1,5 @@
-import { database } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import {database} from '../firebase';
+import {collection, getDocs} from 'firebase/firestore';
 
 // Gets all busses from the database
 export default async function getAllBusses() {
@@ -9,5 +9,6 @@ export default async function getAllBusses() {
   snapshot.forEach((doc) => {
     busses.push(doc.data());
   });
+  console.log(busses);
   return busses;
 }
