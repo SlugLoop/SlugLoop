@@ -9,6 +9,5 @@ export default async function getAllBusses() {
   snapshot.forEach((doc) => {
     busses.push(doc.data());
   });
-  console.log(busses);
   return busses;
 }
