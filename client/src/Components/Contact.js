@@ -12,8 +12,14 @@ export default function Contact() {
   const [message, setMessage] = useState('');
 
   const handleSubmit = () => {
+    // Check if all fields are filled
+    if (name === '' || email === '' || message === '') {
+      alert('Please fill out all fields');
+      return;
+    }
+
     // Send a post request to the backend
-    fetch('http://localhost:3001/contact', {
+    fetch('https://slugloop.azurewebsites.net/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
