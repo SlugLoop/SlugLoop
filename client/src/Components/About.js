@@ -1,7 +1,7 @@
 import React from 'react';
-import {Box, Button, ListItem, List} from '@mui/material';
-import {Typography} from '@mui/material';
-import {useNavigate} from 'react-router-dom';
+import { Box, Button, ListItem, List } from '@mui/material';
+import { Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function About() {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export default function About() {
           </Typography>
 
           <Typography component="div" align="left" paddingBottom={'3vh'}>
-            Slug Loop gives users loop bus locations in real time.
+            Slug Loop provides UCSC campus bus locations in real time.
           </Typography>
 
           <Typography variant="h5" component="div" fontWeight={'bold'}>
@@ -52,10 +52,10 @@ export default function About() {
                 },
               }}
             >
-              <ListItem>Bill</ListItem>
-              <ListItem>Annie</ListItem>
-              <ListItem>Alex</ListItem>
-              <ListItem>Nick </ListItem>
+              <ListItem>Bill Zhang (bill.zhang.0902@gmail.com)</ListItem>
+              <ListItem>Annie Liu (aliu98@ucsc.edu)</ListItem>
+              <ListItem>Alex Liu (liu.alex01@gmail.com)</ListItem>
+              <ListItem>Nick Szwed (nsszwed@gmail.com) </ListItem>
             </List>
           </Typography>
 
