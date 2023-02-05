@@ -7,7 +7,7 @@ export default function MapComponent({ center, zoom }) {
   const ref = useRef();
   const mapRef = useRef();
   const [busColors, setBusColors] = useState({});
-  const [currentFreeColor, setCurrentFreeColor] = useState(1);
+  let currentFreeColor = 1;
 
   useEffect(() => {
     if (mapRef.current) return;
@@ -30,8 +30,8 @@ export default function MapComponent({ center, zoom }) {
             title: bus.name,
             icon: `${currentFreeColor}.ico`,
           });
-          setCurrentFreeColor(currentFreeColor + 1);
-          console.log(currentFreeColor);
+          currentFreeColor = currentFreeColor + 1;
+          // Increment the value of currentFreeColor by 1
         }
         else {
           markerRef.current[bus.id] = new window.google.maps.Marker({
@@ -55,14 +55,14 @@ export default function MapComponent({ center, zoom }) {
             if (busColors[bus.route] === undefined) {
               // Generate random color
               setBusColors({ ...busColors, [bus.route]: currentFreeColor });
-              setCurrentFreeColor(currentFreeColor + 1);
+              currentFreeColor = currentFreeColor + 1;
             }
 
             markerRef.current[bus.id] = new window.google.maps.Marker({
               position: { lat: bus.lastLatitude, lng: bus.lastLongitude },
               map: mapRef.current,
               title: bus.name,
-              icon: `${busColors[bus.route]}.ico`,
+              icon: `${currentFreeColor}.ico`,
             });
 
           } else {
