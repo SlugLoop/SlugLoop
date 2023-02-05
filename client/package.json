@@ -5,7 +5,6 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.11.0",
     "@googlemaps/js-api-loader": "^1.15.1",
     "@googlemaps/markerwithlabel": "^2.0.14",
     "@googlemaps/react-wrapper": "^1.1.35",
@@ -18,6 +17,7 @@
     "firebase": "^9.17.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
