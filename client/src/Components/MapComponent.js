@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import getAllBusses from './firebase';
 
 export default function MapComponent({center, zoom}) {
