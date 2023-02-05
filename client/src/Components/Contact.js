@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import {Button, Stack} from '@mui/material';
@@ -7,6 +7,10 @@ import {useNavigate} from 'react-router-dom';
 
 export default function Contact() {
   const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
   return (
     <Box
       display="flex"
@@ -30,9 +34,30 @@ export default function Contact() {
           have any questions or concerns, please contact us.
         </Typography>
 
-        <TextField required id="Name" label="Name" variant="outlined" />
-        <TextField required id="Email" label="Email" variant="outlined" />
-        <TextField required id="Message" label="Message" variant="outlined" />
+        <TextField
+          required
+          id="Name"
+          label="Name"
+          variant="outlined"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <TextField
+          required
+          id="Email"
+          label="Email"
+          variant="outlined"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          required
+          id="Message"
+          label="Message"
+          variant="outlined"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
 
         <Button
           variant="contained"
