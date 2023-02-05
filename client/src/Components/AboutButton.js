@@ -36,13 +36,11 @@ export default function AboutButton(props) {
         <Button onClick={
           () => {
             navigate("/contact");
-            handleClose();
           }
         }>Contact Us</Button>
         <Button
           onClick={() => {
             navigate("/about");
-            handleClose();
           }}
           autoFocus
           sx={{
