@@ -79,6 +79,6 @@ int main(int argc, char *argv[])
     // College 9
     //  aws_post_coordinates("Test Bus 2", "Route 2", "36.99992904135921", "-122.05831007378065");
     // Carson
-    // aws_post_coordinates("Test Bus 4", "Route 5", "36.99060884891997", "-122.0661073461559");
+    aws_post_coordinates("Test Bus 4", "Route 5", "36.99060884891997", "-122.0661073461559");
     return 0;
 }
