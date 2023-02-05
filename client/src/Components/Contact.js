@@ -11,6 +11,30 @@ export default function Contact() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
+  const handleSubmit = () => {
+    // Send a post request to the backend
+    fetch('https://slugloop.azurewebsites.net/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        message: message,
+      }),
+    }).then((response) => {
+      if (response.status === 200) {
+        alert('Message sent successfully');
+        setEmail('');
+        setName('');
+        setMessage('');
+      } else {
+        alert('Message failed to send');
+      }
+    });
+  };
+
   return (
     <Box
       display="flex"
@@ -62,7 +86,7 @@ export default function Contact() {
         <Button
           variant="contained"
           onClick={() => {
-            alert('clicked');
+            handleSubmit();
           }}
         >
           Submit
