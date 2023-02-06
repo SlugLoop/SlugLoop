@@ -1,5 +1,6 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import getAllBusses from './firebase';
+import Legend from './Legend';
 
 export default function MapComponent({center, zoom}) {
   const markerRef = useRef({});
@@ -7,6 +8,7 @@ export default function MapComponent({center, zoom}) {
   const mapRef = useRef();
   const currentFreeColor = useRef(1);
   const busColors = useRef({});
+  const [legendItems, setLegendItems] = useState({});
 
   useEffect(() => {
     if (mapRef.current) return;
@@ -33,15 +35,21 @@ export default function MapComponent({center, zoom}) {
           currentFreeColor.current = currentFreeColor.current + 1;
           // Increment the value of currentFreeColor.current by 1
         } else {
-          console.log('samecolor');
           markerRef.current[bus.id] = new window.google.maps.Marker({
             position: {lat: bus.lastLatitude, lng: bus.lastLongitude},
             map: mapRef.current,
             title: bus.name,
-            icon: `${busColors[bus.route]}.ico`,
+            icon: `${busColors.current[bus.route]}.ico`,
           });
         }
       });
+
+      // Set legend items
+      const temp = Object.keys(busColors.current).map((route) => ({
+        name: route,
+        icon: `${busColors.current[route]}.ico`,
+      }));
+      setLegendItems(temp);
     });
   }, [center, zoom]);
 
@@ -52,13 +60,20 @@ export default function MapComponent({center, zoom}) {
         busses.forEach((bus) => {
           // Create marker if it doesn't exist
           if (!markerRef.current[bus.id]) {
-            if (busColors[bus.route] === undefined) {
-              // Generate random color
+            if (busColors.current[bus.route] === undefined) {
               busColors.current = {
                 ...busColors.current,
                 [bus.route]: currentFreeColor.current,
               };
               currentFreeColor.current = currentFreeColor.current + 1;
+
+              // Add new color to legend
+              setLegendItems(
+                Object.keys(busColors.current).map((route) => ({
+                  name: route,
+                  icon: `${busColors.current[route]}.ico`,
+                })),
+              );
             }
 
             markerRef.current[bus.id] = new window.google.maps.Marker({
@@ -81,5 +96,10 @@ export default function MapComponent({center, zoom}) {
     return () => clearInterval(interval);
   }, [center]);
 
-  return <div ref={ref} id="map" style={{height: '100vh', width: '100vw'}} />;
+  return (
+    <>
+      <div ref={ref} id="map" style={{height: '100vh', width: '100vw'}} />
+      <Legend legendItems={legendItems} />
+    </>
+  );
 }
