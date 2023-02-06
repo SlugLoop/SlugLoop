@@ -4,7 +4,7 @@
 
 ### Contributors:
 
-1.  bill.zhang.0902@gmail.com
+1.  billzhangsc@gmail.com
 2.  aliu98@ucsc.edu
 3.  liu.alex01@gmail.com
 4.  nsszwed@gmail.com

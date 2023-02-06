@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Button, ListItem, List } from '@mui/material';
-import { Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import {Box, Button, ListItem, List} from '@mui/material';
+import {Typography} from '@mui/material';
+import {useNavigate} from 'react-router-dom';
 
 export default function About() {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ export default function About() {
                 },
               }}
             >
-              <ListItem>Bill Zhang (bill.zhang.0902@gmail.com)</ListItem>
+              <ListItem>Bill Zhang (billzhangsc@gmail.com)</ListItem>
               <ListItem>Annie Liu (aliu98@ucsc.edu)</ListItem>
               <ListItem>Alex Liu (liu.alex01@gmail.com)</ListItem>
               <ListItem>Nick Szwed (nsszwed@gmail.com) </ListItem>
