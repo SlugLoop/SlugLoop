@@ -19,6 +19,16 @@ export default function MapComponent({center, zoom}) {
 
     // Initial load of markers
     getAllBusses().then((busses) => {
+      // Sort busses based on route
+      busses.sort((a, b) => {
+        if (a.route < b.route) {
+          return -1;
+        }
+        if (a.route > b.route) {
+          return 1;
+        }
+        return 0;
+      });
       busses.forEach((bus) => {
         if (busColors.current[bus.route] === undefined) {
           // Set marker to next free color
