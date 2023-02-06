@@ -45,9 +45,10 @@ router.post('/ping', function (req, res) {
   let data = JSON.parse(req.body.data);
   data = data[0];
 
-  // Check if the data is valid
+  // Check if the data is valid and check data length is 4
   if (
-    Object.keys(data) != 4 ||
+    !data ||
+    Object.keys(data).length !== 4 ||
     !data.id ||
     !data.lon ||
     !data.lat ||
