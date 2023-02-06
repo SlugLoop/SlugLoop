@@ -45,6 +45,18 @@ router.post('/ping', function (req, res) {
   let data = JSON.parse(req.body.data);
   data = data[0];
 
+  // Check if the data is valid
+  if (
+    Object.keys(data) != 4 ||
+    !data.id ||
+    !data.lon ||
+    !data.lat ||
+    !data.route
+  ) {
+    res.status(400).send('Invalid data');
+    return;
+  }
+
   // Get a database reference to the collection of busses
   let bussesRef = defaultDatabase.collection('busses');
 
