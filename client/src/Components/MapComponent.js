@@ -98,7 +98,11 @@ export default function MapComponent({center, zoom}) {
 
   return (
     <>
-      <div ref={ref} id="map" style={{height: '100vh', width: '100vw'}} />
+      <div
+        ref={ref}
+        id="map"
+        style={{height: window.innerHeight, width: '100vw'}}
+      />
       <Legend legendItems={legendItems} />
     </>
   );
