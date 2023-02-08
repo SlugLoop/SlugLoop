@@ -52,10 +52,6 @@ router.get('/buses', function (req, res) {
     });
 });
 
-router.get('/ping', function (req, res) {
-  res.send('OK');
-});
-
 /* Ping the server from base stations. */
 router.post('/ping', function (req, res) {
   let data = JSON.parse(req.body.data);
@@ -90,7 +86,7 @@ router.post('/ping', function (req, res) {
   });
 
   // Send a response to the base station
-  res.send('OK');
+  res.status(200).send('OK');
 });
 
 // For the contact us form
@@ -99,15 +95,19 @@ router.post('/contact', function (req, res) {
   // Get a database reference to the collection of responses
   let responsesRef = defaultDatabase.collection('responses');
 
-  // Add a new document in collection "responses"
-  responsesRef.add({
-    name: data.name,
-    email: data.email,
-    message: data.message,
-  });
+  try {
+    // Add a new document in collection "responses"
+    responsesRef.add({
+      name: data.name,
+      email: data.email,
+      message: data.message,
+    });
 
-  // Send a response to the client
-  res.send('OK');
+    // Send a response to the client
+    res.send('OK');
+  } catch (err) {
+    res.status(500).send('Error sending message');
+  }
 });
 
 module.exports = router;

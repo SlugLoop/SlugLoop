@@ -27,7 +27,7 @@ const apiDoc = {
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/BusesArray',
+                  $ref: '#/components/schemas/busesArray',
                 },
               },
             },
@@ -38,10 +38,56 @@ const apiDoc = {
         },
       },
     },
+    '/ping': {
+      // Ping the server from base stations
+      post: {
+        description: 'Ping the server from base stations',
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/pingBody',
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'OK',
+          },
+          400: {
+            description: 'Invalid data',
+          },
+        },
+      },
+    },
+    '/contact': {
+      // For the contact us form
+      post: {
+        description: 'For the contact us form',
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/messageBody',
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Message sent',
+          },
+          500: {
+            description: 'Error sending message',
+          },
+        },
+      },
+    },
   },
   components: {
     schemas: {
-      BusesArray: {
+      busesArray: {
         type: 'array',
         items: {
           type: 'object',
@@ -61,6 +107,29 @@ const apiDoc = {
             route: {
               type: 'string',
             },
+          },
+        },
+      },
+      messageBody: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+          },
+          email: {
+            type: 'string',
+          },
+          message: {
+            type: 'string',
+          },
+        },
+      },
+      pingBody: {
+        type: 'object',
+        properties: {
+          data: {
+            type: 'string',
+            example: '[{"id":"1","lon":1,"lat":1,"route":"1"}]',
           },
         },
       },
