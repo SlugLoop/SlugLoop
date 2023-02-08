@@ -2,9 +2,25 @@ var express = require('express');
 var router = express.Router();
 require('dotenv').config();
 
+// Documentation
+const OpenApiValidator = require('express-openapi-validator');
+const swaggerUi = require('swagger-ui-express');
+const apiDoc = require('./api-doc');
+
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apiDoc));
+router.use(
+  OpenApiValidator.middleware({
+    apiSpec: apiDoc,
+    validateRequests: true,
+    validateResponses: true,
+  }),
+);
+
 // Add cors
 var cors = require('cors');
 router.use(cors());
+router.use(express.json());
+router.use(express.urlencoded({extended: false}));
 
 var admin = require('firebase-admin');
 
@@ -16,7 +32,7 @@ let defaultDatabase = admin.firestore(defaultApp);
 
 /* GET home page. */
 router.get('/', function (req, res) {
-  res.render('index', {title: 'Express Server Test!'});
+  res.render('index');
 });
 
 router.get('/buses', function (req, res) {
