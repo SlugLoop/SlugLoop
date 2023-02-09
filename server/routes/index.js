@@ -76,13 +76,20 @@ router.post('/ping', function (req, res) {
   // Check if the data is valid and check data length is 4
   if (
     !data ||
-    Object.keys(data).length !== 4 ||
+    Object.keys(data).length !== 6 ||
+    !data.sid ||
+    !data.key ||
     !data.id ||
     !data.lon ||
     !data.lat ||
     !data.route
   ) {
     res.status(400).send('Invalid data');
+    return;
+  }
+
+  if (data.key !== process.env.PING_KEY) {
+    res.status(401).send('Unauthorized');
     return;
   }
 

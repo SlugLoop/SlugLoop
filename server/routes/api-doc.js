@@ -71,6 +71,9 @@ const apiDoc = {
           400: {
             description: 'Invalid data',
           },
+          401: {
+            description: 'Unauthorized',
+          },
         },
       },
     },
@@ -136,15 +139,18 @@ const apiDoc = {
             type: 'string',
           },
         },
+        required: ['name', 'email', 'message'],
       },
       pingBody: {
         type: 'object',
         properties: {
           data: {
             type: 'string',
-            example: '[{"id":"1","lon":1,"lat":1,"route":"1"}]',
+            example:
+              '[{"sid":"1","id":"1","lon":1,"lat":1,"route":"1", "key":"testKey"}]',
           },
         },
+        required: ['data'],
       },
     },
   },
