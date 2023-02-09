@@ -20,7 +20,6 @@ router.use(
 var cors = require('cors');
 router.use(cors());
 router.use(express.json());
-router.use(express.urlencoded({extended: false}));
 
 var admin = require('firebase-admin');
 

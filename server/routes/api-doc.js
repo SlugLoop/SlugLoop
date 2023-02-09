@@ -57,7 +57,7 @@ const apiDoc = {
         description: 'Ping the server from base stations',
         requestBody: {
           content: {
-            'application/json': {
+            'application/x-www-form-urlencoded': {
               schema: {
                 $ref: '#/components/schemas/pingBody',
               },
