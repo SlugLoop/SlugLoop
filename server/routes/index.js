@@ -2,9 +2,25 @@ var express = require('express');
 var router = express.Router();
 require('dotenv').config();
 
+// Documentation
+const OpenApiValidator = require('express-openapi-validator');
+const swaggerUi = require('swagger-ui-express');
+const apiDoc = require('./api-doc');
+
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apiDoc));
+router.use(
+  OpenApiValidator.middleware({
+    apiSpec: apiDoc,
+    validateRequests: true,
+    validateResponses: true,
+  }),
+);
+
 // Add cors
 var cors = require('cors');
 router.use(cors());
+router.use(express.json());
+router.use(express.urlencoded({extended: false}));
 
 var admin = require('firebase-admin');
 
@@ -16,17 +32,33 @@ let defaultDatabase = admin.firestore(defaultApp);
 
 /* GET home page. */
 router.get('/', function (req, res) {
-  res.render('index', {title: 'Express Server Test!'});
+  res.render('index');
 });
 
 router.get('/buses', function (req, res) {
+  if (req.query.lastUpdated === 0) {
+    res.status(200).send([]);
+    return;
+  }
   let bussesRef = defaultDatabase.collection('busses');
   bussesRef
     .get()
     .then((snapshot) => {
       let busses = [];
       snapshot.forEach((doc) => {
-        busses.push(doc.data());
+        // Check if there is a lastUpdated query parameter
+        if (req.query.lastUpdated) {
+          // Calculate the distance between the current time and the last ping
+          const diff = Date.now() / 1000 - new Date(doc.data().lastPing) / 1000;
+          if (
+            Date.now() / 1000 - new Date(doc.data().lastPing) / 1000 <
+            parseInt(req.query.lastUpdated)
+          ) {
+            busses.push(doc.data());
+          }
+        } else {
+          busses.push(doc.data());
+        }
       });
       res.status(200).send(busses);
     })
@@ -34,10 +66,6 @@ router.get('/buses', function (req, res) {
       console.log('Error getting documents', err);
       res.status(500).send('Error getting documents');
     });
-});
-
-router.get('/ping', function (req, res) {
-  res.send('OK');
 });
 
 /* Ping the server from base stations. */
@@ -74,7 +102,7 @@ router.post('/ping', function (req, res) {
   });
 
   // Send a response to the base station
-  res.send('OK');
+  res.status(200).send('OK');
 });
 
 // For the contact us form
@@ -83,15 +111,19 @@ router.post('/contact', function (req, res) {
   // Get a database reference to the collection of responses
   let responsesRef = defaultDatabase.collection('responses');
 
-  // Add a new document in collection "responses"
-  responsesRef.add({
-    name: data.name,
-    email: data.email,
-    message: data.message,
-  });
+  try {
+    // Add a new document in collection "responses"
+    responsesRef.add({
+      name: data.name,
+      email: data.email,
+      message: data.message,
+    });
 
-  // Send a response to the client
-  res.send('OK');
+    // Send a response to the client
+    res.send('OK');
+  } catch (err) {
+    res.status(500).send('Error sending message');
+  }
 });
 
 module.exports = router;
