@@ -20,7 +20,6 @@ router.use(
 var cors = require('cors');
 router.use(cors());
 router.use(express.json());
-router.use(express.urlencoded({extended: false}));
 
 var admin = require('firebase-admin');
 
@@ -50,10 +49,7 @@ router.get('/buses', function (req, res) {
         if (req.query.lastUpdated) {
           // Calculate the distance between the current time and the last ping
           const diff = Date.now() / 1000 - new Date(doc.data().lastPing) / 1000;
-          if (
-            Date.now() / 1000 - new Date(doc.data().lastPing) / 1000 <
-            parseInt(req.query.lastUpdated)
-          ) {
+          if (diff < parseInt(req.query.lastUpdated)) {
             busses.push(doc.data());
           }
         } else {
@@ -106,6 +102,7 @@ router.post('/ping', function (req, res) {
     lastLatitude: data.lat,
     route: data.route,
     id: data.id,
+    sid: data.sid,
   });
 
   // Send a response to the base station
