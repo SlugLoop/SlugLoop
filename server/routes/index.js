@@ -36,13 +36,29 @@ router.get('/', function (req, res) {
 });
 
 router.get('/buses', function (req, res) {
+  if (req.query.lastUpdated === 0) {
+    res.status(200).send([]);
+    return;
+  }
   let bussesRef = defaultDatabase.collection('busses');
   bussesRef
     .get()
     .then((snapshot) => {
       let busses = [];
       snapshot.forEach((doc) => {
-        busses.push(doc.data());
+        // Check if there is a lastUpdated query parameter
+        if (req.query.lastUpdated) {
+          // Calculate the distance between the current time and the last ping
+          const diff = Date.now() / 1000 - new Date(doc.data().lastPing) / 1000;
+          if (
+            Date.now() / 1000 - new Date(doc.data().lastPing) / 1000 <
+            parseInt(req.query.lastUpdated)
+          ) {
+            busses.push(doc.data());
+          }
+        } else {
+          busses.push(doc.data());
+        }
       });
       res.status(200).send(busses);
     })

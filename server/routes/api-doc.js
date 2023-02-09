@@ -1,9 +1,9 @@
 const apiDoc = {
   openapi: '3.0.3',
   info: {
-    title: 'Api for  SlugLoop',
+    title: 'Slug Loop',
     version: '1.0.0',
-    description: 'Api for SlugLoop',
+    description: 'Backend Documentation for Slug Loop',
   },
   paths: {
     '/': {
@@ -21,6 +21,19 @@ const apiDoc = {
       // Gets all bus location and returns a json array
       get: {
         description: 'Gets all bus location',
+        parameters: [
+          {
+            name: 'lastUpdated',
+            in: 'query',
+            description:
+              'Modifies the result so it only returns buses that have been updated within the last x seconds',
+            required: false,
+            schema: {
+              type: 'integer',
+            },
+          },
+        ],
+
         responses: {
           200: {
             description: 'Gets all bus location',
