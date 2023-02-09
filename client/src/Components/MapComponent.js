@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import getAllBusses from './firebase';
 import Legend from './Legend';
-import {useAuthUser} from './Auth';
 
 export default function MapComponent({center, zoom}) {
   const markerRef = useRef({});
@@ -10,7 +9,6 @@ export default function MapComponent({center, zoom}) {
   const currentFreeColor = useRef(1);
   const busColors = useRef({});
   const [legendItems, setLegendItems] = useState({});
-  const auth = useAuthUser();
 
   useEffect(() => {
     if (mapRef.current) return;
@@ -20,7 +18,7 @@ export default function MapComponent({center, zoom}) {
     });
 
     // Initial load of markers
-    getAllBusses(auth).then((busses) => {
+    getAllBusses().then((busses) => {
       // Sort busses based on route
       busses.sort((a, b) => {
         if (a.route < b.route) {
@@ -68,7 +66,7 @@ export default function MapComponent({center, zoom}) {
   // Update positions of markers every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      getAllBusses(auth).then((busses) => {
+      getAllBusses().then((busses) => {
         busses.forEach((bus) => {
           // Create marker if it doesn't exist
           if (!markerRef.current[bus.id]) {
