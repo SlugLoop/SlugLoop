@@ -21,6 +21,7 @@
 // }
 
 void aws_post_coordinates(
+    const char *station_id,
     const char *bus_id,
     const char *route_name,
     const char *latitude,
@@ -41,7 +42,9 @@ void aws_post_coordinates(
     }
 
     // Prevent buffer overflow.
-    if (strlen(bus_id) > 100 ||
+    if (
+        strlen(station_id) > 100 ||
+        strlen(bus_id) > 100 ||
         strlen(route_name) > 255 ||
         strlen(latitude) > 100 ||
         strlen(longitude) > 100)
@@ -52,8 +55,8 @@ void aws_post_coordinates(
     }
 
     sprintf(buffer,
-            "data=[{\"id\":\"%s\",\"lat\":%s,\"lon\":%s,\"route\":\"%s\"}]",
-            bus_id, latitude, longitude, route_name);
+            "data=[{\"sid\":\"%s\",\"id\":\"%s\",\"lat\":%s,\"lon\":%s,\"route\":\"%s\",,\"key\":\"%s\"}]",
+            station_id, bus_id, latitude, longitude, route_name, "yr6nSEXN7532GJhIdcFI");
 
     // curl_easy_setopt(h, CURLOPT_URL,            AWS_POST_URL); // AWS no longer used
     curl_easy_setopt(h, CURLOPT_URL, POST_URL);

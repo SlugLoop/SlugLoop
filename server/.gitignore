@@ -2,5 +2,5 @@
 .env
 
 node_modules/
-aws.c
+*.c
 *.out
