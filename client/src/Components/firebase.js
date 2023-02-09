@@ -3,7 +3,6 @@ import {collection, getDocs} from 'firebase/firestore';
 
 // Gets all busses from the database
 export default async function getAllBusses(auth) {
-  console.log(auth);
   if (!auth) {
     return [];
   }

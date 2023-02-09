@@ -63,7 +63,7 @@ export default function MapComponent({center, zoom}) {
       }));
       setLegendItems(temp);
     });
-  }, [center, zoom, auth]);
+  }, [center, zoom]);
 
   // Update positions of markers every 5 seconds
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function MapComponent({center, zoom}) {
       });
     }, 5000);
     return () => clearInterval(interval);
-  }, [center, auth]);
+  }, [center]);
 
   return (
     <>
