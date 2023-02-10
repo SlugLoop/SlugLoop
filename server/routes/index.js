@@ -109,6 +109,18 @@ router.post('/ping', function (req, res) {
     sid: data.sid,
   });
 
+  // Debugging purposes
+  let countRef = defaultDatabase.collection('count').doc('count');
+  countRef.get().then((doc) => {
+    // We update the sid count
+    let sidCount = doc.data()[data.sid];
+    if (sidCount === undefined) {
+      sidCount = 0;
+    }
+    sidCount++;
+    countRef.set({[data.sid]: sidCount}, {merge: true});
+  });
+
   // Send a response to the base station
   res.status(200).send('OK');
 });
