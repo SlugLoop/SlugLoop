@@ -72,13 +72,13 @@ router.post('/ping', function (req, res) {
   // Check if the data is valid and check data length is 4
   if (
     !data ||
-    Object.keys(data).length !== 6 ||
-    !data.sid ||
-    !data.key ||
     !data.id ||
     !data.lon ||
     !data.lat ||
-    !data.route
+    !data.route ||
+    !data.key ||
+    !data.sid ||
+    Object.keys(data).length !== 6
   ) {
     res.status(400).send('Invalid data');
     return;
@@ -94,6 +94,10 @@ router.post('/ping', function (req, res) {
 
   // Get the database reference to the bus with the given ID
   let busRef = bussesRef.doc(data.id);
+
+  if (data.sid === undefined) {
+    data.sid = 'No SID';
+  }
 
   //We will update the bus's last ping location and time
   busRef.set({
