@@ -39,7 +39,7 @@ export default function MapComponent({center, zoom}) {
           markerRef.current[bus.id] = new window.google.maps.Marker({
             position: {lat: bus.lastLatitude, lng: bus.lastLongitude},
             map: mapRef.current,
-            title: bus.name,
+            title: bus.id,
             icon: `/${currentFreeColor.current}.ico`,
           });
           currentFreeColor.current = currentFreeColor.current + 1;
@@ -48,7 +48,7 @@ export default function MapComponent({center, zoom}) {
           markerRef.current[bus.id] = new window.google.maps.Marker({
             position: {lat: bus.lastLatitude, lng: bus.lastLongitude},
             map: mapRef.current,
-            title: bus.name,
+            title: bus.id,
             icon: `${busColors.current[bus.route]}.ico`,
           });
         }
@@ -89,7 +89,7 @@ export default function MapComponent({center, zoom}) {
             markerRef.current[bus.id] = new window.google.maps.Marker({
               position: {lat: bus.lastLatitude, lng: bus.lastLongitude},
               map: mapRef.current,
-              title: bus.name,
+              title: bus.id,
 
               icon: `${currentFreeColor.current}.ico`,
             });
