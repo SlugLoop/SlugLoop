@@ -12,7 +12,6 @@ router.use(
   OpenApiValidator.middleware({
     apiSpec: apiDoc,
     validateRequests: true,
-    validateResponses: true,
   }),
 );
 

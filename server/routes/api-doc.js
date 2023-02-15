@@ -7,7 +7,7 @@ const apiDoc = {
   },
   paths: {
     '/': {
-      // Sever description page
+      // Server description page
       get: {
         description: 'Server description page',
         responses: {
@@ -118,6 +118,12 @@ const apiDoc = {
               type: 'number',
             },
             lastLatitude: {
+              type: 'number',
+            },
+            previousLongitude: {
+              type: 'number',
+            },
+            previousLatitude: {
               type: 'number',
             },
             route: {
