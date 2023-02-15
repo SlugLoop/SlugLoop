@@ -1,22 +1,36 @@
 import React, {useState, useEffect, useRef} from 'react';
 import getAllBusses from './firebase';
 import Legend from './Legend';
+import GoogleMapReact from 'google-map-react';
+import {Box} from '@mui/material';
+import MapMarker from './MapMarker';
 
 export default function MapComponent({center, zoom}) {
-  const markerRef = useRef({});
-  const ref = useRef();
-  const mapRef = useRef();
   const currentFreeColor = useRef(1);
   const busColors = useRef({});
   const [legendItems, setLegendItems] = useState({});
+  const [buses, setBuses] = useState({});
+
+  function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
+    const R = 6371; // radius of the earth in km
+
+    const toRad = (deg) => (deg * Math.PI) / 180; // convert degrees to radians
+
+    // Y variable
+    const dLong = toRad(lon2 - lon1);
+    const Y = Math.sin(dLong) * Math.cos(toRad(lat2));
+
+    // X variable
+    const X =
+      Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
+      Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong);
+
+    // Calculate bearing
+    const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360);
+    return bearing;
+  }
 
   useEffect(() => {
-    if (mapRef.current) return;
-    mapRef.current = new window.google.maps.Map(ref.current, {
-      center,
-      zoom,
-    });
-
     // Initial load of markers
     getAllBusses().then((busses) => {
       // Sort busses based on route
@@ -30,27 +44,15 @@ export default function MapComponent({center, zoom}) {
         return 0;
       });
       busses.forEach((bus) => {
+        // Used to define new colors/icons for routes
         if (busColors.current[bus.route] === undefined) {
           // Set marker to next free color
           busColors.current = {
             ...busColors.current,
             [bus.route]: currentFreeColor.current,
           };
-          markerRef.current[bus.id] = new window.google.maps.Marker({
-            position: {lat: bus.lastLatitude, lng: bus.lastLongitude},
-            map: mapRef.current,
-            title: bus.id,
-            icon: `/${currentFreeColor.current}.ico`,
-          });
           currentFreeColor.current = currentFreeColor.current + 1;
           // Increment the value of currentFreeColor.current by 1
-        } else {
-          markerRef.current[bus.id] = new window.google.maps.Marker({
-            position: {lat: bus.lastLatitude, lng: bus.lastLongitude},
-            map: mapRef.current,
-            title: bus.id,
-            icon: `${busColors.current[bus.route]}.ico`,
-          });
         }
       });
 
@@ -60,6 +62,7 @@ export default function MapComponent({center, zoom}) {
         icon: `${busColors.current[route]}.ico`,
       }));
       setLegendItems(temp);
+      setBuses(busses);
     });
   }, [center, zoom]);
 
@@ -68,8 +71,8 @@ export default function MapComponent({center, zoom}) {
     const interval = setInterval(() => {
       getAllBusses().then((busses) => {
         busses.forEach((bus) => {
-          // Create marker if it doesn't exist
-          if (!markerRef.current[bus.id]) {
+          // Set color for route if it doesnt exist
+          if (!buses[bus.id]) {
             if (busColors.current[bus.route] === undefined) {
               busColors.current = {
                 ...busColors.current,
@@ -85,22 +88,10 @@ export default function MapComponent({center, zoom}) {
                 })),
               );
             }
-
-            markerRef.current[bus.id] = new window.google.maps.Marker({
-              position: {lat: bus.lastLatitude, lng: bus.lastLongitude},
-              map: mapRef.current,
-              title: bus.id,
-
-              icon: `${currentFreeColor.current}.ico`,
-            });
-          } else {
-            // Update marker position
-            markerRef.current[bus.id].setPosition({
-              lat: bus.lastLatitude,
-              lng: bus.lastLongitude,
-            });
           }
         });
+
+        setBuses(busses);
       });
     }, 5000);
     return () => clearInterval(interval);
@@ -108,11 +99,49 @@ export default function MapComponent({center, zoom}) {
 
   return (
     <>
-      <div
-        ref={ref}
+      <Box
         id="map"
-        style={{height: window.innerHeight, width: '100vw'}}
-      />
+        sx={{
+          height: window.innerHeight,
+          width: '100vw',
+        }}
+      >
+        <GoogleMapReact
+          bootstrapURLKeys={{key: process.env.REACT_APP_GOOGLE_MAP_KEY}}
+          defaultCenter={center}
+          defaultZoom={zoom}
+        >
+          {Object.keys(buses).map((key) => {
+            const bus = buses[key];
+            const currLocation = {
+              lat1: bus.lastLatitude,
+              lon1: bus.lastLongitude,
+            };
+            const previousLocation = {
+              lat2: bus.previousLatitude
+                ? bus.previousLatitude
+                : bus.lastLatitude,
+              lon2: bus.previousLongitude
+                ? bus.previousLongitude
+                : bus.lastLongitude,
+            };
+
+            const heading = headingBetweenPoints(
+              currLocation,
+              previousLocation,
+            );
+            return (
+              <MapMarker
+                key={key}
+                lat={bus.lastLatitude}
+                lng={bus.lastLongitude}
+                bus={bus}
+                heading={heading}
+              />
+            );
+          })}
+        </GoogleMapReact>
+      </Box>
       <Legend legendItems={legendItems} />
     </>
   );
