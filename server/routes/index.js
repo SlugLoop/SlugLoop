@@ -99,14 +99,27 @@ router.post('/ping', function (req, res) {
     data.sid = 'No SID';
   }
 
-  //We will update the bus's last ping location and time
-  busRef.set({
-    lastPing: new Date().toISOString(),
-    lastLongitude: data.lon,
-    lastLatitude: data.lat,
-    route: data.route,
-    id: data.id,
-    sid: data.sid,
+  let lastLong = 0;
+  let lastLat = 0;
+
+  // Get the last ping location of the bus
+  busRef.get().then((doc) => {
+    if (doc.exists) {
+      lastLong = doc.data().lastLongitude;
+      lastLat = doc.data().lastLatitude;
+    }
+
+    //We will update the bus's last ping location and time
+    busRef.set({
+      lastPing: new Date().toISOString(),
+      lastLongitude: data.lon,
+      lastLatitude: data.lat,
+      previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
+      previousLatitude: lastLat,
+      route: data.route,
+      id: data.id,
+      sid: data.sid,
+    });
   });
 
   // Debugging purposes
