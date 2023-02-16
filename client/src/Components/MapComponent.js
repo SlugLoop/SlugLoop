@@ -9,6 +9,8 @@ export default function MapComponent({center, zoom}) {
   const currentFreeColor = useRef(1);
   const busColors = useRef({});
   const [legendItems, setLegendItems] = useState({});
+
+  // Stores the buses in a state variable to rerender
   const [buses, setBuses] = useState({});
 
   function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
@@ -34,7 +36,7 @@ export default function MapComponent({center, zoom}) {
   useEffect(() => {
     // Initial load of markers
     getAllBusses().then((busses) => {
-      // Sort busses based on route
+      // Sort buses based on route
       busses.sort((a, b) => {
         if (a.route < b.route) {
           return -1;
@@ -46,6 +48,7 @@ export default function MapComponent({center, zoom}) {
       });
       busses.forEach((bus) => {
         // Used to define new colors/icons for routes
+        // Set color for route if it doesnt exist
         if (busColors.current[bus.route] === undefined) {
           // Set marker to next free color
           busColors.current = {
@@ -62,6 +65,7 @@ export default function MapComponent({center, zoom}) {
         name: route,
         icon: `${busColors.current[route]}.ico`,
       }));
+
       setLegendItems(temp);
       setBuses(busses);
     });
@@ -79,6 +83,7 @@ export default function MapComponent({center, zoom}) {
                 ...busColors.current,
                 [bus.route]: currentFreeColor.current,
               };
+              // Increment the value of currentFreeColor.current by 1
               currentFreeColor.current = currentFreeColor.current + 1;
 
               // Add new color to legend
