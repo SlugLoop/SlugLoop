@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import getAllBusses from './firebase';
 import Legend from './Legend';
-import GoogleMapReact from 'google-map-react';
+import GoogleMap from 'google-maps-react-markers';
 import {Box} from '@mui/material';
 import MapMarker from './MapMarker';
 
@@ -27,7 +27,8 @@ export default function MapComponent({center, zoom}) {
 
     // Calculate bearing
     const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360);
-    return bearing;
+    // convert to degrees
+    return (bearing * 180) / Math.PI;
   }
 
   useEffect(() => {
@@ -106,10 +107,11 @@ export default function MapComponent({center, zoom}) {
           width: '100vw',
         }}
       >
-        <GoogleMapReact
-          bootstrapURLKeys={{key: process.env.REACT_APP_GOOGLE_MAP_KEY}}
+        <GoogleMap
+          apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
           defaultCenter={center}
           defaultZoom={zoom}
+          onGoogleApiLoaded={() => {}}
         >
           {Object.keys(buses).map((key) => {
             const bus = buses[key];
@@ -140,7 +142,7 @@ export default function MapComponent({center, zoom}) {
               />
             );
           })}
-        </GoogleMapReact>
+        </GoogleMap>
       </Box>
       <Legend legendItems={legendItems} />
     </>

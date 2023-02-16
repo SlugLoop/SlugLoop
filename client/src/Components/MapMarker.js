@@ -8,7 +8,7 @@ export default function MapMarker(props) {
         component="img"
         src={`1.ico`}
         sx={{
-          //Rotate the marker based on the heading of the bus
+          //Rotate the marker based on the heading of the bus in radians
           transform: `rotate(${props.heading}deg)`,
         }}
       />
