@@ -140,6 +140,7 @@ export default function MapComponent({center, zoom}) {
             return (
               <MapMarker
                 key={key}
+                color={busColors.current[bus.route]}
                 lat={bus.lastLatitude}
                 lng={bus.lastLongitude}
                 bus={bus}
