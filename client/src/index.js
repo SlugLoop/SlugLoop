@@ -8,11 +8,9 @@ import {themeOptions} from './Components/theme';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={themeOptions}>
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>,
+  <ThemeProvider theme={themeOptions}>
+    <App />
+  </ThemeProvider>,
 );
 
 // If you want to start measuring performance in your app, pass a function
