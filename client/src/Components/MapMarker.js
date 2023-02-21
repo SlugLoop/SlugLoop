@@ -1,4 +1,4 @@
-import {Box, Tooltip, Typography} from '@mui/material';
+import {Box, Tooltip} from '@mui/material';
 import React from 'react';
 
 export default function MapMarker(props) {
@@ -50,7 +50,7 @@ export default function MapMarker(props) {
             transform: `rotate(${props.heading}deg)`,
           }}
         />
-        </Box>
+      </Box>
     </Tooltip>
   );
 }
