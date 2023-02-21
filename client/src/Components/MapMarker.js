@@ -12,13 +12,12 @@ export default function MapMarker(props) {
     <>
       <Box
         component="img"
-        src={`1.ico`}
+        src={`${props.color}.ico`}
         sx={{
           //Rotate the marker based on the heading of the bus in radians
           transform: `rotate(${props.heading}deg)`,
         }}
       />
-      <Typography>{props.bus.id}</Typography>
     </>
   );
 }
