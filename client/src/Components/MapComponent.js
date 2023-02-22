@@ -29,8 +29,8 @@ export default function MapComponent({center, zoom}) {
 
     // Calculate bearing
     const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360);
-    // convert to degrees
-    return (bearing * 180) / Math.PI;
+    // convert to degrees then add 180 to get the correct bearing
+    return (toRad(360) + bearing) % toRad(360);
   }
 
   useEffect(() => {
