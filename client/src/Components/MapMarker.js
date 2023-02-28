@@ -1,4 +1,4 @@
-import {Box, Tooltip} from '@mui/material';
+import {Box, Typography} from '@mui/material';
 import React from 'react';
 
 export default function MapMarker(props) {
@@ -30,27 +30,28 @@ export default function MapMarker(props) {
     }
   }
   return (
-    <Tooltip
-      title={convertDateToHumanReadableTime(props.bus.lastPing)}
-      placement="top"
-      arrow
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+      <Typography
+        variant="body2"
+        noWrap
+        sx={{color: 'black', position: 'absolute', top: '-20px'}}
       >
-        <Box
-          component="img"
-          src={`${props.color}.ico`}
-          sx={{
-            //Rotate the marker based on the heading of the bus in radians
-            transform: `rotate(${props.heading}deg)`,
-          }}
-        />
-      </Box>
-    </Tooltip>
+        {convertDateToHumanReadableTime(props.bus.lastPing)}
+      </Typography>
+      <Box
+        component="img"
+        src={`${props.color}.ico`}
+        sx={{
+          //Rotate the marker based on the heading of the bus in radians
+          transform: `rotate(${props.heading}deg)`,
+        }}
+      />
+    </Box>
   );
 }
