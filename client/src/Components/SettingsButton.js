@@ -35,6 +35,7 @@ export default function SettingsButton(props) {
         <Button
           onClick={() => {
             props.toggleDisplayTime()
+            setOpen(false)
           }}
         >
           Toggle Time
@@ -42,6 +43,7 @@ export default function SettingsButton(props) {
         <Button
           onClick={() => {
             props.handleDarkToggle()
+            setOpen(false)
           }}
         >
           {props.darkMode ? 'Light Mode' : 'Dark Mode'}
