@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/d46f6dc2-36ff-4441-8913-9b52bc713e18/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/slugloop",
+    "appService.deploySubpath": "server"
+}
