@@ -34,15 +34,22 @@ export default function MapMarker(props) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      <Typography
-        variant="body2"
-        noWrap
-        sx={{color: 'black', position: 'absolute', top: '-20px'}}
-      >
-        {convertDateToHumanReadableTime(props.bus.lastPing)}
-      </Typography>
+      {props.displayTime && (
+        <Typography
+          variant="body2"
+          noWrap
+          sx={{
+            color: props.darkMode ? 'white' : 'black',
+            position: 'absolute',
+            top: '-20px',
+          }}
+        >
+          {convertDateToHumanReadableTime(props.bus.lastPing)}
+        </Typography>
+      )}
       <Box
         component="img"
         src={`${props.color}.ico`}
