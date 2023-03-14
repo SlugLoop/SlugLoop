@@ -1,5 +1,6 @@
 import {Box, Typography} from '@mui/material';
 import React from 'react';
+import getAllBusses from './firebase';
 
 export default function MapMarker(props) {
   /*
@@ -8,6 +9,18 @@ export default function MapMarker(props) {
   Props: bus, heading
   Bus object contains id, lat, lon, route, timestamp
   */
+
+  function deleteBus(busToDelete){
+    console.log("Delete Bus: ", busToDelete.id);
+    getAllBusses().then((busses)=>{
+      busses.forEach((bus)=>{
+        if(bus.id === busToDelete.id){
+          console.log("Deleting");
+          delete busses.bus;
+        }
+      })
+    })
+  }
 
   function convertDateToHumanReadableTime(date) {
     const currentDateTime = new Date();
@@ -25,7 +38,9 @@ export default function MapMarker(props) {
       return `${minutes} minutes ago`;
     } else if (hours < 24) {
       return `${hours} hours ago`;
-    } else {
+    } else { // Edit so Busses that have not pinged in over an hour are deleted
+      //console.log("Bus to Be Deleted: ", props.bus.id);
+      deleteBus(props.bus);
       return `${days} days ago`;
     }
   }
