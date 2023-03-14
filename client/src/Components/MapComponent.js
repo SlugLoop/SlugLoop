@@ -46,6 +46,10 @@ export default function MapComponent({center, zoom}) {
     setDarkMode(!darkMode)
   }
 
+  function handleFilterToggle() {
+    setFilter(!filter)
+  }
+
   useEffect(() => {
     // Initial load of markers
     getAllBusses().then((busses) => {
@@ -166,25 +170,31 @@ export default function MapComponent({center, zoom}) {
                   : bus.lastLongitude,
               }
 
-            const heading = headingBetweenPoints(currLocation, previousLocation)
-            return (
-              <MapMarker
-                key={key}
-                color={busColors.current[bus.route]}
-                lat={bus.lastLatitude}
-                lng={bus.lastLongitude}
-                bus={bus}
-                heading={heading}
-                displayTime={displayTime}
-                darkMode={darkMode}
-              />
-            )
-          })}
+              const heading = headingBetweenPoints(
+                currLocation,
+                previousLocation,
+              )
+              return (
+                <MapMarker
+                  key={key}
+                  color={busColors.current[bus.route]}
+                  lat={bus.lastLatitude}
+                  lng={bus.lastLongitude}
+                  bus={bus}
+                  heading={heading}
+                  displayTime={displayTime}
+                  darkMode={darkMode}
+                />
+              )
+            })}
         </GoogleMap>
       </Box>
       <Legend legendItems={legendItems} />
       <AboutButton darkMode={darkMode} />
       <SettingsButton
+        filter={filter}
+        handleFilterToggle={handleFilterToggle}
+        displayTime={displayTime}
         toggleDisplayTime={toggleDisplayTime}
         darkMode={darkMode}
         handleDarkToggle={handleDarkToggle}

@@ -38,7 +38,7 @@ export default function SettingsButton(props) {
             setOpen(false)
           }}
         >
-          Toggle Time
+          {props.displayTime ? 'Hide Time' : 'Show Time'}
         </Button>
         <Button
           onClick={() => {
@@ -47,6 +47,14 @@ export default function SettingsButton(props) {
           }}
         >
           {props.darkMode ? 'Light Mode' : 'Dark Mode'}
+        </Button>
+        <Button
+          onClick={() => {
+            props.handleFilterToggle()
+            setOpen(false)
+          }}
+        >
+          {props.filter ? 'Show All Buses' : 'Show Only Recent Buses'}
         </Button>
       </Dialog>
       <IconButton
