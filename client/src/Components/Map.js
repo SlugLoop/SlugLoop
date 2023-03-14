@@ -7,7 +7,7 @@ export default function Map() {
   // Coordinates of UCSC
   const center = {lat: 36.99, lng: -122.06}
   const zoom = 15
-  const [displayUCSC, setDisplayUCSC] = useState(true)
+  const [displayUCSC, setDisplayUCSC] = useState(false)
 
   function toggleDisplayUCSC() {
     setDisplayUCSC(!displayUCSC)
@@ -16,22 +16,20 @@ export default function Map() {
   return (
     <>
       {displayUCSC ? <MapComponent center={center} zoom={zoom} /> : <Metro />}
-
       <Button
         onClick={toggleDisplayUCSC}
         disableRipple
         sx={{
           position: 'absolute',
           top: '20px',
-          left: '50px',
-          scale: '1.5',
+          left: '20px',
 
           backgroundColor: 'white',
           borderRadius: '5px',
           opacity: '0.7',
         }}
       >
-        {displayUCSC ? 'Display Metro Buses' : 'Display Loop Buses'}
+        {displayUCSC ? 'Metro' : 'Loop'}
       </Button>
     </>
   )
