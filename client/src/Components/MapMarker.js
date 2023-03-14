@@ -1,6 +1,5 @@
-import {Box, Typography} from '@mui/material';
-import React from 'react';
-import getAllBusses from './firebase';
+import {Box, Typography} from '@mui/material'
+import React from 'react'
 
 export default function MapMarker(props) {
   /*
@@ -9,39 +8,24 @@ export default function MapMarker(props) {
   Props: bus, heading
   Bus object contains id, lat, lon, route, timestamp
   */
-
-  function deleteBus(busToDelete){
-    console.log("Delete Bus: ", busToDelete.id);
-    getAllBusses().then((busses)=>{
-      busses.forEach((bus)=>{
-        if(bus.id === busToDelete.id){
-          console.log("Deleting");
-          delete busses.bus;
-        }
-      })
-    })
-  }
-
   function convertDateToHumanReadableTime(date) {
-    const currentDateTime = new Date();
-    const myDate = new Date(date);
-    const diffInMilliseconds = currentDateTime.getTime() - myDate.getTime();
+    const currentDateTime = new Date()
+    const myDate = new Date(date)
+    const diffInMilliseconds = currentDateTime.getTime() - myDate.getTime()
 
-    const seconds = Math.floor(diffInMilliseconds / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
+    const seconds = Math.floor(diffInMilliseconds / 1000)
+    const minutes = Math.floor(seconds / 60)
+    const hours = Math.floor(minutes / 60)
+    const days = Math.floor(hours / 24)
 
     if (seconds < 60) {
-      return `${seconds} seconds ago`;
+      return `${seconds} seconds ago`
     } else if (minutes < 60) {
-      return `${minutes} minutes ago`;
+      return `${minutes} minutes ago`
     } else if (hours < 24) {
-      return `${hours} hours ago`;
-    } else { // Edit so Busses that have not pinged in over an hour are deleted
-      //console.log("Bus to Be Deleted: ", props.bus.id);
-      deleteBus(props.bus);
-      return `${days} days ago`;
+      return `${hours} hours ago`
+    } else {
+      return `${days} days ago`
     }
   }
   return (
@@ -68,5 +52,5 @@ export default function MapMarker(props) {
         }}
       />
     </Box>
-  );
+  )
 }
