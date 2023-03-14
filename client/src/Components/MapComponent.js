@@ -23,13 +23,10 @@ export default function MapComponent({center, zoom}) {
     // Y variable
     const dLong = toRad(lon2 - lon1)
     const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
-    const dLong = toRad(lon2 - lon1)
-    const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
 
     // X variable
     const X =
       Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
-      Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
       Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
 
     // Calculate bearing
@@ -135,6 +132,7 @@ export default function MapComponent({center, zoom}) {
             zoomControl: false,
             streetViewControl: false,
             fullscreenControl: false,
+            mapTypeControl: false,
             styles: darkMode && getStyle(darkMode),
           }}
         >
