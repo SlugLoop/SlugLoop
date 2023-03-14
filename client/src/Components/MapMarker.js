@@ -8,7 +8,6 @@ export default function MapMarker(props) {
   Props: bus, heading
   Bus object contains id, lat, lon, route, timestamp
   */
-
   function convertDateToHumanReadableTime(date) {
     const currentDateTime = new Date()
     const myDate = new Date(date)
