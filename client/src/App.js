@@ -11,12 +11,7 @@ import Metro from './Components/Metro'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <>
-        <Map />
-        <AboutButton />
-      </>
-    ),
+    element: <Map />,
   },
   {
     path: '/about',
@@ -39,4 +34,5 @@ function App() {
   return <RouterProvider router={router} />
 }
 
+export default App
 export default App
