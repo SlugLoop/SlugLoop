@@ -21,8 +21,6 @@ export default function Metro() {
         position: 'absolute',
         top: '0px',
         left: '0px',
-        bottom: '0px',
-        right: '0px',
         overflow: 'hidden',
       }}
     >
@@ -34,9 +32,7 @@ export default function Metro() {
         style={{
           position: 'relative',
           top: `-${offset}px`,
-          left: '0px',
-          bottom: '0px',
-          right: '0px',
+          left: '-2px',
           overflow: 'hidden',
         }}
       />
