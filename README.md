@@ -1,42 +1,56 @@
 # SlugLoop
 
-[Demo Link](https://slugloop.tech/)
-[Demo Video](https://www.youtube.com/watch?v=fEAl8MajeOs)
+[![Demo Link](https://img.shields.io/badge/-Demo%20Link-blue)](https://slugloop.tech/)
+[![Demo Video](https://img.shields.io/badge/-Demo%20Video-red)](https://www.youtube.com/watch?v=fEAl8MajeOs)
 
-### Contributors:
+## Overview
 
-1.  billzhangsc@gmail.com
-2.  aliu98@ucsc.edu
-3.  liu.alex01@gmail.com
-4.  nsszwed@gmail.com
+SlugLoop is a real-time tracking application for loop buses at the University of California, Santa Cruz (UCSC). It provides students with accurate and up-to-date information on loop bus locations and routes, allowing them to make informed decisions about their transportation and relieving pressure on metro buses during peak hours.
+
+
+## Contributors:
+
+1.  [Bill Zhang](mailto:billzhangsc@gmail.com)
+2.  [Annie Liu](mailto:aliu98@ucsc.edu)
+3.  [Alex Liu](mailto:liu.alex01@gmail.com)
+4.  [Nick Szwed]nsszwed@gmail.com
+
+## Table of Contents
+
+- [Inspiration](#inspiration)
+- [Goals](#goals)
+- [Built With](#built-with)
+- [Challenges](#challenges)
+- [Accomplishments](#accomplishments)
+- [What We Learned](#what-we-learned)
+- [What's Next](#whats-next)
 
 ## Inspiration
 
-For many students, the only sources of transportation on and off campus are the metro and loop buses. Often, students travelling around campus will take the first metro bus that comes along, since loop buses are much more unpredictable. Meanwhile, those who rely on metros to get back home or go to work off campus are forced to wait even longer because the metro buses are full of students. We believe that providing students with a real-time map of loop bus locations and routes will encourage them to wait for loop buses rather than taking up space on the metros from those who might need them. From this idea, SlugLoops was born.
+Students at the University of California are frustrated at the rough scheduling of loop buses. Due to the size of campus and various elevation changes, buses are essential to getting to class on time. However, due to the unpredictability of the campus shuttles, students often take the metro, taking up valuable space for other students that want to go off campus. Other times, students opt to wait for loop bus, instead of walking to class, and end up late when the loop doesn’t show up in time. We needed a way to accurately determine when loop buses will show up, so students can plan their commutes more efficiently, reduce overcrowding on alternative transportation options, and ensure timely arrival to classes and campus activities.
 
-## What are SlugLoop's Goals?
+## Goals
 
-- To provide accurate and up-to-date information on the location of loop buses
-- The allow UCSC students to make informed decisions about their transportation
-- To relieve pressure on metro buses during peak hours
-- To be maintainable and built upon by the school community
+- Provide accurate and up-to-date information on loop bus locations
+- Enable UCSC students to make informed decisions about their transportation
+- Relieve pressure on metro buses during peak hours
+- Be maintainable and built upon by the school community
 
-## How SlugLoops was built
+## Built With
 
-- The development process involved researching frameworks and tools to provide accurate and up-to-date data to students.
-- Utilizes existing gps emitting hardware on loop busses. These hardware were installed by the school to track the location of the buses.
+- GPS emitting hardware on loop buses, installed by the school for tracking purposes
 - Raw data processed in ExpressJS and stored on a Firebase database
-- Frontend UI pulls bus location data from Firebase and displays it on a map.
-- User interface built with React and Node JS to provide a seamless user experience.
+- Frontend UI built with React and Node.js, displaying bus location data from Firebase on a map
+- Seamless user experience through a simple, attractive, and mobile-friendly interface
 
 ## Challenges
 
-- Difficulty in obtaining data from relay stations on campus.
-- Only Three out of five gps stations were functioning.
-- Access to servers gained through communication with UCSC staff.
-- Data transferred from receivers to server using LibCurl library and C.
-- Technical issue with hosting service temporarily prevented project progress.
-- Limited data availability from loop buses due to limited operating hours on weekends.
+- Obtaining data from relay stations on campus
+- Functionality issues with some GPS stations
+- Gaining access to servers through communication with UCSC staff
+- Data transfer from receivers to server using LibCurl library and C
+- Technical issue with hosting service temporarily hindering project progress
+- Limited data availability from loop buses due to restricted operating hours on weekends
 
 ## Accomplishments
 
@@ -47,17 +61,18 @@ We are proud to have created SlugLoop since when it is launched it will have an 
 3.  This project provides accurate and up-to-date information to the students of UC Santa Crus to reduce the pressure on the city metro buses during peak hours.
 4.  This application uses multiple frameworks that all work together in order to provide an incredibly useful service to students.
 
-## What we learned
+## What We Learned
 
-Our group learned a great deal through the development of our application SlugLoop. Some of which are:
+Throughout the development of SlugLoop, our team learned:
 
-- The importance of blueprinting and designing our application before actually writing any code
-- We learned about the challenges involved with using multiple frameworks together to deliver a functioning product for the end user that is also convenient to use
-- The importance of a simple interface that provides the data to the user without inconveniencing the user
-- The importance of assigning roles to each member's strengths allowed us to quickly and efficiently build our application.
+- The importance of blueprinting and designing applications before writing code
+- The challenges of integrating multiple frameworks to deliver a functional and convenient product
+- The value of a simple, user-friendly interface
+- The significance of assigning roles based on team members' strengths for efficient development
 
-## What's next for SlugLoop
+## What's Next
 
-- Currently, our plan for this application is to collect data over teh next few week which we can then use to train a Machine Learning model. The goal of this model would be to accurately estimate arrival times to a user's location at a given bus stop.
-- Upgrading/replacing the existing hardware around campus since there are some gaps in the coverage area.
-- Installing Hardware on all loop buses since some buses are missing the required hardware.
+- Collect data to train a machine learning model for estimating bus arrival times at given stops
+- Upgrade or replace existing hardware on campus to fill coverage gaps
+- Install required hardware on all loop buses to ensure comprehensive tracking
+- Obtain official school sponsorship
