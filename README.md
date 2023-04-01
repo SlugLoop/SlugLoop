@@ -1,6 +1,7 @@
 # SlugLoop
 
 [Demo Link](https://slugloop.tech/)
+[Demo Video](https://www.youtube.com/watch?v=fEAl8MajeOs)
 
 ### Contributors:
 
