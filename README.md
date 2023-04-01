@@ -13,7 +13,7 @@ SlugLoop is a real-time tracking application for loop buses at the University of
 1.  [Bill Zhang](mailto:billzhangsc@gmail.com)
 2.  [Annie Liu](mailto:aliu98@ucsc.edu)
 3.  [Alex Liu](mailto:liu.alex01@gmail.com)
-4.  [Nick Szwed]nsszwed@gmail.com
+4.  [Nick Szwed](mailto:nsszwed@gmail.com)
 
 ## Table of Contents
 
