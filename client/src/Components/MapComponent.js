@@ -131,6 +131,7 @@ export default function MapComponent({center, zoom}) {
     <>
       <Box
         id="map"
+        data-testid="map"
         sx={{
           height: window.innerHeight,
           width: '100vw',
