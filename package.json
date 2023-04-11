@@ -1,0 +1,23 @@
+{
+  "name": "slugloop",
+  "version": "1.0.0",
+  "description": "[![Demo Link](https://img.shields.io/badge/-Demo%20Link-blue)](https://slugloop.tech/)\r [![Demo Video](https://img.shields.io/badge/-Demo%20Video-red)](https://www.youtube.com/watch?v=fEAl8MajeOs)",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IdkwhatImD0ing/SlugLoop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IdkwhatImD0ing/SlugLoop/issues"
+  },
+  "homepage": "https://github.com/IdkwhatImD0ing/SlugLoop#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.32.2"
+  }
+}
