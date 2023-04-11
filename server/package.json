@@ -3,7 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "jest --runInBand --coverage --verbose --forceExit"
+  },
+  "devDependencies": {
+    "jest": "*",
+    "nodemon": "*",
+    "supertest": "*",
+    "ejs": "*"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -18,5 +25,14 @@
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "swagger-ui-express": "^4.6.0"
+  },
+  "jest": {
+    "testTimeout": 60000,
+    "collectCoverageFrom": [
+      "routes/*.{js,jsx}"
+    ],
+    "testMatch": [
+      "**/?(*.)+(spec|test).[jt]s?(x)"
+    ]
   }
 }
