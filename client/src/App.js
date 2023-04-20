@@ -5,6 +5,8 @@ import Map from './Components/Map'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import About from './Components/About'
 import Contact from './Components/Contact'
+import React, { useState } from 'react';
+import SettingsContext from './SettingsContext';
 
 const router = createBrowserRouter([
   {
@@ -25,7 +27,16 @@ function App() {
   useEffect(() => {
     signIn()
   }, [])
-  return <RouterProvider router={router} />
+
+  const [settings, setSettings] = useState({
+    theme: 'light',
+    language: 'en',
+  });
+  return (
+    <SettingsContext.Provider value={{ settings, setSettings }}>
+      <RouterProvider router={router} />
+    </SettingsContext.Provider>
+  );
 }
 
 export default App

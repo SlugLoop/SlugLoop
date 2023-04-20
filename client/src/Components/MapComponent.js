@@ -6,19 +6,24 @@ import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
 import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
+import { useState, createContext, useContext } from "react";
+import ReactDOM from "react-dom/client";
+import SettingsContext from './SettingsContext';
+
+const UserContext = createContext()
 
 const THIRTY_MINUTES = 30 * 60 * 1000
 
 export default function MapComponent({center, zoom}) {
   const currentFreeColor = useRef(1)
   const busColors = useRef({})
-  const [legendItems, setLegendItems] = useState({})
-  const [displayTime, setDisplayTime] = useState(true)
-  const [darkMode, setDarkMode] = useState(false)
-  const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
+  const [legendItems, setLegendItems] = useContext(SettingsContext)
+  const [displayTime, setDisplayTime] = useContext(SettingsContext)
+  const [darkMode, setDarkMode] = useContext(SettingsContext)
+  const [filter, setFilter] = useContext(SettingsContext) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
-  const [buses, setBuses] = useState({})
+  const [buses, setBuses] = useContext(SettingsContext)
 
   function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
     const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
@@ -193,12 +198,6 @@ export default function MapComponent({center, zoom}) {
       <Legend legendItems={legendItems} />
       <AboutButton darkMode={darkMode} />
       <SettingsButton
-        filter={filter}
-        handleFilterToggle={handleFilterToggle}
-        displayTime={displayTime}
-        toggleDisplayTime={toggleDisplayTime}
-        darkMode={darkMode}
-        handleDarkToggle={handleDarkToggle}
       />
     </>
   )
