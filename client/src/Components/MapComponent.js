@@ -3,6 +3,7 @@ import getAllBusses from './firebase'
 import Legend from './Legend'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
+import Polyline from 'google-map-react'
 import MapMarker from './MapMarker'
 import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
@@ -126,6 +127,47 @@ export default function MapComponent({center, zoom}) {
     const timeDifference = currentTime - lastPingTime
     return timeDifference < THIRTY_MINUTES
   }
+  const loopPath = [
+    //Main entrance
+    { lat: 36.97769579674372,lng: -122.05355908425624},
+    //Lower campus
+    { lat: 36.98138483173853, lng: -122.0519301820712},
+    //Village/Farm
+    { lat: 36.985922500400044, lng: -122.0535323024805},
+    //East Remote
+    { lat: 36.99130427981805, lng: -122.05466955901196},
+    //East Field/OPERS
+    { lat: 36.994269237639365, lng: -122.05551177263281},
+    //Cowell Lower
+    { lat: 36.996664256455965, lng: -122.05542057751792},
+    //Cowell Upper/Bookstore
+    { lat: 36.99750399473223, lng: -122.05503970384831},
+    //Crown/Merrill
+    { lat: 36.999024925679905, lng: -122.05517381433349},
+    //9/10
+    { lat: 36.99994603808732, lng: -122.0583173632834},
+    //Science Hill
+    { lat: 36.99998691248736, lng: -122.06232597818013},
+    //Kresge
+    { lat: 36.99929715066683, lng: -122.06455221169047},
+    //Kerr Hall
+    { lat: 36.99670941703469, lng: -122.06357052316324},
+    //Rachel Carson/Porter
+    { lat: 36.99299314810061, lng: -122.06520042933953},
+    //Family Student Housing
+    { lat: 36.9917782062679, lng: -122.06680347004442},
+    //Oakes Upper
+    { lat: 36.99060848019419, lng: -122.06609268464845 },
+    //Lower Oakes/West Remote
+    { lat: 36.98995076916094, lng: -122.06721653024732},
+    //Arboretum
+    { lat: 36.98279441922901, lng: -122.06272274946373},
+    //High & Western
+    { lat: 36.97883440457822, lng: -122.05772900415315},
+    //Main Entrance
+    { lat: 36.977304498895286, lng: -122.05430650542885}
+
+  ]; 
 
   return (
     <>
@@ -151,6 +193,13 @@ export default function MapComponent({center, zoom}) {
             styles: darkMode && getStyle(darkMode),
           }}
         >
+          <Polyline 
+            path = {loopPath}
+            geodesic = {true}
+            strokeColor = "#FF0000"
+            strokeOpacity = {1}
+            strokeWeight = {4}
+          />
           {Object.keys(buses)
             .filter(
               (key) =>
