@@ -7,10 +7,10 @@
     "test": "jest --runInBand --coverage --verbose --forceExit"
   },
   "devDependencies": {
+    "ejs": "*",
     "jest": "*",
     "nodemon": "*",
-    "supertest": "*",
-    "ejs": "*"
+    "supertest": "*"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -23,7 +23,9 @@
     "firebase-admin": "^11.5.0",
     "google-maps-react": "^2.0.6",
     "http-errors": "~1.6.3",
+    "https": "^1.0.0",
     "morgan": "~1.9.1",
+    "openssl": "^2.0.0",
     "swagger-ui-express": "^4.6.0"
   },
   "jest": {
