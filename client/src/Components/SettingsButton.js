@@ -30,6 +30,7 @@ export default function SettingsButton(props) {
             paddingBottom: '10px',
           },
         }}
+        data-testid="settings-button"
       >
         <DialogTitle position="center">Settings</DialogTitle>
         <Button

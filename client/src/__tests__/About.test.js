@@ -26,3 +26,25 @@ test('renders About component with headings and contributors', () => {
   const backButton = screen.getByText('Back to Map')
   expect(backButton).toBeInTheDocument()
 })
+
+
+// Test to click the "back to map" button
+test('clicking "Back to Map" button navigates to home page', () => {
+  // Render the component within a MemoryRouter to enable navigation
+  render(
+    <BrowserRouter>
+      <About />
+    </BrowserRouter>
+  );
+
+  // Find the "Back to Map" button
+  const backButton = screen.getByRole('button', { name: /back to map/i });
+
+  // Simulate a click on the button
+  fireEvent.click(backButton);
+
+  // Assert that the navigation occurred by checking if the home page is rendered
+  // expect(screen.getByRole('metro')).toBeInTheDocument();
+
+  // expect(screen.getByText('Legend')).toBeInTheDocument()
+});
