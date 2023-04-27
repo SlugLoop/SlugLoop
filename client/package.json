@@ -14,7 +14,7 @@
     "firebase": "^9.17.1",
     "framer-motion": "^10.3.1",
     "google-map-react": "^2.2.0",
-    "google-maps-react-markers": "^1.1.2",
+    "google-maps-react-markers": "^1.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.0",
