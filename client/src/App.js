@@ -5,8 +5,8 @@ import Map from './Components/Map'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import About from './Components/About'
 import Contact from './Components/Contact'
-import React, { useState } from 'react';
-import SettingsContext from './SettingsContext';
+import React, {useState} from 'react'
+import SettingsProvider from './Components/Settings.Provider'
 
 const router = createBrowserRouter([
   {
@@ -31,12 +31,12 @@ function App() {
   const [settings, setSettings] = useState({
     theme: 'light',
     language: 'en',
-  });
+  })
   return (
-    <SettingsContext.Provider value={{ settings, setSettings }}>
+    <SettingsProvider>
       <RouterProvider router={router} />
-    </SettingsContext.Provider>
-  );
+    </SettingsProvider>
+  )
 }
 
 export default App

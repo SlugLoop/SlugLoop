@@ -2,12 +2,14 @@ import {Dialog, DialogTitle, IconButton} from '@mui/material'
 import React, {useContext, useState} from 'react'
 import SettingsIcon from '@mui/icons-material/Settings'
 import Button from '@mui/material/Button'
+import SettingsContext from './SettingsContext'
 //import makeStyles from "@mui/styles/makeStyles";
 
 //import ListItemButton from "@mui/material";
 
 export default function SettingsButton(props) {
   const [open, setOpen] = useState(false)
+  const [settings, setSettings] = useContext(SettingsContext)
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -34,11 +36,14 @@ export default function SettingsButton(props) {
         <DialogTitle position="center">Settings</DialogTitle>
         <Button
           onClick={() => {
-            props.toggleDisplayTime()
+            setSettings({
+              ...settings,
+              displayTime: !settings.displayTime,
+            })
             setOpen(false)
           }}
         >
-          {props.displayTime ? 'Hide Time' : 'Show Time'}
+          {settings.displayTime ? 'Hide Time' : 'Show Time'}
         </Button>
         <Button
           onClick={() => {

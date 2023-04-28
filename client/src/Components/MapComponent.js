@@ -6,21 +6,16 @@ import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
 import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
-import { useState, createContext, useContext } from "react";
-import ReactDOM from "react-dom/client";
-import SettingsContext from './SettingsContext';
-
-const UserContext = createContext()
+import {useState, useContext} from 'react'
+import SettingsContext from './SettingsContext'
 
 const THIRTY_MINUTES = 30 * 60 * 1000
 
 export default function MapComponent({center, zoom}) {
   const currentFreeColor = useRef(1)
   const busColors = useRef({})
+  const [settings, setSettings] = useContext(SettingsContext)
   const [legendItems, setLegendItems] = useContext(SettingsContext)
-  const [displayTime, setDisplayTime] = useContext(SettingsContext)
-  const [darkMode, setDarkMode] = useContext(SettingsContext)
-  const [filter, setFilter] = useContext(SettingsContext) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
   const [buses, setBuses] = useContext(SettingsContext)
@@ -41,18 +36,6 @@ export default function MapComponent({center, zoom}) {
     const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
     // Convert to degrees
     return (bearing * 180) / Math.PI + 180
-  }
-
-  function toggleDisplayTime() {
-    setDisplayTime(!displayTime)
-  }
-
-  function handleDarkToggle() {
-    setDarkMode(!darkMode)
-  }
-
-  function handleFilterToggle() {
-    setFilter(!filter)
   }
 
   useEffect(() => {
@@ -197,8 +180,7 @@ export default function MapComponent({center, zoom}) {
       </Box>
       <Legend legendItems={legendItems} />
       <AboutButton darkMode={darkMode} />
-      <SettingsButton
-      />
+      <SettingsButton />
     </>
   )
 }
