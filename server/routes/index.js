@@ -104,8 +104,8 @@ router.post('/ping', function (req, res) {
     data.sid = 'No SID'
   }
 
-  let lastLong = 0
-  let lastLat = 0
+  let lastLong = 0 // Current longitude
+  let lastLat = 0  // Current latitude
 
   // Get the last ping location of the bus
   busRef.get().then((doc) => {
@@ -117,10 +117,10 @@ router.post('/ping', function (req, res) {
     //We will update the bus's last ping location and time
     busRef.set({
       lastPing: new Date().toISOString(),
-      lastLongitude: data.lon,
-      lastLatitude: data.lat,
-      previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
-      previousLatitude: lastLat,
+      lastLongitude: data.lon,     // Current Longitutde Ping
+      lastLatitude: data.lat,      // Current Latitude Ping
+      previousLongitude: lastLong, // Previous Longitude Ping
+      previousLatitude: lastLat,   // Previous Latitude Ping
       route: data.route,
       id: data.id,
       sid: data.sid,
