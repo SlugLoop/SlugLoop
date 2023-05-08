@@ -22,7 +22,7 @@ export default function Map() {
         sx={{
           position: 'absolute',
           top: '20px',
-          left: '20px',
+          left: '120px',
 
           backgroundColor: 'white',
           borderRadius: '5px',

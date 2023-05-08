@@ -2,6 +2,7 @@ import './App.css'
 import {useEffect} from 'react'
 import {signIn} from './Components/Auth'
 import Map from './Components/Map'
+import Main from './Components/Main'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import About from './Components/About'
 import Contact from './Components/Contact'
@@ -9,7 +10,7 @@ import Contact from './Components/Contact'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Map />,
+    element: <Main />,
   },
   {
     path: '/about',

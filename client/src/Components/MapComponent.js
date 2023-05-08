@@ -394,7 +394,7 @@ export default function MapComponent({center, zoom}) {
         sx={{
           position: 'absolute',
           top: '20px',
-          left: '100px',
+          left: '200px',
 
           backgroundColor: 'white',
           borderRadius: '5px',
