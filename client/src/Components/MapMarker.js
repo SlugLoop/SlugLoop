@@ -66,11 +66,10 @@ export default function MapMarker(props) {
             component="img"
             src={busColors[props.route]}
             alt="bus"
-            sx={
-              {
-                //Rotate the marker based on the heading of the bus in radians
-              }
-            }
+            sx={{
+              //Rotate the marker based on the heading of the bus in radians
+              transform: `rotate(${props.heading}deg)`,
+            }}
           />
         </>
       )}

@@ -5,9 +5,11 @@ import {
   ListItemText,
   Collapse,
   Checkbox,
+  ListItemIcon,
 } from '@mui/material'
 import {ExpandLess, ExpandMore} from '@mui/icons-material'
 import {RouteContext} from '../Route'
+import routeColors from './bus.json'
 
 const metroRoutes = ['10', '15', '18', '19', '20']
 const loopRoutes = [
@@ -58,6 +60,13 @@ export default function RouteSelector(props) {
             >
               <Checkbox checked={selectedRoute.includes(route)} />
               <ListItemText primary={route} />
+              <ListItemIcon>
+                <img
+                  src={routeColors[route]}
+                  alt="bus"
+                  style={{width: '20px', height: '20px'}}
+                />
+              </ListItemIcon>
             </ListItemButton>
           ))}
         </Collapse>
@@ -83,6 +92,13 @@ export default function RouteSelector(props) {
             >
               <Checkbox checked={selectedRoute.includes(route)} />
               <ListItemText primary={route} />
+              <ListItemIcon>
+                <img
+                  src={routeColors[route]}
+                  alt="bus"
+                  style={{width: '20px', height: '20px'}}
+                />
+              </ListItemIcon>
             </ListItemButton>
           ))}
         </Collapse>
