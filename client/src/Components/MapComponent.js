@@ -1,13 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react'
-import getAllBusses from './firebase'
+import {getAllBuses, getAllMetroBuses} from './firebase'
 import Legend from './Legend'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
 import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
-
-const THIRTY_MINUTES = 30 * 60 * 1000
+import {headingBetweenPoints, isBusUpdatedWithinPast30Minutes} from './helper'
 
 export default function MapComponent({center, zoom}) {
   const currentFreeColor = useRef(1)
@@ -19,24 +18,7 @@ export default function MapComponent({center, zoom}) {
 
   // Stores the buses in a state variable to rerender
   const [buses, setBuses] = useState({})
-
-  function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
-    const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
-
-    // Y variable
-    const dLong = toRad(lon2 - lon1)
-    const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
-
-    // X variable
-    const X =
-      Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
-      Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
-
-    // Calculate bearing
-    const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
-    // Convert to degrees
-    return (bearing * 180) / Math.PI + 180
-  }
+  const [metroBuses, setMetroBuses] = useState([])
 
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
@@ -52,7 +34,7 @@ export default function MapComponent({center, zoom}) {
 
   useEffect(() => {
     // Initial load of markers
-    getAllBusses().then((busses) => {
+    getAllBuses().then((busses) => {
       // Sort buses based on route
       busses.sort((a, b) => {
         if (a.route < b.route) {
@@ -91,7 +73,7 @@ export default function MapComponent({center, zoom}) {
   // Update positions of markers every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      getAllBusses().then((busses) => {
+      getAllBuses().then((busses) => {
         busses.forEach((bus) => {
           // Set color for route if it doesnt exist
           if (!buses[bus.id]) {
@@ -117,15 +99,16 @@ export default function MapComponent({center, zoom}) {
         setBuses(busses)
       })
     }, 5000)
-    return () => clearInterval(interval)
+    const interval2 = setInterval(() => {
+      getAllMetroBuses().then((buses) => {
+        setMetroBuses(buses)
+      })
+    }, 12000)
+    return () => {
+      clearInterval(interval)
+      clearInterval(interval2)
+    }
   }, [center])
-
-  const isBusUpdatedWithinPast30Minutes = (lastPing) => {
-    const currentTime = new Date()
-    const lastPingTime = new Date(lastPing)
-    const timeDifference = currentTime - lastPingTime
-    return timeDifference < THIRTY_MINUTES
-  }
 
   return (
     <>
