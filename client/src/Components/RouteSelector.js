@@ -9,9 +9,8 @@ import {
 import {ExpandLess, ExpandMore} from '@mui/icons-material'
 import {RouteContext} from '../Route'
 
-const metroRoutes = ['All Metro Buses', '10', '15', '18', '19', '20']
+const metroRoutes = ['10', '15', '18', '19', '20']
 const loopRoutes = [
-  'All Loop Buses',
   'OUT OF SERVICE/SORRY',
   'LOOP',
   'EAST NIGHT CORE',

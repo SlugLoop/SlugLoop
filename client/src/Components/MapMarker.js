@@ -1,7 +1,10 @@
 import {Box, Typography} from '@mui/material'
-import React from 'react'
+import React, {useState} from 'react'
+import busColors from './bus.json'
 
 export default function MapMarker(props) {
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
+
   /*
   Bus Marker Component
   Returns a marker that rotates based on the heading of the bus and will be placed on the map
@@ -37,27 +40,41 @@ export default function MapMarker(props) {
         justifyContent: 'center',
       }}
     >
-      {props.displayTime && (
-        <Typography
-          variant="body2"
-          noWrap
-          sx={{
-            color: props.darkMode ? 'white' : 'black',
-            position: 'absolute',
-            top: '-20px',
-          }}
-        >
-          {convertDateToHumanReadableTime(props.bus.lastPing)}
-        </Typography>
-      )}
-      <Box
-        component="img"
-        src={`${props.color}.ico`}
-        sx={{
-          //Rotate the marker based on the heading of the bus in radians
-          transform: `rotate(${props.heading}deg)`,
-        }}
+      {/* This is so bad someone please fix this*/}
+      <img
+        src={busColors[props.route]}
+        alt="bus"
+        onLoad={() => setIsImageLoaded(true)}
+        style={{display: 'none'}}
       />
+      {isImageLoaded && (
+        <>
+          {props.displayTime && (
+            <Typography
+              variant="body2"
+              noWrap
+              sx={{
+                color: props.darkMode ? 'white' : 'black',
+                position: 'absolute',
+                top: '-20px',
+              }}
+            >
+              {convertDateToHumanReadableTime(props.lastPing)}
+            </Typography>
+          )}
+          <Box
+            sx={{
+              width: '32', // Set the width and height of the div according to the image size
+              height: '32',
+              backgroundImage: `url(${busColors[props.route]})`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              // Rotate the marker based on the heading of the bus in radians
+              transform: `rotate(${props.heading}deg)`,
+            }}
+          />
+        </>
+      )}
     </Box>
   )
 }
