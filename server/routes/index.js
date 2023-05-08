@@ -84,10 +84,10 @@ router.post('/ping', function (req, res) {
     return
   }
 
-  if (data.key !== process.env.PING_KEY) {
-    res.status(401).send('Unauthorized')
-    return
-  }
+  // if (data.key !== process.env.PING_KEY) {
+  //   res.status(401).send('Unauthorized')
+  //   return
+  // }
 
   // Get a database reference to the collection of busses
   let bussesRef = defaultDatabase.collection('busses')
@@ -108,8 +108,8 @@ router.post('/ping', function (req, res) {
       lastLong = doc.data().lastLongitude
       lastLat = doc.data().lastLatitude
     }
-    const currLocation = {lat: data.lat, lon: data.lon}
-    const prevLocation = {lat: lastLat, lon: lastLong}
+    const currLocation = {lat1: data.lat, lon1: data.lon}
+    const prevLocation = {lat2: lastLat, lon2: lastLong}
     const heading = headingBetweenPoints(currLocation, prevLocation)
 
     //We will update the bus's last ping location and time
@@ -119,7 +119,7 @@ router.post('/ping', function (req, res) {
       lastLatitude: data.lat,
       previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
       previousLatitude: lastLat,
-      heading: heading,
+      heading: heading.toString(),
       route: data.route,
       id: data.id,
       sid: data.sid,
