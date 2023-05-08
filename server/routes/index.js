@@ -149,6 +149,7 @@ router.post('/contact', function (req, res) {
   }
 })
 
+// Check if the data is valid and check data length is 4
 function validateData() {
   if (
     !data ||
