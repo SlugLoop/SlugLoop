@@ -7,6 +7,7 @@ require('dotenv').config()
 const OpenApiValidator = require('express-openapi-validator')
 const swaggerUi = require('swagger-ui-express')
 const apiDoc = require('./api-doc')
+const defaultDatabase = require('./firebase.js')
 
 // Add cors
 var cors = require('cors')
@@ -27,14 +28,6 @@ router.use(
   }),
 )
 router.use('/', metro)
-
-var admin = require('firebase-admin')
-
-let defaultApp = admin.initializeApp({
-  credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_KEY)),
-})
-
-let defaultDatabase = admin.firestore(defaultApp)
 
 /* GET home page. */
 router.get('/', function (req, res) {

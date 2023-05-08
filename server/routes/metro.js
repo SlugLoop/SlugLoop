@@ -2,6 +2,31 @@ const express = require('express')
 const router = express.Router()
 const axios = require('axios')
 require('dotenv').config()
+const defaultDatabase = require('./firebase.js')
+
+setInterval(() => {
+  const baseUrl = `${process.env.METRO_URL}/getvehicles`
+  const routes = [10, 15, 18, 19, 20]
+  const apiKey = process.env.METRO_KEY
+
+  let metroRef = defaultDatabase.collection('metro')
+  axios
+    .get(`${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`)
+    .then((response) => {
+      const buses = response.data['bustime-response'].vehicle
+      buses.forEach((bus) => {
+        metroRef.doc(bus.vid).set({
+          id: bus.vid,
+          route: bus.rt,
+          lastLatitude: bus.lat,
+          lastLongitude: bus.lon,
+          lastPing: convertDateFormat(bus.tmstmp),
+          heading: bus.hdg,
+          capacity: bus.psgld,
+        })
+      })
+    })
+}, 12000)
 
 router.get('/metroBuses', function (req, res) {
   const baseUrl = `${process.env.METRO_URL}/getvehicles`

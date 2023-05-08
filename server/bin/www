@@ -7,20 +7,6 @@
 var app = require('../app')
 var debug = require('debug')('server:server')
 var http = require('http')
-var https = require('https')
-
-/**
- * Setup HTTPS
- */
-const fs = require('fs')
-const key = fs.readFileSync(process.env.PRIVATE_KEY)
-const cert = fs.readFileSync(process.env.CERTIFICATE)
-const ca = fs.readFileSync(process.env.CA)
-const options = {
-  key: key,
-  cert: cert,
-  ca: ca,
-}
 
 /**
  * Get port from environment and store in Express.
@@ -33,7 +19,7 @@ app.set('port', port)
  * Create HTTP server.
  */
 
-var server = https.createServer(options, app)
+var server = http.createServer(app)
 
 /**
  * Listen on provided port, on all network interfaces.
