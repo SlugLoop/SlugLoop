@@ -119,7 +119,7 @@ router.post('/ping', function (req, res) {
       lastLatitude: data.lat,
       previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
       previousLatitude: lastLat,
-      heading: heading.toString(),
+      heading: heading,
       route: data.route,
       id: data.id,
       sid: data.sid,

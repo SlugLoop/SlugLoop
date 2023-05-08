@@ -124,8 +124,12 @@ function convertDateFormat(input) {
   const day = input.slice(6, 8)
   const time = input.slice(9)
 
-  const date = new Date(`${year}-${month}-${day}T${time}:00.000Z`)
-  return date.toISOString()
+  const localDate = new Date(`${year}-${month}-${day}T${time}:00`)
+
+  const utcDate = new Date(
+    localDate.getTime() + localDate.getTimezoneOffset() * 60000,
+  )
+  return utcDate.toISOString()
 }
 
 module.exports = router
