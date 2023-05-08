@@ -123,12 +123,23 @@ function convertDateFormat(input) {
   const month = input.slice(4, 6)
   const day = input.slice(6, 8)
   const time = input.slice(9)
+  const hours = time.slice(0, 2)
+  const minutes = time.slice(3, 5)
 
-  const localDate = new Date(`${year}-${month}-${day}T${time}:00`)
+  // Calculate the offset for PDT
+  const pdtOffsetHours = 7 // 7 hours
 
+  // Create a UTC date directly using Date.UTC() method
   const utcDate = new Date(
-    localDate.getTime() + localDate.getTimezoneOffset() * 60000,
+    Date.UTC(
+      parseInt(year),
+      parseInt(month) - 1, // Months are zero-based in JavaScript Date
+      parseInt(day),
+      parseInt(hours) + pdtOffsetHours,
+      parseInt(minutes),
+    ),
   )
+
   return utcDate.toISOString()
 }
 
