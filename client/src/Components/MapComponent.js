@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef, useContext} from 'react'
 import {getAllBuses, getAllMetroBuses} from './firebase'
 import Legend from './Legend'
 import GoogleMap from 'google-maps-react-markers'
@@ -7,6 +7,8 @@ import MapMarker from './MapMarker'
 import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
 import {headingBetweenPoints, isBusUpdatedWithinPast30Minutes} from './helper'
+import RouteSelector from './RouteSelector'
+import {RouteContext} from '../Route'
 
 export default function MapComponent({center, zoom}) {
   const currentFreeColor = useRef(1)
@@ -18,7 +20,9 @@ export default function MapComponent({center, zoom}) {
 
   // Stores the buses in a state variable to rerender
   const [buses, setBuses] = useState({})
-  const [metroBuses, setMetroBuses] = useState([])
+  const [metroBuses, setMetroBuses] = useState({})
+  const combinedRoutes = {...buses, ...metroBuses}
+  const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
 
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
@@ -183,6 +187,7 @@ export default function MapComponent({center, zoom}) {
         darkMode={darkMode}
         handleDarkToggle={handleDarkToggle}
       />
+      <RouteSelector />
     </>
   )
 }
