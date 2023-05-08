@@ -75,22 +75,7 @@ router.post('/ping', function (req, res) {
   data = data[0]
 
   // Check if the data is valid and check data length is 4
-  if (
-    !data ||
-    !data.id ||
-    !data.lon ||
-    !data.lat ||
-    !data.route ||
-    !data.key ||
-    !data.sid ||
-    Object.keys(data).length !== 6
-  ) {
-    res.status(400).send('Invalid data')
-    return
-  }
-
-  if (data.key !== process.env.PING_KEY) {
-    res.status(401).send('Unauthorized')
+  if(!validateData()) {
     return
   }
 
@@ -163,5 +148,26 @@ router.post('/contact', function (req, res) {
     res.status(500).send('Error sending message')
   }
 })
+
+function validateData() {
+  if (
+    !data ||
+    !data.id ||
+    !data.lon ||
+    !data.lat ||
+    !data.route ||
+    !data.key ||
+    !data.sid ||
+    Object.keys(data).length !== 6
+  ) {
+    res.status(400).send('Invalid data')
+    return false
+  }
+
+  if (data.key !== process.env.PING_KEY) {
+    res.status(401).send('Unauthorized')
+    return false
+  }
+}
 
 module.exports = router
