@@ -17,13 +17,18 @@ SlugLoop is a real-time tracking application for loop buses at the University of
 
 ## Table of Contents
 
-- [Inspiration](#inspiration)
-- [Goals](#goals)
-- [Built With](#built-with)
-- [Challenges](#challenges)
-- [Accomplishments](#accomplishments)
-- [What We Learned](#what-we-learned)
-- [What's Next](#whats-next)
+- [SlugLoop](#slugloop)
+  - [Overview](#overview)
+  - [Contributors:](#contributors)
+  - [Table of Contents](#table-of-contents)
+  - [Inspiration](#inspiration)
+  - [Goals](#goals)
+  - [Built With](#built-with)
+  - [Challenges](#challenges)
+  - [Accomplishments](#accomplishments)
+  - [What We Learned](#what-we-learned)
+  - [What's Next](#whats-next)
+  - [How to run](#how-to-run)
 
 ## Inspiration
 
@@ -76,3 +81,18 @@ Throughout the development of SlugLoop, our team learned:
 - Upgrade or replace existing hardware on campus to fill coverage gaps
 - Install required hardware on all loop buses to ensure comprehensive tracking
 - Obtain official school sponsorship
+
+
+## How to run
+
+1. Clone the repository
+2. Run Frontend
+   1. `cd server`
+   2. `npm install`
+   3. `npm start`
+3. Run Backend
+   1. `cd server`
+   2. `npm install`
+   3. `npm start`
+
+Some backend links and enviromental variables will be required. Please contact us for more information.
