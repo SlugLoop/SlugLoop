@@ -15,11 +15,10 @@ export default function MapComponent({center, zoom}) {
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
-  const [buses, setBuses] = useState({})
-  const [metroBuses, setMetroBuses] = useState({})
-  const combinedBuses = {...buses, ...metroBuses}
+  const [buses, setBuses] = useState([])
+  const [metroBuses, setMetroBuses] = useState([])
+  const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
-
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -88,7 +87,8 @@ export default function MapComponent({center, zoom}) {
             .filter(
               // Filter out buses that haven't updated in the last 30 minutes
               (key) =>
-                !filter || isBusUpdatedWithinPast30Minutes(buses[key].lastPing),
+                !filter ||
+                isBusUpdatedWithinPast30Minutes(combinedBuses[key].lastPing),
             )
             .filter(
               // Filter out buses that don't match the selected routes

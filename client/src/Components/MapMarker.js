@@ -63,15 +63,14 @@ export default function MapMarker(props) {
             </Typography>
           )}
           <Box
-            sx={{
-              width: '32', // Set the width and height of the div according to the image size
-              height: '32',
-              backgroundImage: `url(${busColors[props.route]})`,
-              backgroundSize: 'contain',
-              backgroundRepeat: 'no-repeat',
-              // Rotate the marker based on the heading of the bus in radians
-              transform: `rotate(${props.heading}deg)`,
-            }}
+            component="img"
+            src={busColors[props.route]}
+            alt="bus"
+            sx={
+              {
+                //Rotate the marker based on the heading of the bus in radians
+              }
+            }
           />
         </>
       )}

@@ -11,10 +11,11 @@ import {RouteContext} from '../Route'
 
 const metroRoutes = ['10', '15', '18', '19', '20']
 const loopRoutes = [
-  'OUT OF SERVICE/SORRY',
   'LOOP',
-  'EAST NIGHT CORE',
   'UPPER CAMPUS',
+  'LOOP OUT OF SERVICE AT BARN THEATER',
+  'EAST NIGHT CORE',
+  'OUT OF SERVICE/SORRY',
 ]
 
 export default function RouteSelector(props) {
