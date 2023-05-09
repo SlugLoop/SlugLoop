@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals'
 import {ThemeProvider} from '@mui/material/styles'
 import {themeOptions} from './Components/theme'
 import {inject} from '@vercel/analytics'
+import {register} from './serviceWorkerRegistration'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 inject()
@@ -19,3 +20,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals()
+register()
