@@ -1,43 +1,24 @@
-import React, {useState, useEffect, useRef} from 'react'
-import getAllBusses from './firebase'
-import Legend from './Legend'
+import React, {useState, useEffect, useContext} from 'react'
+import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
 import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
-
-const THIRTY_MINUTES = 30 * 60 * 1000
+import {isBusUpdatedWithinPast30Minutes} from './helper'
+import RouteSelector from './RouteSelector'
+import {RouteContext} from '../Route'
 
 export default function MapComponent({center, zoom}) {
-  const currentFreeColor = useRef(1)
-  const busColors = useRef({})
-  const [legendItems, setLegendItems] = useState({})
   const [displayTime, setDisplayTime] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
-  const [buses, setBuses] = useState({})
-
-  function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
-    const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
-
-    // Y variable
-    const dLong = toRad(lon2 - lon1)
-    const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
-
-    // X variable
-    const X =
-      Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
-      Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
-
-    // Calculate bearing
-    const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
-    // Convert to degrees
-    return (bearing * 180) / Math.PI + 180
-  }
-
+  const [buses, setBuses] = useState([])
+  const [metroBuses, setMetroBuses] = useState([])
+  const combinedBuses = buses.concat(metroBuses)
+  const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -52,80 +33,31 @@ export default function MapComponent({center, zoom}) {
 
   useEffect(() => {
     // Initial load of markers
-    getAllBusses().then((busses) => {
-      // Sort buses based on route
-      busses.sort((a, b) => {
-        if (a.route < b.route) {
-          return -1
-        }
-        if (a.route > b.route) {
-          return 1
-        }
-        return 0
-      })
-      busses.forEach((bus) => {
-        // Used to define new colors/icons for routes
-        // Set color for route if it doesnt exist
-        if (busColors.current[bus.route] === undefined) {
-          // Set marker to next free color
-          busColors.current = {
-            ...busColors.current,
-            [bus.route]: currentFreeColor.current,
-          }
-          currentFreeColor.current = currentFreeColor.current + 1
-          // Increment the value of currentFreeColor.current by 1
-        }
-      })
-
-      // Set legend items
-      const temp = Object.keys(busColors.current).map((route) => ({
-        name: route,
-        icon: `${busColors.current[route]}.ico`,
-      }))
-
-      setLegendItems(temp)
+    getAllBuses().then((busses) => {
       setBuses(busses)
+    })
+    getAllMetroBuses().then((busses) => {
+      setMetroBuses(busses)
     })
   }, [center, zoom])
 
   // Update positions of markers every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      getAllBusses().then((busses) => {
-        busses.forEach((bus) => {
-          // Set color for route if it doesnt exist
-          if (!buses[bus.id]) {
-            if (busColors.current[bus.route] === undefined) {
-              busColors.current = {
-                ...busColors.current,
-                [bus.route]: currentFreeColor.current,
-              }
-              // Increment the value of currentFreeColor.current by 1
-              currentFreeColor.current = currentFreeColor.current + 1
-
-              // Add new color to legend
-              setLegendItems(
-                Object.keys(busColors.current).map((route) => ({
-                  name: route,
-                  icon: `${busColors.current[route]}.ico`,
-                })),
-              )
-            }
-          }
-        })
-
+      getAllBuses().then((busses) => {
         setBuses(busses)
       })
     }, 5000)
-    return () => clearInterval(interval)
+    const interval2 = setInterval(() => {
+      getAllMetroBuses().then((buses) => {
+        setMetroBuses(buses)
+      })
+    }, 12000)
+    return () => {
+      clearInterval(interval)
+      clearInterval(interval2)
+    }
   }, [center])
-
-  const isBusUpdatedWithinPast30Minutes = (lastPing) => {
-    const currentTime = new Date()
-    const lastPingTime = new Date(lastPing)
-    const timeDifference = currentTime - lastPingTime
-    return timeDifference < THIRTY_MINUTES
-  }
 
   return (
     <>
@@ -151,38 +83,27 @@ export default function MapComponent({center, zoom}) {
             styles: darkMode && getStyle(darkMode),
           }}
         >
-          {Object.keys(buses)
+          {Object.keys(combinedBuses)
             .filter(
+              // Filter out buses that haven't updated in the last 30 minutes
               (key) =>
-                !filter || isBusUpdatedWithinPast30Minutes(buses[key].lastPing),
+                !filter ||
+                isBusUpdatedWithinPast30Minutes(combinedBuses[key].lastPing),
+            )
+            .filter(
+              // Filter out buses that don't match the selected routes
+              (key) => selectedRoute.includes(combinedBuses[key].route),
             )
             .map((key) => {
-              const bus = buses[key]
-              const currLocation = {
-                lat1: bus.lastLatitude,
-                lon1: bus.lastLongitude,
-              }
-              const previousLocation = {
-                lat2: bus.previousLatitude
-                  ? bus.previousLatitude
-                  : bus.lastLatitude,
-                lon2: bus.previousLongitude
-                  ? bus.previousLongitude
-                  : bus.lastLongitude,
-              }
-
-              const heading = headingBetweenPoints(
-                currLocation,
-                previousLocation,
-              )
+              const bus = combinedBuses[key]
               return (
                 <MapMarker
                   key={key}
-                  color={busColors.current[bus.route]}
-                  lat={bus.lastLatitude}
-                  lng={bus.lastLongitude}
-                  bus={bus}
-                  heading={heading}
+                  lat={parseFloat(bus.lastLatitude)}
+                  lng={parseFloat(bus.lastLongitude)}
+                  lastPing={bus.lastPing}
+                  route={bus.route}
+                  heading={bus.heading}
                   displayTime={displayTime}
                   darkMode={darkMode}
                 />
@@ -190,7 +111,6 @@ export default function MapComponent({center, zoom}) {
             })}
         </GoogleMap>
       </Box>
-      <Legend legendItems={legendItems} />
       <AboutButton darkMode={darkMode} />
       <SettingsButton
         filter={filter}
@@ -200,6 +120,7 @@ export default function MapComponent({center, zoom}) {
         darkMode={darkMode}
         handleDarkToggle={handleDarkToggle}
       />
+      <RouteSelector />
     </>
   )
 }

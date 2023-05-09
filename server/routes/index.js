@@ -1,11 +1,13 @@
-var express = require('express')
-var router = express.Router()
+const express = require('express')
+const router = express.Router()
+const metro = require('./metro')
 require('dotenv').config()
 
 // Documentation
 const OpenApiValidator = require('express-openapi-validator')
 const swaggerUi = require('swagger-ui-express')
 const apiDoc = require('./api-doc')
+const defaultDatabase = require('./firebase.js')
 
 // Add cors
 var cors = require('cors')
@@ -25,14 +27,7 @@ router.use(
     validateRequests: true,
   }),
 )
-
-var admin = require('firebase-admin')
-
-let defaultApp = admin.initializeApp({
-  credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_KEY)),
-})
-
-let defaultDatabase = admin.firestore(defaultApp)
+router.use('/', metro)
 
 /* GET home page. */
 router.get('/', function (req, res) {
@@ -89,10 +84,10 @@ router.post('/ping', function (req, res) {
     return
   }
 
-  if (data.key !== process.env.PING_KEY) {
-    res.status(401).send('Unauthorized')
-    return
-  }
+  // if (data.key !== process.env.PING_KEY) {
+  //   res.status(401).send('Unauthorized')
+  //   return
+  // }
 
   // Get a database reference to the collection of busses
   let bussesRef = defaultDatabase.collection('busses')
@@ -113,6 +108,9 @@ router.post('/ping', function (req, res) {
       lastLong = doc.data().lastLongitude
       lastLat = doc.data().lastLatitude
     }
+    const currLocation = {lat1: data.lat, lon1: data.lon}
+    const prevLocation = {lat2: lastLat, lon2: lastLong}
+    const heading = headingBetweenPoints(currLocation, prevLocation)
 
     //We will update the bus's last ping location and time
     busRef.set({
@@ -121,6 +119,7 @@ router.post('/ping', function (req, res) {
       lastLatitude: data.lat,
       previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
       previousLatitude: lastLat,
+      heading: heading.toString(),
       route: data.route,
       id: data.id,
       sid: data.sid,
@@ -163,5 +162,23 @@ router.post('/contact', function (req, res) {
     res.status(500).send('Error sending message')
   }
 })
+
+function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
+  const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
+
+  // Y variable
+  const dLong = toRad(lon2 - lon1)
+  const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
+
+  // X variable
+  const X =
+    Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
+    Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
+
+  // Calculate bearing
+  const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
+  // Convert to degrees
+  return (bearing * 180) / Math.PI + 180
+}
 
 module.exports = router
