@@ -98,6 +98,20 @@ const apiDoc = {
         },
       },
     },
+    '/updateMetroBuses': {
+      // Update the metro buses
+      put: {
+        description: 'Update the metro buses',
+        responses: {
+          200: {
+            description: 'OK',
+          },
+          500: {
+            description: 'Error updating buses',
+          },
+        },
+      },
+    },
     '/contact': {
       // For the contact us form
       post: {

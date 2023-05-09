@@ -9,6 +9,7 @@ const swaggerUi = require('swagger-ui-express')
 const apiDoc = require('./api-doc')
 const defaultDatabase = require('./firebase.js')
 
+// Middleware
 // Add cors
 var cors = require('cors')
 router.use(
@@ -18,8 +19,11 @@ router.use(
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 )
+
+// Add body parser
 router.use(express.json())
 
+// Add documentation
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apiDoc))
 router.use(
   OpenApiValidator.middleware({
@@ -27,6 +31,7 @@ router.use(
     validateRequests: true,
   }),
 )
+
 router.use('/', metro)
 
 /* GET home page. */
