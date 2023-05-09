@@ -23,9 +23,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run build-sw",
     "test": "react-scripts test --coverage --verbose",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-sw": "workbox generateSW workbox-config.js"
   },
   "eslintConfig": {
     "extends": [
@@ -49,7 +50,8 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
-    "jest": "^29.5.0"
+    "jest": "^29.5.0",
+    "workbox-cli": "^6.5.4"
   },
   "jest": {
     "collectCoverageFrom": [
