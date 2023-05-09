@@ -28,19 +28,23 @@ export default function RouteSelector(props) {
     <>
       <List
         sx={{
-          width: '400px',
+          width: '200px',
+          maxWidth: '50%',
           position: 'absolute',
           top: '20px',
-          right: '20px',
+          right: '10px',
           backgroundColor: 'white',
-          borderRadius: '4px',
-          padding: '8px',
+
           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
         }}
       >
         <ListItemButton
           onClick={() => {
             setOpen(open === 'Loop' ? '' : 'Loop')
+          }}
+          sx={{
+            paddingTop: 0,
+            paddingBottom: 0,
           }}
         >
           <ListItemText primary="Loop" />
@@ -56,6 +60,11 @@ export default function RouteSelector(props) {
                 } else {
                   setSelectedRoute([...selectedRoute, route])
                 }
+              }}
+              sx={{
+                padding: 0,
+                paddingTop: '5px',
+                paddingBottom: '5px',
               }}
             >
               <Checkbox checked={selectedRoute.includes(route)} />
@@ -74,6 +83,10 @@ export default function RouteSelector(props) {
           onClick={() => {
             setOpen(open === 'Metro' ? '' : 'Metro')
           }}
+          sx={{
+            paddingTop: 0,
+            paddingBottom: 0,
+          }}
         >
           <ListItemText primary="Metro" />
           {open === 'Metro' ? <ExpandLess /> : <ExpandMore />}
@@ -88,6 +101,11 @@ export default function RouteSelector(props) {
                 } else {
                   setSelectedRoute([...selectedRoute, route])
                 }
+              }}
+              sx={{
+                padding: 0,
+                paddingTop: '5px',
+                paddingBottom: '5px',
               }}
             >
               <Checkbox checked={selectedRoute.includes(route)} />
