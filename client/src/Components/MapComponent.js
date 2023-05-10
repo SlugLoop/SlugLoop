@@ -5,7 +5,7 @@ import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
 import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
-import {isBusUpdatedWithinPast30Minutes} from 'helper'
+import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 
