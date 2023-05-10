@@ -154,6 +154,10 @@ async function updateMetroBuses() {
   )
   const buses = response.data['bustime-response'].vehicle
 
+  if (!buses && response.status === 200) {
+    return 204
+  }
+
   // TRANSACTIONS!!!!
   // Create a batch
   const batch = defaultDatabase.batch()
@@ -173,6 +177,7 @@ async function updateMetroBuses() {
 
   // Commit the batch
   await batch.commit()
+  return 200
 }
 
 // Create a rate limiter middleware
@@ -189,8 +194,8 @@ const limiter = rateLimit({
 // Apply the rate limiter to the specific route
 router.put('/updateMetroBuses', limiter, async (req, res) => {
   try {
-    await updateMetroBuses()
-    res.status(200).send('Metro buses updated successfully')
+    const status = await updateMetroBuses()
+    res.status(status).send('Updated metro buses')
   } catch (error) {
     console.error(`Failed to update buses: ${error}`)
     res.status(500).send('Error updating metro buses')
