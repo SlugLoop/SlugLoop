@@ -32,30 +32,53 @@ export default function MapComponent({center, zoom}) {
   }
 
   useEffect(() => {
-    // Initial load of markers
-    getAllBuses().then((busses) => {
-      setBuses(busses)
-    })
-    getAllMetroBuses().then((busses) => {
-      setMetroBuses(busses)
-    })
-  }, [center, zoom])
+    let interval, interval2
 
-  // Update positions of markers every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
+    const fetchData = () => {
       getAllBuses().then((busses) => {
         setBuses(busses)
       })
-    }, 5000)
-    const interval2 = setInterval(() => {
+    }
+    const fetchMetroData = () => {
       getAllMetroBuses().then((buses) => {
         setMetroBuses(buses)
       })
-    }, 12000)
-    return () => {
+    }
+
+    const setupIntervals = () => {
+      // Update positions of markers every 5 seconds
+      interval = setInterval(fetchData, 5000)
+      interval2 = setInterval(fetchMetroData, 12000)
+    }
+
+    const clearIntervals = () => {
       clearInterval(interval)
       clearInterval(interval2)
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchData()
+        fetchMetroData()
+        clearIntervals() // Clear existing intervals
+        setupIntervals() // Set up new intervals
+      } else {
+        clearIntervals() // Clear intervals when the app loses focus
+      }
+    }
+
+    // Initial load of markers
+    fetchData()
+    fetchMetroData()
+
+    setupIntervals()
+
+    // Add event listeners to handle app focus and blur events
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      clearIntervals()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [center])
 
