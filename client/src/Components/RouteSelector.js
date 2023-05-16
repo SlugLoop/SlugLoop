@@ -120,6 +120,17 @@ export default function RouteSelector(props) {
             </ListItemButton>
           ))}
         </Collapse>
+        <ListItemButton
+          onClick={() => {
+            setSelectedRoute([])
+          }}
+          sx={{
+            paddingTop: 0,
+            paddingBottom: 0,
+          }}
+        >
+          <ListItemText primary="Clear Routes" />
+        </ListItemButton>
       </List>
     </>
   )
