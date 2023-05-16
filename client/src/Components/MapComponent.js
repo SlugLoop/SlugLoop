@@ -8,6 +8,7 @@ import AboutButton from './AboutButton'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
+import InstallPWAButton from './PwaButton'
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
@@ -143,6 +144,7 @@ export default function MapComponent({center, zoom}) {
         darkMode={darkMode}
         handleDarkToggle={handleDarkToggle}
       />
+      <InstallPWAButton />
       <RouteSelector />
     </>
   )
