@@ -45,7 +45,7 @@ export default function InstallPWAButton() {
     handleClose()
   }
 
-  return isInstallable ? (
+  return (
     <>
       <Button
         variant="contained"
@@ -109,5 +109,5 @@ export default function InstallPWAButton() {
         </Box>
       </Modal>
     </>
-  ) : null
+  )
 }
