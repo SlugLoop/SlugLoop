@@ -13,7 +13,10 @@ export default function InstallPWAButton() {
       setIsInstallable(true)
     }
 
-    window.addEventListener('beforeinstallprompt', beforeInstallPromptHandler)
+    // Only add the beforeinstallprompt event listener if the app is not already installed
+    if (!window.matchMedia('(display-mode: standalone)').matches) {
+      window.addEventListener('beforeinstallprompt', beforeInstallPromptHandler)
+    }
 
     return () => {
       window.removeEventListener(
@@ -78,7 +81,7 @@ export default function InstallPWAButton() {
       >
         <Box
           sx={{
-            width: {xs: '70%', sm: '50%', md: '40%'},
+            width: {xs: '80%', sm: '60%', md: '40%'},
             bgcolor: 'background.paper',
             border: '2px solid #000',
             boxShadow: 24,
