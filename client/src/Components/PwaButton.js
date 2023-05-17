@@ -1,16 +1,19 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Modal, Box, Typography} from '@mui/material'
+import {Button, Modal, Box, Typography, IconButton, Stack} from '@mui/material'
 import IosShareIcon from '@mui/icons-material/IosShare'
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
+import CloseIcon from '@mui/icons-material/Close'
 
 export default function InstallPWAButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [isInstallable, setIsInstallable] = useState(false)
   const [open, setOpen] = useState(false)
+  const [showIosPrompt, setShowIosPrompt] = useState(false)
 
   useEffect(() => {
     const beforeInstallPromptHandler = (e) => {
       e.preventDefault()
+      console.log('beforeinstallprompt fired')
       setDeferredPrompt(e)
       setIsInstallable(true)
     }
@@ -36,6 +39,10 @@ export default function InstallPWAButton() {
     )
   }
 
+  useEffect(() => {
+    setShowIosPrompt(isIphoneSafari()) // update the state when isIphoneSafari changes
+  }, [])
+
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
@@ -55,7 +62,7 @@ export default function InstallPWAButton() {
     handleClose()
   }
 
-  return isIphoneSafari() ? (
+  return showIosPrompt ? (
     <Box
       sx={{
         position: 'fixed',
@@ -68,19 +75,33 @@ export default function InstallPWAButton() {
         bgcolor: 'grey.200',
         borderRadius: '15px',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
+        alignItems: 'center',
       }}
     >
-      <Typography variant="body1">
-        <span style={{display: 'inline-flex', alignItems: 'center'}}>
-          To install this app, tap on the
-          <IosShareIcon sx={{mr: 1, ml: 1}} />
-        </span>{' '}
-        <span style={{display: 'inline-flex', alignItems: 'center'}}>
-          icon and then 'Add to Home Screen'
-          <AddBoxOutlinedIcon sx={{ml: 1}} />
-        </span>
-      </Typography>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
+        <Typography variant="body1">
+          To install this app, tap on the icon{' '}
+        </Typography>
+        <IosShareIcon sx={{ml: 1}} />
+        <Typography variant="body1">and then 'Add to Home Screen'</Typography>
+        <AddBoxOutlinedIcon sx={{ml: 1}} />
+      </div>
+
+      <IconButton
+        onClick={() => {
+          setShowIosPrompt(false)
+        }}
+        color="inherit"
+      >
+        <CloseIcon />
+      </IconButton>
     </Box>
   ) : isInstallable ? (
     <>
