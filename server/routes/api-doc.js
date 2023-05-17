@@ -51,6 +51,27 @@ const apiDoc = {
         },
       },
     },
+    '/metroBuses': {
+      // Gets all buses on routes 10, 15, 18, 19, and 20 and returns a json array
+      get: {
+        description: 'Gets all buses on routes 10, 15, 18, 19, and 20',
+        responses: {
+          200: {
+            description: 'Gets all buses on specified routes',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/busesArray',
+                },
+              },
+            },
+          },
+          500: {
+            description: 'Error fetching buses',
+          },
+        },
+      },
+    },
     '/ping': {
       // Ping the server from base stations
       post: {
@@ -73,6 +94,20 @@ const apiDoc = {
           },
           401: {
             description: 'Unauthorized',
+          },
+        },
+      },
+    },
+    '/updateMetroBuses': {
+      // Update the metro buses
+      put: {
+        description: 'Update the metro buses',
+        responses: {
+          200: {
+            description: 'OK',
+          },
+          500: {
+            description: 'Error updating buses',
           },
         },
       },
@@ -132,6 +167,35 @@ const apiDoc = {
           },
         },
       },
+      metroArray: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+            },
+            lastPing: {
+              type: 'string',
+            },
+            lastLongitude: {
+              type: 'number',
+            },
+            lastLatitude: {
+              type: 'number',
+            },
+            route: {
+              type: 'string',
+            },
+            heading: {
+              type: 'string',
+            },
+            capacity: {
+              type: 'string',
+            },
+          },
+        },
+      },
       messageBody: {
         type: 'object',
         properties: {
@@ -160,7 +224,7 @@ const apiDoc = {
       },
     },
   },
-};
+}
 
 // Export
-module.exports = apiDoc;
+module.exports = apiDoc
