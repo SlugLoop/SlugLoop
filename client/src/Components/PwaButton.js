@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Button, Modal, Box, Typography} from '@mui/material'
+import IosShareIcon from '@mui/icons-material/IosShare'
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
 
 export default function InstallPWAButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
@@ -26,6 +28,14 @@ export default function InstallPWAButton() {
     }
   }, [])
 
+  const isIphoneSafari = () => {
+    return (
+      /iphone/.test(navigator.userAgent.toLowerCase()) &&
+      !navigator.standalone &&
+      /safari/.test(navigator.userAgent.toLowerCase())
+    )
+  }
+
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
@@ -45,7 +55,34 @@ export default function InstallPWAButton() {
     handleClose()
   }
 
-  return (
+  return isIphoneSafari() ? (
+    <Box
+      sx={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        mb: 2,
+        mx: 2,
+        p: 2,
+        bgcolor: 'grey.200',
+        borderRadius: '15px',
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
+      <Typography variant="body1">
+        <span style={{display: 'inline-flex', alignItems: 'center'}}>
+          To install this app, tap on the
+          <IosShareIcon sx={{mr: 1, ml: 1}} />
+        </span>{' '}
+        <span style={{display: 'inline-flex', alignItems: 'center'}}>
+          icon and then 'Add to Home Screen'
+          <AddBoxOutlinedIcon sx={{ml: 1}} />
+        </span>
+      </Typography>
+    </Box>
+  ) : isInstallable ? (
     <>
       <Button
         variant="contained"
@@ -109,5 +146,5 @@ export default function InstallPWAButton() {
         </Box>
       </Modal>
     </>
-  )
+  ) : null
 }
