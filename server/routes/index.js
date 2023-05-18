@@ -104,8 +104,8 @@ router.post('/ping', function (req, res) {
     data.sid = 'No SID'
   }
 
-  let lastLong = 0 // Current longitude
-  let lastLat = 0  // Current latitude
+  let lastLong = 0
+  let lastLat = 0
 
   // Get the last ping location of the bus
   busRef.get().then((doc) => {
@@ -116,14 +116,18 @@ router.post('/ping', function (req, res) {
     const currLocation = {lat1: data.lat, lon1: data.lon}
     const prevLocation = {lat2: lastLat, lon2: lastLong}
     const heading = headingBetweenPoints(currLocation, prevLocation)
+    const direction = calcCWorCWW(currLocation, prevLocation)
+
+
 
     //We will update the bus's last ping location and time
     busRef.set({
       lastPing: new Date().toISOString(),
-      lastLongitude: data.lon,     // Current Longitutde Ping
-      lastLatitude: data.lat,      // Current Latitude Ping
-      previousLongitude: lastLong, // Previous Longitude Ping
-      previousLatitude: lastLat,   // Previous Latitude Ping
+      lastLongitude: data.lon,
+      lastLatitude: data.lat,
+      previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
+      previousLatitude: lastLat,
+      direction: direction,
       heading: heading.toString(),
       route: data.route,
       id: data.id,
@@ -184,6 +188,72 @@ function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
   const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
   // Convert to degrees
   return (bearing * 180) / Math.PI + 180
+}
+
+// Determine if bus is going up or down
+function latitudeDecreasing(lat1, lat2) {
+  return false;
+}
+
+// Determine if bus is going left or right
+function longitudeDecreasing(lon1, lon2) {
+  return false;
+}
+
+// Calculate direction of bus
+function calcCWorCWW({latitude, longitude}, {previousLatitude, previousLongitude}) {
+  // Lower Half
+  if (36.977583 < latitude && latitude < 36.992444) {
+    // Lower West Half
+    if (longitude < -122.055831) {
+      if (latitudeDecreasing(latitude, previousLatitude)) return "ccw";
+      else return "cw";
+    }
+    // Lower East Half
+    else {
+      if (latitudeDecreasing(latitude, previousLatitude)) return "cw";
+      else return "ccw";
+    }
+  }
+
+  // RCC Area
+  if ((36.992444 <= latitude && latitude < 36.993316) && (-122.066566 < longitude && longitude < -122.061)) {
+    if (longitudeDecreasing(longitude, previousLongitude)) return "ccw";
+    else return "cw";
+  }
+
+  // RCC to Kresge
+  if ((36.993316 <= latitude && latitude < 36.999290) && longtitude < -122.062260) {
+    if (latitudeDecreasing(latitude, previousLatitude)) return "ccw";
+    else return "cw";
+  }
+
+  // Baskin to Crown
+  if ((36.999290 <= latitude) && (-122.064560 <= longitude && longitude < -122.054543)) {
+    if (longitudeDecreasing(longitude, previousLongitude)) return "ccw";
+    else return "cw";
+  }
+
+  // Crown to East Remote
+  if ((36.992444 <= latitude && latitude < 36.999290) && (longitude >= -122.055831)) {
+    if (latitudeDecreasing(latitude, previousLatitude)) return "cw";
+    else return "ccw";
+  }
+
+  // Bay and High Area
+  if (36.977119 < latitude && latitude < 36.9775833) {
+    // West Side
+    if (longitude < -122.053795) {
+      if (longitudeDecreasing(longitude, previousLongitude)) return "cw";
+      else return "ccw";
+    }
+    // East Side
+    if (longitude >= -122.053795) {
+      if (latitudeDecreasing(latitude, previousLatitude)) return "cw";
+      else return "ccw";
+    }
+  }
+  return null;
 }
 
 module.exports = router
