@@ -128,7 +128,7 @@ router.post('/ping', function (req, res) {
     const currLocation = {lat1: data.lat, lon1: data.lon}
     const prevLocation = {lat2: lastLat, lon2: lastLong}
     const heading = headingBetweenPoints(currLocation, prevLocation)
-    const direction = calcCWorCWW(currLocation, prevLocation)
+    const direction = calcCWorCCW(currLocation, previousLocationArray)
 
     // Calculate the distance between the current and the last locations
     const distance = getDistanceFromLatLonInMeters(
@@ -152,6 +152,7 @@ router.post('/ping', function (req, res) {
       previousLongitude: lastLong, // Previous Longitude Ping
       previousLatitude: lastLat, // Previous Latitude Ping
       previousLocationArray: previousLocationArray,
+      direction: direction, 
       heading: heading.toString(),
       route: data.route,
       id: data.id,
@@ -215,52 +216,56 @@ function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
 }
 
 // Determine if bus is going up or down
-function latitudeDecreasing(lat1, lat2) {
-  return false;
+function latitudeDecreasing(previousLocationArray) {
+  totalChange = previousLocationArray[0].lat - previousLocationArray[10].lat;
+  if(totalChange > 0) return false;
+  return true;
 }
 
 // Determine if bus is going left or right
-function longitudeDecreasing(lon1, lon2) {
-  return false;
+function longitudeDecreasing(previousLocationArray) {
+  totalChange = previousLocationArray[0].lon - previousLocationArray[10].lon;
+  if(totalChange > 0) return false;
+  return true;
 }
 
 // Calculate direction of bus
-function calcCWorCWW({latitude, longitude}, {previousLatitude, previousLongitude}) {
+function calcCWorCCW({latitude, longitude}, previousLocationArray) {
   // Lower Half
   if (36.977583 < latitude && latitude < 36.992444) {
     // Lower West Half
     if (longitude < -122.055831) {
-      if (latitudeDecreasing(latitude, previousLatitude)) return "ccw";
+      if (latitudeDecreasing(previousLocationArray)) return "ccw";
       else return "cw";
     }
     // Lower East Half
     else {
-      if (latitudeDecreasing(latitude, previousLatitude)) return "cw";
+      if (latitudeDecreasing(previousLocationArray)) return "cw";
       else return "ccw";
     }
   }
 
   // RCC Area
   if ((36.992444 <= latitude && latitude < 36.993316) && (-122.066566 < longitude && longitude < -122.061)) {
-    if (longitudeDecreasing(longitude, previousLongitude)) return "ccw";
+    if (longitudeDecreasing(previousLocationArray)) return "ccw";
     else return "cw";
   }
 
   // RCC to Kresge
   if ((36.993316 <= latitude && latitude < 36.999290) && longtitude < -122.062260) {
-    if (latitudeDecreasing(latitude, previousLatitude)) return "ccw";
+    if (latitudeDecreasing(previousLocationArray)) return "ccw";
     else return "cw";
   }
 
   // Baskin to Crown
   if ((36.999290 <= latitude) && (-122.064560 <= longitude && longitude < -122.054543)) {
-    if (longitudeDecreasing(longitude, previousLongitude)) return "ccw";
+    if (longitudeDecreasing(previousLocationArray)) return "ccw";
     else return "cw";
   }
 
   // Crown to East Remote
   if ((36.992444 <= latitude && latitude < 36.999290) && (longitude >= -122.055831)) {
-    if (latitudeDecreasing(latitude, previousLatitude)) return "cw";
+    if (latitudeDecreasing(previousLocationArray)) return "cw";
     else return "ccw";
   }
 
@@ -268,12 +273,12 @@ function calcCWorCWW({latitude, longitude}, {previousLatitude, previousLongitude
   if (36.977119 < latitude && latitude < 36.9775833) {
     // West Side
     if (longitude < -122.053795) {
-      if (longitudeDecreasing(longitude, previousLongitude)) return "cw";
+      if (longitudeDecreasing(previousLocationArray)) return "cw";
       else return "ccw";
     }
     // East Side
     if (longitude >= -122.053795) {
-      if (latitudeDecreasing(latitude, previousLatitude)) return "cw";
+      if (latitudeDecreasing(previousLocationArray)) return "cw";
       else return "ccw";
     }
   }
