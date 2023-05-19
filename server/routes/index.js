@@ -217,15 +217,32 @@ function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
 
 // Determine if bus is going up or down
 function latitudeDecreasing(previousLocationArray) {
-  totalChange = previousLocationArray[0].lat - previousLocationArray[10].lat;
-  if(totalChange > 0) return false;
+  total = 0;
+  for (let i = 0; i < 4; i++) {
+    if((previousLocationArray[i].lat - previousLocationArray[i+1].lat) > 0) {
+      total += 1;
+    }
+    else {
+      total -= 1;
+    }
+  }
+  if (total > 0) return false;
   return true;
+  
 }
 
 // Determine if bus is going left or right
 function longitudeDecreasing(previousLocationArray) {
-  totalChange = previousLocationArray[0].lon - previousLocationArray[10].lon;
-  if(totalChange > 0) return false;
+  total = 0;
+  for (let i = 0; i < 4; i++) {
+    if((previousLocationArray[i].lon - previousLocationArray[i+1].lon) > 0) {
+      total += 1;
+    }
+    else {
+      total -= 1;
+    }
+  }
+  if (total > 0) return false;
   return true;
 }
 
