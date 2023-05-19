@@ -74,22 +74,8 @@ router.post('/ping', function (req, res) {
   let data = JSON.parse(req.body.data)
   data = data[0]
 
-  // Check if the data is valid and check data length is 4
-<<<<<<< HEAD
-  if(!validateData()) {
-    return
-  }
-=======
-  if (
-    !data ||
-    !data.id ||
-    !data.lon ||
-    !data.lat ||
-    !data.route ||
-    !data.key ||
-    !data.sid ||
-    Object.keys(data).length !== 6
-  ) {
+  // Check if the data is valid and check data length is 6
+  if (dataValidate(data)) {
     res.status(400).send('Invalid data')
     return
   }
@@ -98,7 +84,6 @@ router.post('/ping', function (req, res) {
   //   res.status(401).send('Unauthorized')
   //   return
   // }
->>>>>>> e90d5e8dbd9e912c5fbba443381adfe3cddc1077
 
   // Get a database reference to the collection of busses
   let bussesRef = defaultDatabase.collection('busses')
@@ -174,28 +159,6 @@ router.post('/contact', function (req, res) {
   }
 })
 
-<<<<<<< HEAD
-// Check if the data is valid and check data length is 4
-function validateData() {
-  if (
-    !data ||
-    !data.id ||
-    !data.lon ||
-    !data.lat ||
-    !data.route ||
-    !data.key ||
-    !data.sid ||
-    Object.keys(data).length !== 6
-  ) {
-    res.status(400).send('Invalid data')
-    return false
-  }
-
-  if (data.key !== process.env.PING_KEY) {
-    res.status(401).send('Unauthorized')
-    return false
-  }
-=======
 function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
   const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
 
@@ -212,7 +175,21 @@ function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
   const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
   // Convert to degrees
   return (bearing * 180) / Math.PI + 180
->>>>>>> e90d5e8dbd9e912c5fbba443381adfe3cddc1077
+}
+
+// Validates and confirms data
+function dataValidate(data) {
+  if (
+    !data ||
+    !data.id ||
+    !data.lon ||
+    !data.lat ||
+    !data.route ||
+    !data.key ||
+    !data.sid ||
+    Object.keys(data).length != 6
+  ) { return true;}
+  else { return false;}
 }
 
 module.exports = router
