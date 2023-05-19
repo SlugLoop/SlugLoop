@@ -135,8 +135,8 @@ router.post('/ping', function (req, res) {
       data.lat,
       data.lon,
     )
-    if (distance > 152.4) {
-      // Check if the distance is greater than 500ft (~152.4m)
+    if (distance > 30.48) {
+      // Check if the distance is greater than 100ft (~30.48m)
       // Append the current location to the previousLocationArray
       previousLocationArray.push({lat: data.lat, lon: data.lon})
     }

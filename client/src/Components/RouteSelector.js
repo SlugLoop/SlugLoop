@@ -18,6 +18,7 @@ const loopRoutes = [
   'LOOP OUT OF SERVICE AT BARN THEATER',
   'EAST NIGHT CORE',
   'OUT OF SERVICE/SORRY',
+  'SPECIAL',
 ]
 
 export default function RouteSelector(props) {
