@@ -3,6 +3,12 @@ const router = express.Router()
 const metro = require('./metro')
 require('dotenv').config()
 
+// Helper functions
+const {
+  headingBetweenPoints,
+  getDistanceFromLatLonInMeters,
+} = require('./pingHelper')
+
 // Documentation
 const OpenApiValidator = require('express-openapi-validator')
 const swaggerUi = require('swagger-ui-express')
@@ -89,10 +95,10 @@ router.post('/ping', function (req, res) {
     return
   }
 
-  // if (data.key !== process.env.PING_KEY) {
-  //   res.status(401).send('Unauthorized')
-  //   return
-  // }
+  if (data.key !== process.env.PING_KEY) {
+    res.status(401).send('Unauthorized')
+    return
+  }
 
   // Get a database reference to the collection of busses
   let bussesRef = defaultDatabase.collection('busses')
@@ -104,15 +110,21 @@ router.post('/ping', function (req, res) {
     data.sid = 'No SID'
   }
 
-  let lastLong = 0
-  let lastLat = 0
+  let lastLong = 0 // Current longitude
+  let lastLat = 0 // Current latitude
+  let previousLocationArray = []
 
   // Get the last ping location of the bus
   busRef.get().then((doc) => {
     if (doc.exists) {
+      // If the bus exists, we will get the last ping location
       lastLong = doc.data().lastLongitude
       lastLat = doc.data().lastLatitude
+      // Fetching the previousLocationArray from the database, if it exists
+      previousLocationArray = doc.data().previousLocationArray || []
     }
+
+    // Calculate heading
     const currLocation = {lat1: data.lat, lon1: data.lon}
     const prevLocation = {lat2: lastLat, lon2: lastLong}
     const heading = headingBetweenPoints(currLocation, prevLocation)
@@ -120,14 +132,28 @@ router.post('/ping', function (req, res) {
 
 
 
+    // Calculate the distance between the current and the last locations
+    const distance = getDistanceFromLatLonInMeters(
+      lastLat,
+      lastLong,
+      data.lat,
+      data.lon,
+    )
+    if (distance > 30.48) {
+      // Check if the distance is greater than 100ft (~30.48m)
+      // Append the current location to the previousLocationArray
+      previousLocationArray.push({lat: data.lat, lon: data.lon})
+    }
+
+
     //We will update the bus's last ping location and time
     busRef.set({
       lastPing: new Date().toISOString(),
-      lastLongitude: data.lon,
-      lastLatitude: data.lat,
-      previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
-      previousLatitude: lastLat,
-      direction: direction,
+      lastLongitude: data.lon, // Current Longitutde Ping
+      lastLatitude: data.lat, // Current Latitude Ping
+      previousLongitude: lastLong, // Previous Longitude Ping
+      previousLatitude: lastLat, // Previous Latitude Ping
+      previousLocationArray: previousLocationArray,
       heading: heading.toString(),
       route: data.route,
       id: data.id,
