@@ -130,8 +130,6 @@ router.post('/ping', function (req, res) {
     const heading = headingBetweenPoints(currLocation, prevLocation)
     const direction = calcCWorCWW(currLocation, prevLocation)
 
-
-
     // Calculate the distance between the current and the last locations
     const distance = getDistanceFromLatLonInMeters(
       lastLat,
