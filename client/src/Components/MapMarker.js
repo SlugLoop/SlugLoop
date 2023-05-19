@@ -40,7 +40,7 @@ export default function MapMarker(props) {
         justifyContent: 'center',
       }}
     >
-      {/* This is so bad someone please fix this*/}
+      {/* DON't TOUCH IT BREAKS IF YOU REMOVE*/}
       <img
         src={busColors[props.route]}
         alt="bus"
