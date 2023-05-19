@@ -3,6 +3,12 @@ const router = express.Router()
 const metro = require('./metro')
 require('dotenv').config()
 
+// Helper functions
+const {
+  headingBetweenPoints,
+  getDistanceFromLatLonInMeters,
+} = require('./pingHelper')
+
 // Documentation
 const OpenApiValidator = require('express-openapi-validator')
 const swaggerUi = require('swagger-ui-express')
@@ -89,10 +95,10 @@ router.post('/ping', function (req, res) {
     return
   }
 
-  // if (data.key !== process.env.PING_KEY) {
-  //   res.status(401).send('Unauthorized')
-  //   return
-  // }
+  if (data.key !== process.env.PING_KEY) {
+    res.status(401).send('Unauthorized')
+    return
+  }
 
   // Get a database reference to the collection of busses
   let bussesRef = defaultDatabase.collection('busses')
@@ -110,12 +116,30 @@ router.post('/ping', function (req, res) {
   // Get the last ping location of the bus
   busRef.get().then((doc) => {
     if (doc.exists) {
+      // If the bus exists, we will get the last ping location
       lastLong = doc.data().lastLongitude
       lastLat = doc.data().lastLatitude
+      // Fetching the previousLocationArray from the database, if it exists
+      previousLocationArray = doc.data().previousLocationArray || []
     }
+
+    // Calculate heading
     const currLocation = {lat1: data.lat, lon1: data.lon}
     const prevLocation = {lat2: lastLat, lon2: lastLong}
     const heading = headingBetweenPoints(currLocation, prevLocation)
+
+    // Calculate the distance between the current and the last locations
+    const distance = getDistanceFromLatLonInMeters(
+      lastLat,
+      lastLong,
+      data.lat,
+      data.lon,
+    )
+    if (distance > 152.4) {
+      // Check if the distance is greater than 500ft (~152.4m)
+      // Append the current location to the previousLocationArray
+      previousLocationArray.push({lat: data.lat, lon: data.lon})
+    }
 
     //We will update the bus's last ping location and time
     busRef.set({
@@ -124,6 +148,7 @@ router.post('/ping', function (req, res) {
       lastLatitude: data.lat,      // Current Latitude Ping
       previousLongitude: lastLong, // Previous Longitude Ping
       previousLatitude: lastLat,   // Previous Latitude Ping
+      previousLocationArray: previousLocationArray,
       heading: heading.toString(),
       route: data.route,
       id: data.id,
@@ -167,23 +192,5 @@ router.post('/contact', function (req, res) {
     res.status(500).send('Error sending message')
   }
 })
-
-function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
-  const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
-
-  // Y variable
-  const dLong = toRad(lon2 - lon1)
-  const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
-
-  // X variable
-  const X =
-    Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
-    Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
-
-  // Calculate bearing
-  const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
-  // Convert to degrees
-  return (bearing * 180) / Math.PI + 180
-}
 
 module.exports = router

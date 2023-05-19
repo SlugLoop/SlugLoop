@@ -1,19 +1,27 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Modal, Box, Typography} from '@mui/material'
+import {Button, Modal, Box, Typography, IconButton, Stack} from '@mui/material'
+import IosShareIcon from '@mui/icons-material/IosShare'
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
+import CloseIcon from '@mui/icons-material/Close'
 
 export default function InstallPWAButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [isInstallable, setIsInstallable] = useState(false)
   const [open, setOpen] = useState(false)
+  const [showIosPrompt, setShowIosPrompt] = useState(false)
 
   useEffect(() => {
     const beforeInstallPromptHandler = (e) => {
       e.preventDefault()
+      console.log('beforeinstallprompt fired')
       setDeferredPrompt(e)
       setIsInstallable(true)
     }
 
-    window.addEventListener('beforeinstallprompt', beforeInstallPromptHandler)
+    // Only add the beforeinstallprompt event listener if the app is not already installed
+    if (!window.matchMedia('(display-mode: standalone)').matches) {
+      window.addEventListener('beforeinstallprompt', beforeInstallPromptHandler)
+    }
 
     return () => {
       window.removeEventListener(
@@ -21,6 +29,18 @@ export default function InstallPWAButton() {
         beforeInstallPromptHandler,
       )
     }
+  }, [])
+
+  const isIphoneSafari = () => {
+    return (
+      /iphone/.test(navigator.userAgent.toLowerCase()) &&
+      !navigator.standalone &&
+      /safari/.test(navigator.userAgent.toLowerCase())
+    )
+  }
+
+  useEffect(() => {
+    setShowIosPrompt(isIphoneSafari()) // update the state when isIphoneSafari changes
   }, [])
 
   const handleOpen = () => setOpen(true)
@@ -42,7 +62,48 @@ export default function InstallPWAButton() {
     handleClose()
   }
 
-  return isInstallable ? (
+  return showIosPrompt ? (
+    <Box
+      sx={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        mb: 2,
+        mx: 2,
+        p: 2,
+        bgcolor: 'grey.200',
+        borderRadius: '15px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
+        <Typography variant="body1">
+          To install this app, tap on the icon{' '}
+        </Typography>
+        <IosShareIcon sx={{ml: 1}} />
+        <Typography variant="body1">and then 'Add to Home Screen'</Typography>
+        <AddBoxOutlinedIcon sx={{ml: 1}} />
+      </div>
+
+      <IconButton
+        onClick={() => {
+          setShowIosPrompt(false)
+        }}
+        color="inherit"
+      >
+        <CloseIcon />
+      </IconButton>
+    </Box>
+  ) : isInstallable ? (
     <>
       <Button
         variant="contained"
@@ -78,7 +139,7 @@ export default function InstallPWAButton() {
       >
         <Box
           sx={{
-            width: {xs: '70%', sm: '50%', md: '40%'},
+            width: {xs: '80%', sm: '60%', md: '40%'},
             bgcolor: 'background.paper',
             border: '2px solid #000',
             boxShadow: 24,
