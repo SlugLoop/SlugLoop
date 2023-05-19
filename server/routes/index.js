@@ -112,6 +112,7 @@ router.post('/ping', function (req, res) {
 
   let lastLong = 0
   let lastLat = 0
+  let previousLocationArray = []
 
   // Get the last ping location of the bus
   busRef.get().then((doc) => {
