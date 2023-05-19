@@ -9,6 +9,7 @@ export const RouteProvider = ({children}) => {
     'LOOP OUT OF SERVICE AT BARN THEATER',
     'EAST NIGHT CORE',
     'OUT OF SERVICE/SORRY',
+    'SPECIAL',
   ])
 
   return (

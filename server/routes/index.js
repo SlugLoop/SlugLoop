@@ -111,7 +111,8 @@ router.post('/ping', function (req, res) {
   }
 
   let lastLong = 0 // Current longitude
-  let lastLat = 0  // Current latitude
+  let lastLat = 0 // Current latitude
+  let previousLocationArray = []
 
   // Get the last ping location of the bus
   busRef.get().then((doc) => {
@@ -135,8 +136,8 @@ router.post('/ping', function (req, res) {
       data.lat,
       data.lon,
     )
-    if (distance > 152.4) {
-      // Check if the distance is greater than 500ft (~152.4m)
+    if (distance > 30.48) {
+      // Check if the distance is greater than 100ft (~30.48m)
       // Append the current location to the previousLocationArray
       previousLocationArray.push({lat: data.lat, lon: data.lon})
     }
@@ -144,10 +145,10 @@ router.post('/ping', function (req, res) {
     //We will update the bus's last ping location and time
     busRef.set({
       lastPing: new Date().toISOString(),
-      lastLongitude: data.lon,     // Current Longitutde Ping
-      lastLatitude: data.lat,      // Current Latitude Ping
+      lastLongitude: data.lon, // Current Longitutde Ping
+      lastLatitude: data.lat, // Current Latitude Ping
       previousLongitude: lastLong, // Previous Longitude Ping
-      previousLatitude: lastLat,   // Previous Latitude Ping
+      previousLatitude: lastLat, // Previous Latitude Ping
       previousLocationArray: previousLocationArray,
       heading: heading.toString(),
       route: data.route,
