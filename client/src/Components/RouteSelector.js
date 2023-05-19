@@ -18,6 +18,7 @@ const loopRoutes = [
   'LOOP OUT OF SERVICE AT BARN THEATER',
   'EAST NIGHT CORE',
   'OUT OF SERVICE/SORRY',
+  'SPECIAL',
 ]
 
 export default function RouteSelector(props) {
@@ -34,6 +35,7 @@ export default function RouteSelector(props) {
           top: '20px',
           right: '10px',
           backgroundColor: 'white',
+          padding: 0,
 
           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
         }}
@@ -41,10 +43,6 @@ export default function RouteSelector(props) {
         <ListItemButton
           onClick={() => {
             setOpen(open === 'Loop' ? '' : 'Loop')
-          }}
-          sx={{
-            paddingTop: 0,
-            paddingBottom: 0,
           }}
         >
           <ListItemText primary="Loop" />
@@ -83,10 +81,6 @@ export default function RouteSelector(props) {
           onClick={() => {
             setOpen(open === 'Metro' ? '' : 'Metro')
           }}
-          sx={{
-            paddingTop: 0,
-            paddingBottom: 0,
-          }}
         >
           <ListItemText primary="Metro" />
           {open === 'Metro' ? <ExpandLess /> : <ExpandMore />}
@@ -123,10 +117,6 @@ export default function RouteSelector(props) {
         <ListItemButton
           onClick={() => {
             setSelectedRoute([])
-          }}
-          sx={{
-            paddingTop: 0,
-            paddingBottom: 0,
           }}
         >
           <ListItemText primary="Clear Routes" />
