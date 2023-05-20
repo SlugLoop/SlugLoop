@@ -128,7 +128,6 @@ router.post('/ping', function (req, res) {
     const currLocation = {lat1: data.lat, lon1: data.lon}
     const prevLocation = {lat2: lastLat, lon2: lastLong}
     const heading = headingBetweenPoints(currLocation, prevLocation)
-    const direction = calcCWorCCW(currLocation, previousLocationArray)
 
     // Calculate the distance between the current and the last locations
     const distance = getDistanceFromLatLonInMeters(
@@ -142,6 +141,9 @@ router.post('/ping', function (req, res) {
       // Append the current location to the previousLocationArray
       previousLocationArray.push({lat: data.lat, lon: data.lon})
     }
+
+    // Calculate direction
+    const direction = calcCWorCCW(currLocation, previousLocationArray)
 
 
     //We will update the bus's last ping location and time
@@ -218,7 +220,7 @@ function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
 // Determine if bus is going up or down
 function latitudeDecreasing(previousLocationArray) {
   total = 0;
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < previousLocationArray.length; i++) {
     if((previousLocationArray[i].lat - previousLocationArray[i+1].lat) > 0) {
       total += 1;
     }
@@ -234,7 +236,7 @@ function latitudeDecreasing(previousLocationArray) {
 // Determine if bus is going left or right
 function longitudeDecreasing(previousLocationArray) {
   total = 0;
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < previousLocationArray.length; i++) {
     if((previousLocationArray[i].lon - previousLocationArray[i+1].lon) > 0) {
       total += 1;
     }
