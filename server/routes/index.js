@@ -249,11 +249,11 @@ function longitudeDecreasing(previousLocationArray) {
 }
 
 // Calculate direction of bus
-function calcCWorCCW({latitude, longitude}, previousLocationArray) {
+function calcCWorCCW({lat1, lon1}, previousLocationArray) {
   // Lower Half
-  if (36.977583 < latitude && latitude < 36.992444) {
+  if (36.977583 < lat1 && lat1 < 36.992444) {
     // Lower West Half
-    if (longitude < -122.055831) {
+    if (lon1 < -122.055831) {
       if (latitudeDecreasing(previousLocationArray)) return "ccw";
       else return "cw";
     }
@@ -265,38 +265,38 @@ function calcCWorCCW({latitude, longitude}, previousLocationArray) {
   }
 
   // RCC Area
-  if ((36.992444 <= latitude && latitude < 36.993316) && (-122.066566 < longitude && longitude < -122.061)) {
+  if ((36.992444 <= lat1 && lat1 < 36.993316) && (-122.066566 < lon1 && lon1 < -122.061)) {
     if (longitudeDecreasing(previousLocationArray)) return "ccw";
     else return "cw";
   }
 
   // RCC to Kresge
-  if ((36.993316 <= latitude && latitude < 36.999290) && longtitude < -122.062260) {
+  if ((36.993316 <= lat1 && lat1 < 36.999290) && lon1 < -122.062260) {
     if (latitudeDecreasing(previousLocationArray)) return "ccw";
     else return "cw";
   }
 
   // Baskin to Crown
-  if ((36.999290 <= latitude) && (-122.064560 <= longitude && longitude < -122.054543)) {
+  if ((36.999290 <= lat1) && (-122.064560 <= lon1 && lon1 < -122.054543)) {
     if (longitudeDecreasing(previousLocationArray)) return "ccw";
     else return "cw";
   }
 
   // Crown to East Remote
-  if ((36.992444 <= latitude && latitude < 36.999290) && (longitude >= -122.055831)) {
+  if ((36.992444 <= lat1 && lat1 < 36.999290) && (lon1 >= -122.055831)) {
     if (latitudeDecreasing(previousLocationArray)) return "cw";
     else return "ccw";
   }
 
   // Bay and High Area
-  if (36.977119 < latitude && latitude < 36.9775833) {
+  if (36.977119 < lat1 && lat1 < 36.9775833) {
     // West Side
-    if (longitude < -122.053795) {
+    if (lon1 < -122.053795) {
       if (longitudeDecreasing(previousLocationArray)) return "cw";
       else return "ccw";
     }
     // East Side
-    if (longitude >= -122.053795) {
+    if (lon1 >= -122.053795) {
       if (latitudeDecreasing(previousLocationArray)) return "cw";
       else return "ccw";
     }
