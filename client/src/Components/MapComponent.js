@@ -32,56 +32,56 @@ export default function MapComponent({center, zoom}) {
     setFilter(!filter)
   }
 
-  useEffect(() => {
-    let interval, interval2
+  // useEffect(() => {
+  //   let interval, interval2
 
-    const fetchData = () => {
-      getAllBuses().then((busses) => {
-        setBuses(busses)
-      })
-    }
-    const fetchMetroData = () => {
-      getAllMetroBuses().then((buses) => {
-        setMetroBuses(buses)
-      })
-    }
+  //   const fetchData = () => {
+  //     getAllBuses().then((busses) => {
+  //       setBuses(busses)
+  //     })
+  //   }
+  //   const fetchMetroData = () => {
+  //     getAllMetroBuses().then((buses) => {
+  //       setMetroBuses(buses)
+  //     })
+  //   }
 
-    const setupIntervals = () => {
-      // Update positions of markers every 5 seconds
-      interval = setInterval(fetchData, 5000)
-      interval2 = setInterval(fetchMetroData, 12000)
-    }
+  //   const setupIntervals = () => {
+  //     // Update positions of markers every 5 seconds
+  //     interval = setInterval(fetchData, 5000)
+  //     interval2 = setInterval(fetchMetroData, 12000)
+  //   }
 
-    const clearIntervals = () => {
-      clearInterval(interval)
-      clearInterval(interval2)
-    }
+  //   const clearIntervals = () => {
+  //     clearInterval(interval)
+  //     clearInterval(interval2)
+  //   }
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        fetchData()
-        fetchMetroData()
-        clearIntervals() // Clear existing intervals
-        setupIntervals() // Set up new intervals
-      } else {
-        clearIntervals() // Clear intervals when the app loses focus
-      }
-    }
+  //   const handleVisibilityChange = () => {
+  //     if (document.visibilityState === 'visible') {
+  //       fetchData()
+  //       fetchMetroData()
+  //       clearIntervals() // Clear existing intervals
+  //       setupIntervals() // Set up new intervals
+  //     } else {
+  //       clearIntervals() // Clear intervals when the app loses focus
+  //     }
+  //   }
 
-    // Initial load of markers
-    fetchData()
-    fetchMetroData()
+  //   // Initial load of markers
+  //   fetchData()
+  //   fetchMetroData()
 
-    setupIntervals()
+  //   setupIntervals()
 
-    // Add event listeners to handle app focus and blur events
-    document.addEventListener('visibilitychange', handleVisibilityChange)
+  //   // Add event listeners to handle app focus and blur events
+  //   document.addEventListener('visibilitychange', handleVisibilityChange)
 
-    return () => {
-      clearIntervals()
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
-  }, [center])
+  //   return () => {
+  //     clearIntervals()
+  //     document.removeEventListener('visibilitychange', handleVisibilityChange)
+  //   }
+  // }, [center])
 
   return (
     <>
