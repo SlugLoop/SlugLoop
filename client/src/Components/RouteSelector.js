@@ -9,8 +9,13 @@ import {
   ListItemIcon,
   Drawer,
   IconButton,
+  Typography,
 } from '@mui/material'
-import {ExpandLess, ExpandMore, Menu as MenuIcon} from '@mui/icons-material'
+import {
+  ExpandLess,
+  ExpandMore,
+  DirectionsBus as MenuIcon,
+} from '@mui/icons-material'
 import {RouteContext} from '../Route'
 import routeColors from './bus.json'
 
@@ -36,51 +41,6 @@ export default function RouteSelector() {
     setDrawerOpen(false)
   }
 
-  const handleToggle = (value) => {
-    setOpen(value)
-  }
-
-  const RouteSelectorList = (routes, value) => (
-    <Collapse in={open === value} timeout="auto" unmountOnExit>
-      <List component="div" disablePadding>
-        {routes.map((route) => (
-          <ListItemButton
-            key={route}
-            onClick={() => {
-              if (selectedRoute.includes(route)) {
-                setSelectedRoute(selectedRoute.filter((r) => r !== route))
-              } else {
-                setSelectedRoute([...selectedRoute, route])
-              }
-            }}
-            sx={{
-              padding: 0,
-              paddingTop: '5px',
-              paddingBottom: '5px',
-            }}
-          >
-            <Checkbox checked={selectedRoute.includes(route)} />
-            <ListItemText primary={route} />
-            <ListItemIcon>
-              <img
-                src={routeColors[route]}
-                alt="bus"
-                style={{width: '20px', height: '20px'}}
-              />
-            </ListItemIcon>
-          </ListItemButton>
-        ))}
-      </List>
-    </Collapse>
-  )
-
-  const CustomListItem = (value) => (
-    <ListItem onClick={() => handleToggle(value)}>
-      <ListItemText primary={value} />
-      {open === value ? <ExpandLess /> : <ExpandMore />}
-    </ListItem>
-  )
-
   return (
     <>
       <IconButton
@@ -101,9 +61,21 @@ export default function RouteSelector() {
       <Drawer anchor="right" open={isDrawerOpen} onClose={handleDrawerClose}>
         <List
           sx={{
-            width: '300px',
+            width: '200px',
           }}
         >
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{
+              fontWeight: 'bold',
+              textAlign: 'center',
+              marginTop: '10px',
+              marginBottom: '20px',
+            }}
+          >
+            Bus Routes
+          </Typography>
           <ListItem
             onClick={() => {
               if (open === 'Loop') {

@@ -3,12 +3,11 @@ import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
-import SettingsButton from './SettingsButton'
-import AboutButton from './AboutButton'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
+import SettingsDrawer from './SettingsDrawer'
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
@@ -135,8 +134,7 @@ export default function MapComponent({center, zoom}) {
             })}
         </GoogleMap>
       </Box>
-      <AboutButton darkMode={darkMode} />
-      <SettingsButton
+      <SettingsDrawer
         filter={filter}
         handleFilterToggle={handleFilterToggle}
         displayTime={displayTime}
