@@ -31,15 +31,15 @@ export default function SettingsDrawer(props) {
         onClick={handleDrawerOpen}
         sx={{
           position: 'absolute',
-          left: '30px',
-          top: '30px',
+          right: '30px',
+          top: '90px',
           borderRadius: '50%',
           backgroundColor: 'white',
         }}
       >
         <MenuIcon />
       </IconButton>
-      <Drawer anchor="left" open={isDrawerOpen} onClose={handleDrawerClose}>
+      <Drawer anchor="right" open={isDrawerOpen} onClose={handleDrawerClose}>
         <List
           sx={{
             width: '200px',
