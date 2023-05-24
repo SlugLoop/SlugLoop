@@ -8,15 +8,17 @@ import SettingsContext from './SettingsContext'
 export default function Main() {
     //const [showMap, setMap] = useState(true);
     const {settings, dispatch} = useContext(SettingsContext)
+    /*
     function toggleShowMap() {
         setMap(!showMap)
     }
+    */
 
     return (
         <>
-            {showMap ? <Map /> : <List />}
+            {settings.showMap ? <Map /> : <List />}
             <Button
-                onClick={toggleShowMap}
+                onClick={()=>dispatch({type:"SET_SHOW_MAP"})}
                 disableRipple
                 sx={{
                     position: 'absolute',
@@ -28,7 +30,7 @@ export default function Main() {
                     opacity: '0.7',
                 }}
             >
-                {showMap ? 'Map View' : 'List View'}
+                {settings.showMap ? 'Map View' : 'List View'}
             </Button>
         </>
     )

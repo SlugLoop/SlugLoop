@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef, useContext} from 'react'
 import getAllBusses from './firebase'
 import Legend from './Legend'
 import GoogleMap from 'google-maps-react-markers'
@@ -8,16 +8,18 @@ import MapMarker from './MapMarker'
 import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
 import Button from '@mui/material/Button'
+import SettingsContext from './SettingsContext'
 
 const THIRTY_MINUTES = 30 * 60 * 1000
 
 export default function MapComponent({center, zoom}) {
   const currentFreeColor = useRef(1)
+  const {settings, dispatch} = useContext(SettingsContext)
   const busColors = useRef({})
   const [legendItems, setLegendItems] = useState({})
-  const [displayTime, setDisplayTime] = useState(true)
-  const [darkMode, setDarkMode] = useState(false)
-  const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
+  //const [displayTime, setDisplayTime] = useState(true)
+  //const [darkMode, setDarkMode] = useState(false)
+  //const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
   const [buses, setBuses] = useState({})
@@ -171,7 +173,7 @@ export default function MapComponent({center, zoom}) {
 
     
   ]
-  const [path, setPath] = useState(true)
+  //const [path, setPath] = useState(true)
 
   function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
     const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
@@ -190,7 +192,7 @@ export default function MapComponent({center, zoom}) {
     // Convert to degrees
     return (bearing * 180) / Math.PI + 180
   }
-
+/*
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -202,7 +204,7 @@ export default function MapComponent({center, zoom}) {
   function handleFilterToggle() {
     setFilter(!filter)
   }
-
+*/
   useEffect(() => {
     // Initial load of markers
     getAllBusses().then((busses) => {
@@ -280,11 +282,11 @@ export default function MapComponent({center, zoom}) {
 
   const onMapLoad = ({map, maps}) => {
  
-    setPath(true)
+    //setPath(true)
     polylineRef.current = new maps.Polyline({
-      path:loopPath,
+      path: settings.path ? loopPath : upperCampusPath,
       geodesic: true,
-      strokeColor: '#FF0000',
+      strokeColor: settings.path ?'#FF0000':'#0000FF',
       strokeOpacity: 1,
       strokeWeight: 4,
     })
@@ -295,7 +297,7 @@ export default function MapComponent({center, zoom}) {
   useEffect(() => {
 
     if(polylineRef.current){
-      if(path){
+      if(settings.path){
         polylineRef.current.setOptions({
           path:loopPath,
           geodesic: true,
@@ -316,7 +318,7 @@ export default function MapComponent({center, zoom}) {
       }
     }
 
-  },[path]);
+  },[settings.path]);
 
 
   const isBusUpdatedWithinPast30Minutes = (lastPing) => {
@@ -341,19 +343,19 @@ export default function MapComponent({center, zoom}) {
           defaultCenter={center}
           defaultZoom={zoom}
           onGoogleApiLoaded={onMapLoad}
-          key={darkMode ? 'dark' : 'light'}
+          key={settings.darkMode ? 'dark' : 'light'}
           options={{
             zoomControl: false,
             streetViewControl: false,
             fullscreenControl: false,
             mapTypeControl: false,
-            styles: darkMode && getStyle(darkMode),
+            styles: settings.darkMode && getStyle(settings.darkMode),
           }}
         >
           {Object.keys(buses)
             .filter(
               (key) =>
-                !filter || isBusUpdatedWithinPast30Minutes(buses[key].lastPing),
+                !settings.filter || isBusUpdatedWithinPast30Minutes(buses[key].lastPing),
             )
             .map((key) => {
               const bus = buses[key]
@@ -382,15 +384,15 @@ export default function MapComponent({center, zoom}) {
                   lng={bus.lastLongitude}
                   bus={bus}
                   heading={heading}
-                  displayTime={displayTime}
-                  darkMode={darkMode}
+                  displayTime={settings.displayTime}
+                  darkMode={settings.darkMode}
                 />
               )
             })}
         </GoogleMap>
       </Box>
       <Button
-        onClick={() => setPath(!path)}
+        onClick={() => dispatch({type: "SET_PATH"})}
         disableRipple
         sx={{
           position: 'absolute',
@@ -402,17 +404,12 @@ export default function MapComponent({center, zoom}) {
           opacity: '0.7',
         }}
         >
-        {path ? 'Loop' : 'Upper Campus'}
+        {settings.path ? 'Loop' : 'Upper Campus'}
       </Button>
       <Legend legendItems={legendItems} />
-      <AboutButton darkMode={darkMode} />
+      <AboutButton darkMode={settings.darkMode} />
       <SettingsButton
-        filter={filter}
-        handleFilterToggle={handleFilterToggle}
-        displayTime={displayTime}
-        toggleDisplayTime={toggleDisplayTime}
-        darkMode={darkMode}
-        handleDarkToggle={handleDarkToggle}
+
       />
     </>
   )

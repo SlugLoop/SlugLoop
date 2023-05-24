@@ -1,37 +1,46 @@
-function SettingsReducer(state, action){
+
+export const INITIAL_STATE = {
+    displayTime: false,
+    darkMode: false,
+    filter: false,
+    path: true,
+    showMap: true,
+    displayUCSC: true,
+
+}
+export function SettingsReducer(state, action){
     switch (action.type){
         case 'SET_DISPLAY_TIME':
             return {
                 ...state, 
-                displayTime: !displayTime
+                displayTime: !state.displayTime
             }
         case 'SET_DARK_MODE':
             return {
                 ...state, 
-                darkMode: !darkMode
+                darkMode: !state.darkMode
             }
         case 'SET_FILTER':
             return {
                 ...state, 
-                filter: !filter
+                filter: !state.filter
             }
         case 'SET_PATH':
             return {
                 ...state,
-                path: !path
+                path: !state.path
             }
         case 'SET_SHOW_MAP':
             return {
                 ...state,
-                showMap: !showMap
+                showMap: !state.showMap
             }
         case 'SET_DISPLAY_UCSC':
             return {
                 ...state,
-                displayUCSC: !displayUCSC
+                displayUCSC: !state.displayUCSC
             }
         default: return state
     }
 }
 
-export default SettingsReducer;
