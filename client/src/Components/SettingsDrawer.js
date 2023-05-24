@@ -5,9 +5,17 @@ import {
   Drawer,
   IconButton,
   Typography,
+  Divider,
 } from '@mui/material'
 import {useNavigate} from 'react-router-dom'
-
+import {Info as InfoIcon} from '@mui/icons-material'
+import {Mail as MailIcon} from '@mui/icons-material'
+import {FilterList as FilterListIcon} from '@mui/icons-material'
+import {
+  Brightness4 as Brightness4Icon,
+  Brightness7 as Brightness7Icon,
+} from '@mui/icons-material'
+import {AccessTime as AccessTimeIcon} from '@mui/icons-material'
 import {Menu as MenuIcon} from '@mui/icons-material'
 
 export default function SettingsDrawer(props) {
@@ -62,6 +70,11 @@ export default function SettingsDrawer(props) {
               props.toggleDisplayTime()
             }}
           >
+            <AccessTimeIcon
+              sx={{
+                mr: 2,
+              }}
+            />
             {props.displayTime ? 'Hide Time' : 'Show Time'}
           </ListItemButton>
           <ListItemButton
@@ -69,6 +82,19 @@ export default function SettingsDrawer(props) {
               props.handleDarkToggle()
             }}
           >
+            {props.darkMode ? (
+              <Brightness7Icon
+                sx={{
+                  mr: 2,
+                }}
+              />
+            ) : (
+              <Brightness4Icon
+                sx={{
+                  mr: 2,
+                }}
+              />
+            )}
             {props.darkMode ? 'Light Mode' : 'Dark Mode'}
           </ListItemButton>
           <ListItemButton
@@ -76,13 +102,23 @@ export default function SettingsDrawer(props) {
               props.handleFilterToggle()
             }}
           >
-            {props.filter ? 'Show All Buses' : 'Show Only Recent Buses'}
+            <FilterListIcon
+              sx={{
+                mr: 2,
+              }}
+            />
+            {props.filter ? 'Show Past Buses' : 'Show Recent Buses'}
           </ListItemButton>
           <ListItemButton
             onClick={() => {
               navigate('/contact')
             }}
           >
+            <MailIcon
+              sx={{
+                mr: 2,
+              }}
+            />
             Contact Us
           </ListItemButton>
           <ListItemButton
@@ -94,6 +130,11 @@ export default function SettingsDrawer(props) {
               paddingBottom: '6%',
             }}
           >
+            <InfoIcon
+              sx={{
+                mr: 2,
+              }}
+            />
             About Us
           </ListItemButton>
         </List>
