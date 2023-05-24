@@ -220,7 +220,7 @@ function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
 // Determine if bus is going up or down
 function latitudeDecreasing(previousLocationArray) {
   total = 0;
-  for (let i = 0; i < previousLocationArray.length; i++) {
+  for (let i = 0; i < previousLocationArray.length - 1; i++) {
     if((previousLocationArray[i].lat - previousLocationArray[i+1].lat) > 0) {
       total += 1;
     }
@@ -236,7 +236,7 @@ function latitudeDecreasing(previousLocationArray) {
 // Determine if bus is going left or right
 function longitudeDecreasing(previousLocationArray) {
   total = 0;
-  for (let i = 0; i < previousLocationArray.length; i++) {
+  for (let i = 0; i < previousLocationArray.length - 1; i++) {
     if((previousLocationArray[i].lon - previousLocationArray[i+1].lon) > 0) {
       total += 1;
     }
@@ -301,7 +301,7 @@ function calcCWorCCW({lat1, lon1}, previousLocationArray) {
       else return "ccw";
     }
   }
-  return null;
+  return "n/a";
 }
 
 module.exports = router
