@@ -5,3 +5,4 @@ node_modules/
 *.c
 *.out
 coverage/
+*pem

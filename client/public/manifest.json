@@ -1,21 +1,28 @@
 {
   "short_name": "SlugLoop",
-  "name": "SlugLoop Loop Tracker Tool",
+  "name": "SlugLoop Loop Bus Tracker Tool",
+  "description": "SlugLoop is a tool for tracking the UCSC Loop Bus in real time.",
   "icons": [
     {
-      "src": "logoSmall.png",
+      "src": "icons/favicon-32x32.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/png"
     },
     {
-      "src": "logoSmall.png",
+      "src": "icons/android-chrome-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logoSmall.png",
+      "src": "icons/android-chrome-512x512.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "maskable.png",
+      "sizes": "512x512",
+      "type": "image/x-icon",
+      "purpose": "maskable"
     }
   ],
   "start_url": ".",

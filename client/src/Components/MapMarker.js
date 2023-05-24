@@ -1,7 +1,10 @@
 import {Box, Typography} from '@mui/material'
-import React from 'react'
+import React, {useState} from 'react'
+import busColors from './bus.json'
 
 export default function MapMarker(props) {
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
+
   /*
   Bus Marker Component
   Returns a marker that rotates based on the heading of the bus and will be placed on the map
@@ -37,27 +40,39 @@ export default function MapMarker(props) {
         justifyContent: 'center',
       }}
     >
-      {props.displayTime && (
-        <Typography
-          variant="body2"
-          noWrap
-          sx={{
-            color: props.darkMode ? 'white' : 'black',
-            position: 'absolute',
-            top: '-20px',
-          }}
-        >
-          {convertDateToHumanReadableTime(props.bus.lastPing)}
-        </Typography>
-      )}
-      <Box
-        component="img"
-        src={`${props.color}.ico`}
-        sx={{
-          //Rotate the marker based on the heading of the bus in radians
-          transform: `rotate(${props.heading}deg)`,
-        }}
+      {/* DON't TOUCH IT BREAKS IF YOU REMOVE*/}
+      <img
+        src={busColors[props.route]}
+        alt="bus"
+        onLoad={() => setIsImageLoaded(true)}
+        style={{display: 'none'}}
       />
+      {isImageLoaded && (
+        <>
+          {props.displayTime && (
+            <Typography
+              variant="body2"
+              noWrap
+              sx={{
+                color: props.darkMode ? 'white' : 'black',
+                position: 'absolute',
+                top: '-20px',
+              }}
+            >
+              {convertDateToHumanReadableTime(props.lastPing)}
+            </Typography>
+          )}
+          <Box
+            component="img"
+            src={busColors[props.route]}
+            alt="bus"
+            sx={{
+              //Rotate the marker based on the heading of the bus in radians
+              transform: `rotate(${props.heading}deg)`,
+            }}
+          />
+        </>
+      )}
     </Box>
   )
 }
