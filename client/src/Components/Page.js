@@ -14,7 +14,7 @@ export default function Page({ busStop }) {
             width: '100%',
             height: '100%',
             left: '300px',
-            top: '40px', 
+            top: '60x', 
          
         }}>
           <Card>

@@ -6,6 +6,7 @@ import AboutButton from './AboutButton'
 import { Box } from '@mui/material'
 import AppBar from '@mui/material/AppBar';
 import Page from './Page';
+import Typography from '@mui/material/Typography';
 
 
 export default function ListView() {
@@ -18,22 +19,27 @@ export default function ListView() {
             <Box sx={{
                 height: window.innerHeight,
                 width: '100vw',
-            }}>
+            }} >
                 <AppBar sx={{
                     width: '100%',
+                    height: '10%',
                     position: 'absolute',
                     top: '0px',
                     left: '100px'
                 }}>
-                    Select a Bus Stop
+                    <Typography variant = 'h3'
+                    sx = {{fontSize: 20 , position: 'absolute', top: '20px', left: '20px' }} 
+                    color = "#ffffff">
+                        Select a bus stop
+                    </Typography>
                 </AppBar>
                 <List sx={{
                     width: '100%',
                     position: 'absolute',
                     left: '100px',
-                    top: '40px',
+                    top: '60px',
                     overflow: 'auto',
-                    maxHeight: '100%'
+                    maxHeight: '90%'
                 }}>
                     {stops.map((stop) => (
                         <ListItemButton onClick ={()=> setShowPage(stop)}>

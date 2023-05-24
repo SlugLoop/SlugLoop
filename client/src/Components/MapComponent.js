@@ -280,6 +280,7 @@ export default function MapComponent({center, zoom}) {
 
   const onMapLoad = ({map, maps}) => {
  
+    setPath(true)
     polylineRef.current = new maps.Polyline({
       path:loopPath,
       geodesic: true,
