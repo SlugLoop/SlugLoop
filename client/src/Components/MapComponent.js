@@ -384,8 +384,7 @@ export default function MapComponent({center, zoom}) {
                   lng={bus.lastLongitude}
                   bus={bus}
                   heading={heading}
-                  displayTime={settings.displayTime}
-                  darkMode={settings.darkMode}
+                  
                 />
               )
             })}
@@ -407,7 +406,7 @@ export default function MapComponent({center, zoom}) {
         {settings.path ? 'Loop' : 'Upper Campus'}
       </Button>
       <Legend legendItems={legendItems} />
-      <AboutButton darkMode={settings.darkMode} />
+      <AboutButton  />
       <SettingsButton
 
       />
