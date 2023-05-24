@@ -131,6 +131,7 @@ router.post('/ping', function (req, res) {
       // Check if the distance is greater than 100ft (~30.48m)
       // Append the current location to the previousLocationArray
       previousLocationArray.push({lat: data.lat, lon: data.lon})
+      previousLocationArray = previousLocationArray.slice(-5)
     }
 
     //We will update the bus's last ping location and time
