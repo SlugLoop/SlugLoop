@@ -8,12 +8,21 @@ import {themeOptions} from './Components/theme'
 import {inject} from '@vercel/analytics'
 import {register} from './serviceWorkerRegistration'
 
+import AppContext from './appContext'
+import AppProvider from './appProvider'
+
 const root = ReactDOM.createRoot(document.getElementById('root'))
 inject()
 root.render(
-  <ThemeProvider theme={themeOptions}>
-    <App />
-  </ThemeProvider>,
+  <AppProvider>
+    <AppContext.Consumer>
+      {({isDarkMode}) => (
+        <ThemeProvider theme={themeOptions(isDarkMode)}>
+          <App />
+        </ThemeProvider>
+      )}
+    </AppContext.Consumer>
+  </AppProvider>,
 )
 
 // If you want to start measuring performance in your app, pass a function
