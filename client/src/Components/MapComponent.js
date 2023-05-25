@@ -2,9 +2,7 @@ import React, {useState, useEffect, useContext} from 'react'
 import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
-import Polyline from 'google-map-react'
 import MapMarker from './MapMarker'
-new-polyline
 import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
 import Button from '@mui/material/Button'
@@ -17,14 +15,12 @@ import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
 
-main
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
-new-polyline
   const [buses, setBuses] = useState({})
   
   const [path, setPath] = useState(true)
@@ -52,7 +48,7 @@ new-polyline
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
-main
+
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -116,10 +112,6 @@ main
     }
   }, [center])
 
-new-polyline
-  
-  
-
   const polylineRef = useRef(null)
 
   const onMapLoad = ({map, maps}) => {
@@ -169,8 +161,6 @@ new-polyline
     return timeDifference < THIRTY_MINUTES
   }
 
-
-main
   return (
     <>
       <Box
@@ -223,7 +213,6 @@ main
             })}
         </GoogleMap>
       </Box>
-new-polyline
       <Button
         onClick={() => setPath(!path)}
         disableRipple
@@ -244,7 +233,6 @@ new-polyline
       <SettingsButton
 
       <SettingsDrawer
-main
         filter={filter}
         handleFilterToggle={handleFilterToggle}
         displayTime={displayTime}
