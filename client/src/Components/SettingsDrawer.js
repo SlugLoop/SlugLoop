@@ -5,6 +5,7 @@ import {
   Drawer,
   IconButton,
   Typography,
+  Divider,
 } from '@mui/material'
 import {useNavigate} from 'react-router-dom'
 
@@ -55,8 +56,42 @@ export default function SettingsDrawer(props) {
               marginBottom: '20px',
             }}
           >
-            Settings
+            Menu
           </Typography>
+          <Divider />
+          <ListItemButton
+            onClick={() => {
+              navigate('/')
+            }}
+          >
+            Home
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              navigate('/timeline')
+            }}
+          >
+            Timeline
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              navigate('/contact')
+            }}
+          >
+            Contact Us
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              navigate('/about')
+            }}
+            autoFocus
+            sx={{
+              paddingBottom: '6%',
+            }}
+          >
+            About Us
+          </ListItemButton>
+          <Divider />
           <ListItemButton
             onClick={() => {
               props.toggleDisplayTime()
@@ -77,24 +112,6 @@ export default function SettingsDrawer(props) {
             }}
           >
             {props.filter ? 'Show All Buses' : 'Show Only Recent Buses'}
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              navigate('/contact')
-            }}
-          >
-            Contact Us
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              navigate('/about')
-            }}
-            autoFocus
-            sx={{
-              paddingBottom: '6%',
-            }}
-          >
-            About Us
           </ListItemButton>
         </List>
       </Drawer>

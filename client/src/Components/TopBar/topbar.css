@@ -73,10 +73,10 @@
 
 .burger.open span:nth-child(5) {
   left: 5px;
-  top: 18px;
+  top: 17px;
 }
 
 .burger.open span:nth-child(6) {
   left: calc(50% - 5px);
-  top: 18px
+  top: 17px
 }

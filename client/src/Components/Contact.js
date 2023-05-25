@@ -82,8 +82,6 @@ export default function Contact() {
       />
       <Box
         display="flex"
-        width="100vw"
-        height="100vh"
         component="form"
         sx={{
           alignItems: 'center',
@@ -201,7 +199,7 @@ export default function Contact() {
               navigate('/')
             }}
           >
-            Back to Map
+            Back
           </Button>
         </motion.div>
       </Box>

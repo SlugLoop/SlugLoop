@@ -115,6 +115,21 @@ export default function MobileTopBar() {
                   stiffness: 80,
                 }}
                 variant="h6"
+                onClick={() => handlePageChange('/Map')}
+              >
+                Map
+              </MotionTypography>
+              <MotionTypography
+                initial={{x: -100, opacity: 0}}
+                animate={{x: 0, opacity: 1}}
+                exit={{x: -100, opacity: 0}}
+                transition={{
+                  delay: 0.5,
+                  duration: 0.3,
+                  type: 'spring',
+                  stiffness: 80,
+                }}
+                variant="h6"
                 onClick={() => handlePageChange('/timeline')}
               >
                 Timeline
@@ -124,7 +139,7 @@ export default function MobileTopBar() {
                 animate={{x: 0, opacity: 1}}
                 exit={{x: -100, opacity: 0}}
                 transition={{
-                  delay: 0.5,
+                  delay: 0.7,
                   duration: 0.3,
                   type: 'spring',
                   stiffness: 80,
