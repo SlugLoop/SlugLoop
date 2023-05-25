@@ -8,7 +8,8 @@ export default function Hero() {
       width="100vw"
       height="100vh"
       sx={{
-        backgroundImage: 'url(background/abstract.png)',
+        backgroundImage:
+          'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(background/bus.png)',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',

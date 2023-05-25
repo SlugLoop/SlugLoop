@@ -4,7 +4,7 @@ import {
   VerticalTimelineElement,
 } from 'react-vertical-timeline-component'
 import 'react-vertical-timeline-component/style.min.css'
-import {Box} from '@mui/material'
+import {Box, Typography} from '@mui/material'
 import LightbulbIcon from '@mui/icons-material/Lightbulb'
 import LaptopIcon from '@mui/icons-material/Laptop'
 import AutoGraphIcon from '@mui/icons-material/AutoGraph'
@@ -94,8 +94,7 @@ function TimelineElement({date, setBackgroundImage}) {
       className="vertical-timeline-element--work"
       date={date}
       contentStyle={{
-        marginBottom: '25vh',
-        marginTop: '25vh',
+        marginBottom: '50vh',
       }}
       iconStyle={{background: 'rgb(33, 150, 243)', color: '#fff'}}
       icon={events[date].icon}
@@ -132,11 +131,15 @@ export default function MyTimeline() {
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          filter: 'brightness(0.5)',
           overflow: 'hidden',
 
-          animation: 'tr',
+          zIndex: -1,
         }}
       />
+      <Typography variant="h3" marginTop="5vh" align="center" color="white">
+        Timeline
+      </Typography>
       <VerticalTimeline>
         {Object.keys(events).map((date) => (
           <TimelineElement

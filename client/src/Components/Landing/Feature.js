@@ -12,7 +12,7 @@ export default function Features() {
       height="100vh"
       sx={{
         backgroundImage:
-          'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(background/rainback.png)',
+          'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(background/buses.png)',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',

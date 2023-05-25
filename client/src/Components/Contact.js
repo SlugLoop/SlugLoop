@@ -64,13 +64,30 @@ export default function Contact() {
   return (
     <motion.div initial="hidden" animate="visible" variants={containerVariant}>
       <Box
+        width="100vw"
+        height="100vh"
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+
+          backgroundImage: 'url(/background/staircase.png)',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+
+          zIndex: -1,
+          filter: 'brightness(0.5)',
+        }}
+      />
+      <Box
         display="flex"
         width="100vw"
         height="100vh"
         component="form"
         sx={{
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           flexDirection: 'column',
           overflow: 'auto',
         }}
@@ -123,12 +140,12 @@ export default function Contact() {
           alignItems="center"
         >
           <motion.div variants={itemVariant}>
-            <Typography variant="h4" component="div">
+            <Typography variant="h3" component="div" color="white">
               Contact Us
             </Typography>
           </motion.div>
           <motion.div variants={itemVariant}>
-            <Typography component="div">
+            <Typography component="div" color="white">
               Slug Loop is helping students get to where they need to go. If you
               have any questions or concerns, please contact us.
             </Typography>

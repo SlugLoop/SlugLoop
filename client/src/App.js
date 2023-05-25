@@ -2,20 +2,29 @@ import {useEffect} from 'react'
 import {signIn} from './Components/Auth'
 import Map from './Components/Map'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import About from './Components/About'
+import About from './Components/About/AboutUs'
 import Contact from './Components/Contact'
 import {RouteProvider} from './Route'
 import Main from './Components/Landing/Main'
 import MyTimeline from './Components/TimeLine/TimeLine'
+import Wrapper from './Components/UIWrapper/Wrapper'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Main />,
+    element: (
+      <Wrapper>
+        <Main />
+      </Wrapper>
+    ),
   },
   {
     path: '/timeline',
-    element: <MyTimeline />,
+    element: (
+      <Wrapper>
+        <MyTimeline />
+      </Wrapper>
+    ),
   },
   {
     path: '/map',
@@ -23,11 +32,19 @@ const router = createBrowserRouter([
   },
   {
     path: '/about',
-    element: <About />,
+    element: (
+      <Wrapper>
+        <About />
+      </Wrapper>
+    ),
   },
   {
     path: '/contact',
-    element: <Contact />,
+    element: (
+      <Wrapper>
+        <Contact />
+      </Wrapper>
+    ),
   },
 ])
 
