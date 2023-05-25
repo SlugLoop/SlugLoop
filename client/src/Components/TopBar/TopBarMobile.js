@@ -1,16 +1,8 @@
 import React from 'react'
-import {
-  AppBar,
-  IconButton,
-  Toolbar,
-  Typography,
-  Box,
-  useTheme,
-} from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
-import CloseIcon from '@mui/icons-material/Close'
+import {AppBar, Toolbar, Typography, Box, useTheme} from '@mui/material'
 import {useNavigate} from 'react-router-dom'
 import {AnimatePresence, motion} from 'framer-motion'
+import './topbar.css'
 
 const MotionBox = motion(Box)
 const MotionTypography = motion(Typography)
@@ -43,21 +35,28 @@ export default function MobileTopBar() {
           >
             SlugLoop
           </Typography>
+
+          <div
+            className="container"
+            onClick={handleMenuToggle}
+            style={{
+              position: 'fixed',
+              right: theme.spacing(2),
+              top: theme.spacing(1),
+              zIndex: theme.zIndex.drawer + 2,
+            }}
+          >
+            <div className={`burger ${isOpen ? 'open' : ''}`}>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
         </Toolbar>
       </AppBar>
-      <IconButton
-        color={isOpen ? 'inherit' : 'inherit'}
-        aria-label="menu"
-        onClick={handleMenuToggle}
-        sx={{
-          position: 'fixed',
-          right: theme.spacing(2),
-          top: theme.spacing(1),
-          zIndex: (theme) => theme.zIndex.drawer + 2,
-        }}
-      >
-        {isOpen ? <CloseIcon /> : <MenuIcon />}
-      </IconButton>
 
       <AnimatePresence>
         {isOpen && (
@@ -91,30 +90,45 @@ export default function MobileTopBar() {
               }}
             >
               <MotionTypography
-                initial={{opacity: 0}}
-                animate={{opacity: 1}}
-                exit={{opacity: 0}}
-                transition={{duration: 0.5}}
+                initial={{x: -100, opacity: 0}}
+                animate={{x: 0, opacity: 1}}
+                exit={{x: -100, opacity: 0}}
+                transition={{
+                  delay: 0.1,
+                  duration: 0.3,
+                  type: 'spring',
+                  stiffness: 80,
+                }}
                 variant="h6"
                 onClick={() => handlePageChange('/about')}
               >
                 About
               </MotionTypography>
               <MotionTypography
-                initial={{opacity: 0}}
-                animate={{opacity: 1}}
-                exit={{opacity: 0}}
-                transition={{duration: 0.5}}
+                initial={{x: -100, opacity: 0}}
+                animate={{x: 0, opacity: 1}}
+                exit={{x: -100, opacity: 0}}
+                transition={{
+                  delay: 0.3,
+                  duration: 0.3,
+                  type: 'spring',
+                  stiffness: 80,
+                }}
                 variant="h6"
                 onClick={() => handlePageChange('/timeline')}
               >
                 Timeline
               </MotionTypography>
               <MotionTypography
-                initial={{opacity: 0}}
-                animate={{opacity: 1}}
-                exit={{opacity: 0}}
-                transition={{duration: 0.5}}
+                initial={{x: -100, opacity: 0}}
+                animate={{x: 0, opacity: 1}}
+                exit={{x: -100, opacity: 0}}
+                transition={{
+                  delay: 0.5,
+                  duration: 0.3,
+                  type: 'spring',
+                  stiffness: 80,
+                }}
                 variant="h6"
                 onClick={() => handlePageChange('/contact')}
               >
