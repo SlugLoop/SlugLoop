@@ -12,15 +12,16 @@ import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
+import AppContext from '../appContext'
 const THIRTY_MINUTES = 30 * 60 * 1000
+
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
-  const [darkMode, setDarkMode] = useState(false)
+  const {darkMode} = useContext(AppContext)
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
-  
-  
+
   const [path, setPath] = useState(true)
 
   function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
@@ -41,7 +42,6 @@ export default function MapComponent({center, zoom}) {
     return (bearing * 180) / Math.PI + 180
   }
 
-
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
@@ -49,10 +49,6 @@ export default function MapComponent({center, zoom}) {
 
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
-  }
-
-  function handleDarkToggle() {
-    setDarkMode(!darkMode)
   }
 
   function handleFilterToggle() {
@@ -113,34 +109,30 @@ export default function MapComponent({center, zoom}) {
   const polylineRef = useRef(null)
 
   const onMapLoad = ({map, maps}) => {
- 
     polylineRef.current = new maps.Polyline({
-      path:loopPath,
+      path: loopPath,
       geodesic: true,
       strokeColor: '#FF0000',
       strokeOpacity: 1,
       strokeWeight: 4,
     })
-    
+
     polylineRef.current.setMap(map)
   }
 
   useEffect(() => {
-
-    if(polylineRef.current){
-      if(path){
+    if (polylineRef.current) {
+      if (path) {
         polylineRef.current.setOptions({
-          path:loopPath,
+          path: loopPath,
           geodesic: true,
           strokeColor: '#FF0000',
           strokeOpacity: 1,
           strokeWeight: 4,
         })
-        
-      }
-      else{
+      } else {
         polylineRef.current.setOptions({
-          path:upperCampusPath,
+          path: upperCampusPath,
           geodesic: true,
           strokeColor: '#0000FF',
           strokeOpacity: 1,
@@ -148,9 +140,7 @@ export default function MapComponent({center, zoom}) {
         })
       }
     }
-
-  },[path]);
-
+  }, [path])
 
   const isBusUpdatedWithinPast30Minutes = (lastPing) => {
     const currentTime = new Date()
@@ -211,31 +201,12 @@ export default function MapComponent({center, zoom}) {
             })}
         </GoogleMap>
       </Box>
-      <Button
-        onClick={() => setPath(!path)}
-        disableRipple
-        sx={{
-          position: 'absolute',
-          top: '20px',
-          left: '150px',
-
-          backgroundColor: 'white',
-          borderRadius: '5px',
-          opacity: '0.7',
-        }}
-        >
-        {path ? 'Loop' : 'Upper Campus'}
-      </Button>
-      <AboutButton darkMode={darkMode} />
-      
-
       <SettingsDrawer
         filter={filter}
         handleFilterToggle={handleFilterToggle}
         displayTime={displayTime}
         toggleDisplayTime={toggleDisplayTime}
         darkMode={darkMode}
-        handleDarkToggle={handleDarkToggle}
       />
       <InstallPWAButton />
       <RouteSelector />
