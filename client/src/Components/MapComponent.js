@@ -3,6 +3,12 @@ import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
+import SettingsButton from './SettingsButton'
+import AboutButton from './AboutButton'
+import Button from '@mui/material/Button'
+import {upperCampusPath, loopPath} from './PolylinePoints'
+const THIRTY_MINUTES = 30 * 60 * 1000
+
 import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
@@ -15,10 +21,34 @@ export default function MapComponent({center, zoom}) {
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
+  
+  
+  const [path, setPath] = useState(true)
+
+  function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
+    const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
+
+    // Y variable
+    const dLong = toRad(lon2 - lon1)
+    const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
+
+    // X variable
+    const X =
+      Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
+      Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
+
+    // Calculate bearing
+    const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
+    // Convert to degrees
+    return (bearing * 180) / Math.PI + 180
+  }
+
+
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
+
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -82,6 +112,55 @@ export default function MapComponent({center, zoom}) {
     }
   }, [center])
 
+  const polylineRef = useRef(null)
+
+  const onMapLoad = ({map, maps}) => {
+ 
+    polylineRef.current = new maps.Polyline({
+      path:loopPath,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1,
+      strokeWeight: 4,
+    })
+    
+    polylineRef.current.setMap(map)
+  }
+
+  useEffect(() => {
+
+    if(polylineRef.current){
+      if(path){
+        polylineRef.current.setOptions({
+          path:loopPath,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1,
+          strokeWeight: 4,
+        })
+        
+      }
+      else{
+        polylineRef.current.setOptions({
+          path:upperCampusPath,
+          geodesic: true,
+          strokeColor: '#0000FF',
+          strokeOpacity: 1,
+          strokeWeight: 4,
+        })
+      }
+    }
+
+  },[path]);
+
+
+  const isBusUpdatedWithinPast30Minutes = (lastPing) => {
+    const currentTime = new Date()
+    const lastPingTime = new Date(lastPing)
+    const timeDifference = currentTime - lastPingTime
+    return timeDifference < THIRTY_MINUTES
+  }
+
   return (
     <>
       <Box
@@ -96,7 +175,7 @@ export default function MapComponent({center, zoom}) {
           apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
           defaultCenter={center}
           defaultZoom={zoom}
-          onGoogleApiLoaded={() => {}}
+          onGoogleApiLoaded={onMapLoad}
           key={darkMode ? 'dark' : 'light'}
           options={{
             zoomControl: false,
@@ -134,6 +213,25 @@ export default function MapComponent({center, zoom}) {
             })}
         </GoogleMap>
       </Box>
+      <Button
+        onClick={() => setPath(!path)}
+        disableRipple
+        sx={{
+          position: 'absolute',
+          top: '20px',
+          left: '100px',
+
+          backgroundColor: 'white',
+          borderRadius: '5px',
+          opacity: '0.7',
+        }}
+        >
+        {path ? 'Loop' : 'Upper Campus'}
+      </Button>
+      <Legend legendItems={legendItems} />
+      <AboutButton darkMode={darkMode} />
+      
+
       <SettingsDrawer
         filter={filter}
         handleFilterToggle={handleFilterToggle}
