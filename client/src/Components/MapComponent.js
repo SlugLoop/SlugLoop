@@ -151,7 +151,6 @@ export default function MapComponent({center, zoom}) {
           apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
           defaultCenter={center}
           defaultZoom={zoom}
-          onGoogleApiLoaded={}
           key={darkMode ? 'dark' : 'light'}
           options={{
             zoomControl: false,
