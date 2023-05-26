@@ -2,10 +2,10 @@ import React, {useState} from 'react'
 import AppContext from './appContext'
 
 const AppProvider = ({children}) => {
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(false)
 
   return (
-    <AppContext.Provider value={{isDarkMode, setIsDarkMode}}>
+    <AppContext.Provider value={{darkMode, setDarkMode}}>
       {children}
     </AppContext.Provider>
   )

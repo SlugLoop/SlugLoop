@@ -4,7 +4,7 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import {ThemeProvider} from '@mui/material/styles'
-import {themeOptions} from './Components/theme'
+import {themeOptions} from './Components/Theme/theme'
 import {inject} from '@vercel/analytics'
 import {register} from './serviceWorkerRegistration'
 
@@ -16,8 +16,8 @@ inject()
 root.render(
   <AppProvider>
     <AppContext.Consumer>
-      {({isDarkMode}) => (
-        <ThemeProvider theme={themeOptions(isDarkMode)}>
+      {({darkMode}) => (
+        <ThemeProvider theme={themeOptions(darkMode)}>
           <App />
         </ThemeProvider>
       )}

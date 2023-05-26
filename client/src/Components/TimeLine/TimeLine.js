@@ -1,15 +1,17 @@
-import React, {useEffect, useState, useRef} from 'react'
+import React, {useEffect, useState, useRef, useContext} from 'react'
 import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from 'react-vertical-timeline-component'
 import 'react-vertical-timeline-component/style.min.css'
-import {Box, Typography} from '@mui/material'
+import {Box, Typography, useTheme} from '@mui/material'
 import LightbulbIcon from '@mui/icons-material/Lightbulb'
 import LaptopIcon from '@mui/icons-material/Laptop'
 import AutoGraphIcon from '@mui/icons-material/AutoGraph'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
+import AppContext from '../../appContext'
+import {motion, AnimatePresence} from 'framer-motion'
 
 const events = {
   'January 2023': {
@@ -17,35 +19,35 @@ const events = {
     icon: <LightbulbIcon />,
     name: 'Planning',
     description:
-      'We are planning to make a bus tracking app for UCSC students based on a reddit post.',
+      'Our journey began serendipitously when we stumbled upon a Reddit post. A fellow student expressed frustration about the unpredictable loop bus schedules. Among the sea of comments, one mentioned a discontinued bus tracker. A spark ignited within us. We saw an opportunity to contribute and immediately reached out to our professors. We were at the start of an incredible journey.',
   },
   'February 2023': {
     url: 'background/hackathon.png',
     icon: <LaptopIcon />,
     name: 'Hackathon',
     description:
-      'We participated in a hackathon and developed the first prototype of our app.',
+      'Cruzhacks was on the horizon, and we were searching for a challenge to tackle. Then, the idea of the loop bus tracker surfaced. We seized the opportunity, dedicating our energies to bring this concept to life during the hackathon. The weekend was a whirlwind of coding and collaboration, ultimately earning us the "Best Use of Github" prize. Our idea was starting to become a reality.',
   },
   'March 2023': {
-    url: 'background/data.png',
-    icon: <AutoGraphIcon />,
-    name: 'Data Analysis',
-    description:
-      'We collected and analyzed data to improve the efficiency of our bus tracking system.',
-  },
-  'April 2023': {
     url: 'background/competition.png',
     icon: <EmojiEventsIcon />,
     name: 'Competition',
     description:
-      'We entered our app in a competition and received positive feedback.',
+      'Bolstered by our success and the positive response from our community, we decided to take a leap of faith. We released a public beta of our app and entered it in the Google Developer Student Challenge. We were putting our creation out into the world, filled with anticipation.',
+  },
+  'April 2023': {
+    url: 'background/data.png',
+    icon: <AutoGraphIcon />,
+    name: 'Data Analysis',
+    description:
+      'April was a month of refinement. With our app in the hands of users, we received invaluable feedback. This was our opportunity to listen, learn, and iterate. We worked tirelessly to improve, resolving bugs and enhancing functionality.',
   },
   'May 2023': {
     url: 'background/coding.png',
     icon: <TrendingUpIcon />,
     name: 'Coding',
     description:
-      'We spent this month coding and refining the app based on the feedback we received.',
+      'Our efforts did not go unnoticed. We were thrilled to learn we were among the top 100 teams chosen as finalists for the Google Developer Student Challenge, including just three from the United States! The recognition spurred us on to further refine our app, collaborate with school faculty, and work with transport officials to update aging infrastructure. We knew we were making a difference.',
   },
 }
 
@@ -82,6 +84,7 @@ function useIntersectionObserver(
 function TimelineElement({date, setBackgroundImage}) {
   const triggerRef = useRef(null)
   const entry = useIntersectionObserver(triggerRef, {threshold: 0.1})
+  const theme = useTheme()
 
   useEffect(() => {
     if (entry?.isIntersecting) {
@@ -95,8 +98,17 @@ function TimelineElement({date, setBackgroundImage}) {
       date={date}
       contentStyle={{
         marginBottom: '50vh',
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[0],
       }}
-      iconStyle={{background: 'rgb(33, 150, 243)', color: '#fff'}}
+      contentArrowStyle={{
+        borderRight: `7px solid  ${theme.palette.background.paper}`,
+      }}
+      iconStyle={{
+        background: theme.palette.primary.main,
+        color: theme.palette.secondary.main,
+      }}
       icon={events[date].icon}
     >
       <h3>{events[date].name}</h3>
@@ -116,38 +128,49 @@ export default function MyTimeline() {
   const [backgroundImage, setBackgroundImage] = useState(
     events['January 2023'].url,
   )
+  const theme = useTheme()
+
+  const {darkMode} = useContext(AppContext)
 
   return (
     <div>
-      <Box
-        component="section"
-        width="100vw"
-        height="100vh"
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          backgroundImage: 'url(' + backgroundImage + ')',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'brightness(0.5)',
-          overflow: 'hidden',
-
-          zIndex: -1,
-        }}
-      />
-      <Typography variant="h3" marginTop="5vh" align="center" color="white">
+      <AnimatePresence>
+        <motion.section
+          key={backgroundImage}
+          initial={{opacity: 0}}
+          animate={{opacity: 1}}
+          exit={{opacity: 0}}
+          transition={{duration: 0.5}}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundImage: 'url(' + backgroundImage + ')',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+            overflow: 'hidden',
+            zIndex: -1,
+          }}
+        />
+      </AnimatePresence>
+      <Typography
+        variant="h3"
+        marginTop="5vh"
+        align="center"
+        color={darkMode ? 'white' : 'black'}
+      >
         Timeline
       </Typography>
-      <VerticalTimeline>
+      <VerticalTimeline lineColor={theme.palette.primary.main}>
         {Object.keys(events).map((date) => (
           <TimelineElement
             key={date}
             date={date}
             setBackgroundImage={setBackgroundImage}
-            contentStyle={{background: 'rgb(33, 150, 243)', color: '#fff'}}
-            iconStyle={{background: 'rgb(33, 150, 243)', color: '#fff'}}
           />
         ))}
       </VerticalTimeline>

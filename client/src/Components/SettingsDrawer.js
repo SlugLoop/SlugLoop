@@ -17,6 +17,8 @@ import {
 } from '@mui/icons-material'
 import {AccessTime as AccessTimeIcon} from '@mui/icons-material'
 import {Menu as MenuIcon} from '@mui/icons-material'
+import HomeIcon from '@mui/icons-material/Home'
+import TimelineIcon from '@mui/icons-material/Timeline'
 
 export default function SettingsDrawer(props) {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
@@ -71,6 +73,11 @@ export default function SettingsDrawer(props) {
               navigate('/')
             }}
           >
+            <HomeIcon
+              sx={{
+                mr: 2,
+              }}
+            />
             Home
           </ListItemButton>
           <ListItemButton
@@ -78,6 +85,11 @@ export default function SettingsDrawer(props) {
               navigate('/timeline')
             }}
           >
+            <TimelineIcon
+              sx={{
+                mr: 2,
+              }}
+            />
             Timeline
           </ListItemButton>
           <ListItemButton
@@ -85,6 +97,11 @@ export default function SettingsDrawer(props) {
               navigate('/contact')
             }}
           >
+            <MailIcon
+              sx={{
+                mr: 2,
+              }}
+            />
             Contact Us
           </ListItemButton>
           <ListItemButton
@@ -96,6 +113,11 @@ export default function SettingsDrawer(props) {
               paddingBottom: '6%',
             }}
           >
+            <InfoIcon
+              sx={{
+                mr: 2,
+              }}
+            />
             About Us
           </ListItemButton>
           <Divider />
@@ -142,34 +164,6 @@ export default function SettingsDrawer(props) {
               }}
             />
             {props.filter ? 'Show Past Buses' : 'Show Recent Buses'}
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              navigate('/contact')
-            }}
-          >
-            <MailIcon
-              sx={{
-                mr: 2,
-              }}
-            />
-            Contact Us
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              navigate('/about')
-            }}
-            autoFocus
-            sx={{
-              paddingBottom: '6%',
-            }}
-          >
-            <InfoIcon
-              sx={{
-                mr: 2,
-              }}
-            />
-            About Us
           </ListItemButton>
         </List>
       </Drawer>

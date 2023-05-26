@@ -1,8 +1,19 @@
-import React from 'react'
-import {AppBar, Toolbar, Typography, Box, useTheme} from '@mui/material'
+import React, {useContext} from 'react'
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  useTheme,
+  IconButton,
+} from '@mui/material'
 import {useNavigate} from 'react-router-dom'
 import {AnimatePresence, motion} from 'framer-motion'
 import './topbar.css'
+import AppContext from '../../appContext'
+
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
 
 const MotionBox = motion(Box)
 const MotionTypography = motion(Typography)
@@ -11,6 +22,7 @@ export default function MobileTopBar() {
   const [isOpen, setIsOpen] = React.useState(false)
   const navigate = useNavigate()
   const theme = useTheme()
+  const {darkMode, setDarkMode} = useContext(AppContext)
 
   const handleMenuToggle = () => {
     setIsOpen(!isOpen)
@@ -19,6 +31,10 @@ export default function MobileTopBar() {
   const handlePageChange = (path) => {
     setIsOpen(false)
     navigate(path)
+  }
+
+  const handleDarkModeToggle = () => {
+    setDarkMode(!darkMode)
   }
 
   return (
@@ -32,9 +48,20 @@ export default function MobileTopBar() {
             variant="h6"
             onClick={() => navigate('/')}
             style={{flexGrow: 1, cursor: 'pointer'}}
+            color="text.primary"
           >
             SlugLoop
           </Typography>
+
+          <IconButton
+            onClick={handleDarkModeToggle}
+            color="inherit"
+            sx={{
+              marginRight: 7,
+            }}
+          >
+            {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
 
           <div
             className="container"
@@ -100,6 +127,7 @@ export default function MobileTopBar() {
                   stiffness: 80,
                 }}
                 variant="h6"
+                color="text.primary"
                 onClick={() => handlePageChange('/about')}
               >
                 About
@@ -115,6 +143,7 @@ export default function MobileTopBar() {
                   stiffness: 80,
                 }}
                 variant="h6"
+                color="text.primary"
                 onClick={() => handlePageChange('/Map')}
               >
                 Map
@@ -130,6 +159,7 @@ export default function MobileTopBar() {
                   stiffness: 80,
                 }}
                 variant="h6"
+                color="text.primary"
                 onClick={() => handlePageChange('/timeline')}
               >
                 Timeline
@@ -145,6 +175,7 @@ export default function MobileTopBar() {
                   stiffness: 80,
                 }}
                 variant="h6"
+                color="text.primary"
                 onClick={() => handlePageChange('/contact')}
               >
                 Contact

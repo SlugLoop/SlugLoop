@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {
   Box,
   Typography,
@@ -6,9 +6,9 @@ import {
   Card,
   CardContent,
   Avatar,
-  Divider,
   Paper,
 } from '@mui/material'
+import AppContext from '../../appContext'
 
 const team = [
   {
@@ -42,6 +42,8 @@ const team = [
 ]
 
 export default function About() {
+  const {darkMode} = useContext(AppContext)
+
   return (
     <Box
       sx={{
@@ -67,16 +69,21 @@ export default function About() {
           backgroundPosition: 'center',
 
           zIndex: -1,
-          filter: 'brightness(0.5)',
+          filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
         }}
       />
-      <Typography variant="h3" textAlign="center" mb={3} color="white">
+      <Typography variant="h3" textAlign="center" mb={3} color="text.primary">
         About Us
       </Typography>
-      <Typography variant="h5" textAlign="center" mb={1} color="white">
+      <Typography variant="h5" textAlign="center" mb={1} color="text.primary">
         Project Goals:
       </Typography>
-      <Typography variant="subtitle1" textAlign="center" mb={2} color="white">
+      <Typography
+        variant="subtitle1"
+        textAlign="center"
+        mb={2}
+        color="text.primary"
+      >
         Slug Loop provides UCSC campus bus locations in real time.
       </Typography>
       <Typography
@@ -84,7 +91,7 @@ export default function About() {
         fontWeight="bold"
         textAlign="center"
         mb={1}
-        color="white"
+        color="text.primary"
       >
         Contributors:
       </Typography>
@@ -96,7 +103,9 @@ export default function About() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                bgcolor: 'rgba(255, 255, 255, 0.7)',
+                bgcolor: darkMode
+                  ? 'rgba(0, 0, 0, 0.5)'
+                  : 'rgba(255, 255, 255, 0.7)',
               }}
             >
               <Avatar
@@ -112,7 +121,7 @@ export default function About() {
                   bgcolor: 'transparent',
                 }}
               >
-                <Typography variant="h6" color="primary">
+                <Typography variant="h6" color="text.primary">
                   {member.name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -130,25 +139,56 @@ export default function About() {
         sx={{
           p: 2,
           mb: 2,
-          bgcolor: 'rgba(255, 255, 255, 0.7)',
+          bgcolor: darkMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.7)',
         }}
       >
-        <Typography variant="h5" fontWeight="bold" textAlign="center" mb={1}>
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          textAlign="center"
+          mb={1}
+          color="text.primary"
+        >
           Our project stands on the shoulders of giants. Many thanks to:
         </Typography>
-        <Typography variant="subtitle1" textAlign="center" mb={2}>
+        <Typography
+          variant="subtitle1"
+          textAlign="center"
+          mb={2}
+          color="text.secondary"
+        >
           • Professor Kerry Veenstra
         </Typography>
-        <Typography variant="subtitle1" textAlign="center" mb={2}>
+        <Typography
+          variant="subtitle1"
+          textAlign="center"
+          mb={2}
+          color="text.secondary"
+        >
           • Santa Cruz Metro
         </Typography>
-        <Typography variant="subtitle1" textAlign="center" mb={2}>
+        <Typography
+          variant="subtitle1"
+          textAlign="center"
+          mb={2}
+          color="text.secondary"
+        >
           • UCSC TAPS
         </Typography>
-        <Typography variant="subtitle1" textAlign="center" mb={2}>
+        <Typography
+          variant="subtitle1"
+          textAlign="center"
+          mb={2}
+          color="text.secondary"
+        >
           • Past Contributors of BTS 2 and 3
         </Typography>
-        <Typography variant="subtitle1" textAlign="center" mb={2}>
+        <Typography
+          variant="subtitle1"
+          textAlign="center"
+          mb={2}
+          color="text.secondary"
+        >
           • PinPoint Team
         </Typography>
       </Paper>
