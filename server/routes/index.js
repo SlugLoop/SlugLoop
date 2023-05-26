@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const metro = require('./metro')
 require('dotenv').config()
+const busStops = require('./bus-stops.json')
 
 // Helper functions
 const {
@@ -136,6 +137,9 @@ router.post('/ping', function (req, res) {
 
     // Calculate direction
     const direction = calcCWorCCW(currLocation, previousLocationArray)
+
+    // Update database for which bus stops have incoming busses
+    nextBusStops(currLocation, previousLocationArray)
 
 
     //We will update the bus's last ping location and time
@@ -311,6 +315,66 @@ function calcCWorCCW({lat1, lon1}, previousLocationArray) {
     }
   }
   return "n/a";
+}
+
+// updates next 3 bus stops
+
+function nextBusStops({lat1, lon1}, previousLocationArray) {
+  let direction = calcCWorCCW({lat1, lon1}, previousLocationArray)
+
+  if (direction == "cw") {
+    const cwData = busStops.bstop.CW;
+    for (let i = 0; i < cwData.length; i++) {
+      let location = cwData[i];
+      let locationName = Object.keys(location)[0];
+      let lat2 = location[locationName].lat;
+      let lon2 = location[locationName].lon;
+      if((lat2 - 0.000450) <= lat1 <= (lat2 + 0.000450)) {
+        if ((lon2 - 0.000450) <= lon1 <= (lon2 + 0.000450)) {
+          let stops_arr = [Object.keys(cwData[i + 1])[0], Object.keys(cwData[i + 2])[0], Object.keys(cwData[i + 3])[0]]
+          soonBusStopUpdate(stops_arr, "CW");
+        }
+      } 
+    }
+  } 
+  else if(direction == "ccw") {
+    const ccwData = busStops.bstop.CCW;
+    for (let i = 0; i < ccwData.length; i++) {
+      let location = ccwData[i];
+      let locationName = Object.keys(location)[0];
+      let lat2 = location[locationName].lat;
+      let lon2 = location[locationName].lon;
+      if((lat2 - 0.000450) <= lat1 <= (lat2 + 0.000450)) {
+        if ((lon2 - 0.000450) <= lon1 <= (lon2 + 0.000450)) {
+          let stops_arr = [Object.keys(ccwData[i + 1])[0], Object.keys(ccwData[i + 2])[0], Object.keys(ccwData[i + 3])[0]]
+          soonBusStopUpdate(stops_arr, "CCW");
+        }
+      }
+    }
+  }
+}
+
+// Set bus stops "Soon" to true if 
+
+function soonBusStopUpdate(soonBusStops, direction) {
+  // Get a database reference to the collection of stops given a direction
+  const stopRef = defaultDatabase.collection('busStop').document(direction);
+
+  // Get all the collection values inside the doc
+  const stops =  async () => {
+    await stopRef.listCollections();
+    stops.forEach(stop => {
+      if(soonBusStops.includes(stop.id)) {
+        stop.update({
+          soon: true
+        });
+      } else {
+        stop.update({
+          soon: false
+        });
+      };
+    });
+  };
 }
 
 module.exports = router
