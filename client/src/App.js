@@ -6,6 +6,7 @@ import Main from './Components/Main'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import About from './Components/About'
 import Contact from './Components/Contact'
+import {RouteProvider} from './Route'
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,11 @@ function App() {
   useEffect(() => {
     signIn()
   }, [])
-  return <RouterProvider router={router} />
+  return (
+    <RouteProvider>
+      <RouterProvider router={router} />
+    </RouteProvider>
+  )
 }
 
 export default App
