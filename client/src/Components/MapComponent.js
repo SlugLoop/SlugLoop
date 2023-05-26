@@ -8,10 +8,11 @@ import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
+import AppContext from '../appContext'
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
-  const [darkMode, setDarkMode] = useState(false)
+  const {darkMode} = useContext(AppContext)
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
@@ -21,10 +22,6 @@ export default function MapComponent({center, zoom}) {
   const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
-  }
-
-  function handleDarkToggle() {
-    setDarkMode(!darkMode)
   }
 
   function handleFilterToggle() {
@@ -140,7 +137,6 @@ export default function MapComponent({center, zoom}) {
         displayTime={displayTime}
         toggleDisplayTime={toggleDisplayTime}
         darkMode={darkMode}
-        handleDarkToggle={handleDarkToggle}
       />
       <InstallPWAButton />
       <RouteSelector />

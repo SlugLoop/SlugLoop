@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import {
   List,
   ListItemButton,
@@ -19,10 +19,12 @@ import {AccessTime as AccessTimeIcon} from '@mui/icons-material'
 import {Menu as MenuIcon} from '@mui/icons-material'
 import HomeIcon from '@mui/icons-material/Home'
 import TimelineIcon from '@mui/icons-material/Timeline'
+import AppContext from '../appContext'
 
 export default function SettingsDrawer(props) {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
   const navigate = useNavigate()
+  const {darkMode, setDarkMode} = useContext(AppContext)
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true)
@@ -135,7 +137,7 @@ export default function SettingsDrawer(props) {
           </ListItemButton>
           <ListItemButton
             onClick={() => {
-              props.handleDarkToggle()
+              setDarkMode(!darkMode)
             }}
           >
             {props.darkMode ? (
