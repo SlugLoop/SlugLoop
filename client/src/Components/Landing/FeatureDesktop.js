@@ -57,7 +57,7 @@ export default function FeaturesDesktop() {
             <ListItemIcon>
               <DirectionsBusIcon color="secondary" fontSize="large" />
             </ListItemIcon>
-            <Typography variant="h5" color="text.primary">
+            <Typography variant="h6" color="text.primary">
               Track campus shuttles in real time: Using our app, you can get the
               real-time location of all Campus Shuttles (Loop) buses. Never miss
               your bus again, and optimize your time by knowing when to head to
@@ -80,11 +80,10 @@ export default function FeaturesDesktop() {
             <ListItemIcon>
               <TrainIcon color="secondary" fontSize="large" />
             </ListItemIcon>
-            <Typography variant="h5" color="text.primary">
+            <Typography variant="h6" color="text.primary">
               Live locations of Santa Cruz (Metro) buses: In addition to Campus
               Shuttles, our service also provides live location data for all
-              Santa Cruz (Metro) buses. This comprehensive coverage ensures
-              you're always informed about your transport options.
+              Santa Cruz (Metro) buses.
             </Typography>
           </Stack>
         </Box>
@@ -103,12 +102,10 @@ export default function FeaturesDesktop() {
             <ListItemIcon>
               <SearchIcon color="secondary" fontSize="large" />
             </ListItemIcon>
-            <Typography variant="h5" color="text.primary">
+            <Typography variant="h6" color="text.primary">
               Advanced Filtering for both Loop and Metro Buses: Customize your
-              tracking experience with our advanced filtering options. Whether
-              you want to follow a specific route, or only want updates on
-              certain types of buses, our filtering system allows you to tailor
-              the information to your needs.
+              tracking experience with our advanced filtering options. You can
+              choose to filter by bus route, time, and more.
             </Typography>
           </Stack>
         </Box>
