@@ -3,9 +3,11 @@ import {signIn} from './Components/Auth'
 import Map from './Components/Map'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import About from './Components/About/AboutUs'
+import AboutDesktop from './Components/About/AboutUsDesktop'
 import Contact from './Components/Contact'
 import {RouteProvider} from './Route'
-import Main from './Components/Landing/Main'
+import MainMobile from './Components/Landing/MainMobile'
+import MainDesktop from './Components/Landing/MainDesktop'
 import MyTimeline from './Components/TimeLine/TimeLine'
 import Wrapper from './Components/UIWrapper/Wrapper'
 
@@ -19,7 +21,7 @@ function App() {
       path: '/',
       element: (
         <Wrapper>
-          <Main />
+          {viewportWidth > 600 ? <MainDesktop /> : <MainMobile />}
         </Wrapper>
       ),
     },
@@ -38,9 +40,7 @@ function App() {
     {
       path: '/about',
       element: (
-        <Wrapper>
-          <About />
-        </Wrapper>
+        <Wrapper>{viewportWidth > 600 ? <AboutDesktop /> : <About />}</Wrapper>
       ),
     },
     {
@@ -58,8 +58,9 @@ function App() {
     </RouteProvider>
   )
 }
-const useViewportWidth = () => {
-  const [viewportWidth, setViewportWidth] = useState(null)
+
+export const useViewportWidth = () => {
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth)
 
   useEffect(() => {
     const handleResize = () => setViewportWidth(window.innerWidth)

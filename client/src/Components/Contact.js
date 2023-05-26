@@ -14,8 +14,10 @@ import {
 import {useNavigate} from 'react-router-dom'
 import {motion} from 'framer-motion'
 import AppContext from '../appContext'
+import {useViewportWidth} from '../App'
 
 export default function Contact() {
+  const viewportWidth = useViewportWidth()
   const {darkMode} = useContext(AppContext)
   const navigate = useNavigate()
   const [name, setName] = useState('')
@@ -82,13 +84,25 @@ export default function Contact() {
           top: 0,
           left: 0,
 
-          backgroundImage: 'url(/background/staircase.png)',
+          backgroundImage:
+            viewportWidth < 600
+              ? 'url(/background/staircase.png)'
+              : 'url(/background/contact.png)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
 
           zIndex: -1,
           filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+          '::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
+          },
         }}
       />
       <Box
@@ -171,7 +185,7 @@ export default function Contact() {
           </Typography>
         </motion.div>
         <Stack
-          width="70%"
+          width={viewportWidth < 600 ? '70%' : '50%'}
           direction="column"
           spacing={1.3}
           alignItems="center"
