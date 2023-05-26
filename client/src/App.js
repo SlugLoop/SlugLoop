@@ -7,7 +7,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import About from './Components/About'
 import Contact from './Components/Contact'
 import SettingsContext from './Components/SettingsContext'
-import SettingsReducer from './Components/SettingsReducer'
+import {SettingsReducer, INITIAL_STATE} from './Components/SettingsReducer'
 
 const router = createBrowserRouter([
   {
@@ -25,14 +25,24 @@ const router = createBrowserRouter([
 ])
 
 function App() {
-  const initialState = []
-  const [settings, dispatch] = useReducer(SettingsReducer, initialState);
+  
+  const [settings, dispatch] = useReducer(SettingsReducer, INITIAL_STATE);
   const providerState = {
     settings, dispatch
   }
   useEffect(() => {
     signIn()
   }, [])
+  /*
+  useEffect(()=>{
+    settings.displayTime = localStorage.getItem('displayTime')? localStorage.getItem('displayTime'):false
+    settings.darkMode= localStorage.getItem('darkMode')? localStorage.getItem('darkMode'):false
+    settings.filter= localStorage.getItem('filter')? localStorage.getItem('filter'):false
+    settings.path= localStorage.getItem('path')? localStorage.getItem('path'):true
+    settings.showMap= localStorage.getItem('showMap')? localStorage.getItem('showMap'):true
+    settings.displayUCSC= localStorage.getItem('displayUCSC')? localStorage.getItem('displayUCSC'):true
+  })
+  */
   return (
     <SettingsContext.Provider value = {providerState}>
       <RouterProvider router={router} />

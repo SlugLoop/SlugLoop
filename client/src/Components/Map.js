@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import MapComponent from './MapComponent'
 import Metro from './Metro'
 import Button from '@mui/material/Button'
@@ -15,6 +15,7 @@ export default function Map() {
     setDisplayUCSC(!displayUCSC)
   }
 */
+
   return (
     <>
       {settings.displayUCSC ? <MapComponent center={center} zoom={zoom} /> : <Metro />}
