@@ -32,6 +32,16 @@ export default function FeaturesDesktop() {
           zIndex: -1,
 
           filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+
+          '::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
+          },
         }}
       />
 
@@ -50,7 +60,7 @@ export default function FeaturesDesktop() {
           alignItems="center"
           justifyContent="center"
           padding={5}
-          backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.6)'}
+          backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
           borderRadius="10px"
         >
           <Stack direction="column" alignItems="center" spacing={1}>
@@ -73,7 +83,7 @@ export default function FeaturesDesktop() {
           alignItems="center"
           justifyContent="center"
           padding={5}
-          backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.6)'}
+          backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
           borderRadius="10px"
         >
           <Stack direction="column" alignItems="center" spacing={1}>
@@ -95,7 +105,7 @@ export default function FeaturesDesktop() {
           alignItems="center"
           justifyContent="center"
           padding={5}
-          backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.6)'}
+          backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
           borderRadius="10px"
         >
           <Stack direction="column" alignItems="center" spacing={1}>
