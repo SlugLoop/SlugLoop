@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useEffect, useContext, useRef} from 'react'
 import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
@@ -7,14 +7,12 @@ import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
 import Button from '@mui/material/Button'
 import {upperCampusPath, loopPath} from './PolylinePoints'
-const THIRTY_MINUTES = 30 * 60 * 1000
-
 import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
-
+const THIRTY_MINUTES = 30 * 60 * 1000
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
@@ -219,7 +217,7 @@ export default function MapComponent({center, zoom}) {
         sx={{
           position: 'absolute',
           top: '20px',
-          left: '100px',
+          left: '150px',
 
           backgroundColor: 'white',
           borderRadius: '5px',
@@ -228,7 +226,6 @@ export default function MapComponent({center, zoom}) {
         >
         {path ? 'Loop' : 'Upper Campus'}
       </Button>
-      <Legend legendItems={legendItems} />
       <AboutButton darkMode={darkMode} />
       
 
