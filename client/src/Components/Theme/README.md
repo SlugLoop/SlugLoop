@@ -1,0 +1,7 @@
+Primary color: For the dark mode, we've used a deep navy blue color (#003c71) that is closer to UCSC's official navy blue color. For the light mode, we've used a lighter shade of blue (#1f78b4) which provides a more vibrant and less contrasty feel, suitable for a light theme.
+
+Secondary color: UCSC's official secondary color is gold. For the dark mode, we've chosen a brighter gold (#ffc72c) to provide a good contrast against the dark backgrounds. For the light mode, we've used a less intense gold (#ffcc00) to prevent the color from being too overwhelming against the lighter background.
+
+Background color: The default background color is dark gray (#121212) for the dark mode and white (#ffffff) for the light mode. The paper background color, which is used for components like cards, is a darker gray (#1e272e) for the dark mode and a light gray (#f8f8f8) for the light mode. This helps distinguish the card and other paper components from the background.
+
+Text color: The primary text color is white (#ffffff) for the dark mode and black (#000000) for the light mode. The secondary text color, which can be used for less important text, is a lighter gray for the dark mode (#a0a0a0) and a darker gray for the light mode (#303030). This helps distinguish the relative importance of text elements.
