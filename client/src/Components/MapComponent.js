@@ -21,7 +21,7 @@ export default function MapComponent({center, zoom}) {
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
-  const [buses, setBuses] = useState({})
+  
   
   const [path, setPath] = useState(true)
 
@@ -230,7 +230,7 @@ export default function MapComponent({center, zoom}) {
       </Button>
       <Legend legendItems={legendItems} />
       <AboutButton darkMode={darkMode} />
-      <SettingsButton
+      
 
       <SettingsDrawer
         filter={filter}
