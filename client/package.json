@@ -12,13 +12,15 @@
     "@vercel/analytics": "^0.1.11",
     "dotenv": "^16.0.3",
     "firebase": "^9.17.1",
-    "framer-motion": "^10.3.1",
+    "framer-motion": "^10.12.16",
     "google-map-react": "^2.2.0",
     "google-maps-react-markers": "^1.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.8.0",
     "react-router-dom": "^6.8.0",
     "react-scripts": "5.0.1",
+    "react-vertical-timeline-component": "^3.6.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
