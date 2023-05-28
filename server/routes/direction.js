@@ -1,5 +1,5 @@
 // Calculate direction of bus
-export function calcCWorCCW({lat1, lon1}, previousLocationArray) {
+module.exports = function calcCWorCCW ({lat1, lon1}, previousLocationArray) {
     // Lower Half
     if (36.977583 < lat1 && lat1 < 36.992444) {
       // Lower West Half

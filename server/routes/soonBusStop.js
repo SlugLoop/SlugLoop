@@ -1,9 +1,9 @@
-import { calcCWorCCW } from "./direction.js"
+var calcCWorCCW = require('./direction.js')
 const busStops = require('./bus-stops.json')
 const defaultDatabase = require('./firebase.js')
 
 // updates next 3 bus stops for every bus
-export function nextBusStops() {
+module.exports = function nextBusStops() {
   const busCollection = [];
   let stops_arr_CW = [];
   let stops_arr_CCW = [];

@@ -2,8 +2,8 @@ const express = require('express')
 const router = express.Router()
 const metro = require('./metro')
 require('dotenv').config()
-import { calcCWorCCW } from "./direction.js"
-import { nextBusStops } from "./soonBusStop.js"
+var calcCWorCCW = require('./direction.js')
+var nextBusStops = require('./soonBusStop.js')
 
 // Helper functions
 const {
