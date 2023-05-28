@@ -1,31 +1,29 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useEffect, useContext, useRef} from 'react'
 import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
-
 import SettingsButton from './SettingsButton'
 import AboutButton from './AboutButton'
 import Button from '@mui/material/Button'
-
-const THIRTY_MINUTES = 30 * 60 * 1000
-
+import {upperCampusPath, loopPath} from './PolylinePoints'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
-
+import AppContext from '../appContext'
+const THIRTY_MINUTES = 30 * 60 * 1000
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
-  const [darkMode, setDarkMode] = useState(false)
+  const {darkMode} = useContext(AppContext)
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
 
-  const [buses, setBuses] = useState({})
- 
+  const [path, setPath] = useState(true)
+
   function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
     const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
 
@@ -44,7 +42,6 @@ export default function MapComponent({center, zoom}) {
     return (bearing * 180) / Math.PI + 180
   }
 
-
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
@@ -52,10 +49,6 @@ export default function MapComponent({center, zoom}) {
 
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
-  }
-
-  function handleDarkToggle() {
-    setDarkMode(!darkMode)
   }
 
   function handleFilterToggle() {
@@ -113,15 +106,41 @@ export default function MapComponent({center, zoom}) {
     }
   }, [center])
 
+  const polylineRef = useRef(null)
 
-  
-  
+  const onMapLoad = ({map, maps}) => {
+    polylineRef.current = new maps.Polyline({
+      path: loopPath,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1,
+      strokeWeight: 4,
+    })
 
- 
+    polylineRef.current.setMap(map)
+  }
 
- 
- 
-
+  useEffect(() => {
+    if (polylineRef.current) {
+      if (path) {
+        polylineRef.current.setOptions({
+          path: loopPath,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1,
+          strokeWeight: 4,
+        })
+      } else {
+        polylineRef.current.setOptions({
+          path: upperCampusPath,
+          geodesic: true,
+          strokeColor: '#0000FF',
+          strokeOpacity: 1,
+          strokeWeight: 4,
+        })
+      }
+    }
+  }, [path])
 
   const isBusUpdatedWithinPast30Minutes = (lastPing) => {
     const currentTime = new Date()
@@ -129,7 +148,6 @@ export default function MapComponent({center, zoom}) {
     const timeDifference = currentTime - lastPingTime
     return timeDifference < THIRTY_MINUTES
   }
-
 
   return (
     <>
@@ -188,7 +206,6 @@ export default function MapComponent({center, zoom}) {
         displayTime={displayTime}
         toggleDisplayTime={toggleDisplayTime}
         darkMode={darkMode}
-        handleDarkToggle={handleDarkToggle}
       />
       <InstallPWAButton />
       <RouteSelector />
