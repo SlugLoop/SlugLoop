@@ -31,7 +31,7 @@ export function nextBusStops() {
   }
 
   // Initialize CCW array with false values
-  const ccwObj = busStops.bstop.CW;
+  const ccwObj = busStops.bstop.CCW;
   for (let i = 0; i < ccwObj.length; i++) {
     let locationName = Object.keys(ccwObj[i])[0];
     stops_arr_CCW.push({
