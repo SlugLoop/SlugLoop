@@ -77,6 +77,14 @@ router.get('/buses', function (req, res) {
     })
 })
 
+router.post('/updateSoon', function (req, res) {
+  // Update database for which bus stops have incoming busses
+  nextBusStops();
+
+  // Send a response to the base station
+  res.status(200).send('OK');
+})
+
 /* Ping the server from base stations. */
 router.post('/ping', function (req, res) {
   let data = JSON.parse(req.body.data)
@@ -138,9 +146,6 @@ router.post('/ping', function (req, res) {
 
     // Calculate direction
     const direction = calcCWorCCW(currLocation, previousLocationArray)
-
-    // Update database for which bus stops have incoming busses
-    nextBusStops()
 
     //We will update the bus's last ping location and time
     busRef.set({
