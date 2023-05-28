@@ -140,7 +140,7 @@ router.post('/ping', function (req, res) {
     const direction = calcCWorCCW(currLocation, previousLocationArray)
 
     // Update database for which bus stops have incoming busses
-    nextBusStops(currLocation, previousLocationArray)
+    nextBusStops()
 
     //We will update the bus's last ping location and time
     busRef.set({
