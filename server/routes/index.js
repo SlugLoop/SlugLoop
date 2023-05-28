@@ -150,7 +150,6 @@ router.post('/ping', function (req, res) {
     // Update database for which bus stops have incoming busses
     nextBusStops(currLocation, previousLocationArray)
 
-
     //We will update the bus's last ping location and time
     busRef.set({
       lastPing: new Date().toISOString(),
@@ -311,7 +310,6 @@ function calcCWorCCW({lat1, lon1}, previousLocationArray) {
 
 
 // updates next 3 bus stops
-
 function nextBusStops({lat1, lon1}, previousLocationArray) {
   let direction = calcCWorCCW({lat1, lon1}, previousLocationArray)
 
@@ -319,7 +317,8 @@ function nextBusStops({lat1, lon1}, previousLocationArray) {
   if (direction == "cw") {
     const cwData = busStops.bstop.CW;
     // Iterates through all CW bus stops
-    for (let i = 0; i < cwData.length; i++) {
+    let cwLength = cwData.length;
+    for (let i = 0; i < cwLength; i++) {
       let location = cwData[i];
       let locationName = Object.keys(location)[0];
       let lat2 = location[locationName].lat;
@@ -327,7 +326,9 @@ function nextBusStops({lat1, lon1}, previousLocationArray) {
       // Find the bus stop closest to the bus, and store next 3 stops into an array
       if((lat2 - 0.000450) <= lat1 <= (lat2 + 0.000450)) {
         if ((lon2 - 0.000450) <= lon1 <= (lon2 + 0.000450)) {
-          let stops_arr = [Object.keys(cwData[i + 1])[0], Object.keys(cwData[i + 2])[0], Object.keys(cwData[i + 3])[0]]
+          let stops_arr = [Object.keys(cwData[(i + 1) % cwLength])[0], 
+                           Object.keys(cwData[(i + 2) % cwLength])[0], 
+                           Object.keys(cwData[(i + 3) % cwLength])[0]]
           // Pass the array into function for database updates for CW bus stops
           soonBusStopUpdate(stops_arr, "CW");
         }
@@ -338,7 +339,8 @@ function nextBusStops({lat1, lon1}, previousLocationArray) {
   else if(direction == "ccw") {
     const ccwData = busStops.bstop.CCW;
     // Iterates through all CCW bus stops
-    for (let i = 0; i < ccwData.length; i++) {
+    let ccwLength = ccwData.length;
+    for (let i = 0; i < ccwLength; i++) {
       let location = ccwData[i];
       let locationName = Object.keys(location)[0];
       let lat2 = location[locationName].lat;
@@ -346,7 +348,9 @@ function nextBusStops({lat1, lon1}, previousLocationArray) {
       // Find the bus stop closest to the bus, and store next 3 stops into an array
       if((lat2 - 0.000450) <= lat1 <= (lat2 + 0.000450)) {
         if ((lon2 - 0.000450) <= lon1 <= (lon2 + 0.000450)) {
-          let stops_arr = [Object.keys(ccwData[i + 1])[0], Object.keys(ccwData[i + 2])[0], Object.keys(ccwData[i + 3])[0]]
+          let stops_arr = [Object.keys(ccwData[(i + 1) % ccwLength])[0], 
+                           Object.keys(ccwData[(i + 2) % ccwLength])[0], 
+                           Object.keys(ccwData[(i + 3) % ccwLength])[0]]
           // Pass the array into function for database updates for CCW bus stops
           soonBusStopUpdate(stops_arr, "CCW");
         }
