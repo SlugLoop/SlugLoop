@@ -82,8 +82,17 @@ router.post('/ping', function (req, res) {
   let data = JSON.parse(req.body.data)
   data = data[0]
 
-  // Check if the data is valid and check data length is 6
-  if (dataValidate(data)) {
+  // Check if the data is valid and check data length is 4
+  if (
+    !data ||
+    !data.id ||
+    !data.lon ||
+    !data.lat ||
+    !data.route ||
+    !data.key ||
+    !data.sid ||
+    Object.keys(data).length !== 6
+  ) {
     res.status(400).send('Invalid data')
     return
   }
@@ -141,7 +150,6 @@ router.post('/ping', function (req, res) {
 
     // Update database for which bus stops have incoming busses
     nextBusStops(currLocation, previousLocationArray)
-
 
     //We will update the bus's last ping location and time
     busRef.set({
@@ -227,6 +235,170 @@ function dataValidate(data) {
     Object.keys(data).length != 6
   ) { return true;}
   else { return false;}
+// Determine if bus is going up or down
+function latitudeDecreasing(previousLocationArray) {
+  total = 0;
+  for (let i = 0; i < previousLocationArray.length - 1; i++) {
+    if((previousLocationArray[i].lat - previousLocationArray[i+1].lat) > 0) {
+      total += 1;
+    }
+    else {
+      total -= 1;
+    }
+  }
+  if (total > 0) return false;
+  return true;
+  
+}
+
+// Determine if bus is going left or right
+function longitudeDecreasing(previousLocationArray) {
+  total = 0;
+  for (let i = 0; i < previousLocationArray.length - 1; i++) {
+    if((previousLocationArray[i].lon - previousLocationArray[i+1].lon) > 0) {
+      total += 1;
+    }
+    else {
+      total -= 1;
+    }
+  }
+  if (total > 0) return false;
+  return true;
+}
+
+// Calculate direction of bus
+function calcCWorCCW({lat1, lon1}, previousLocationArray) {
+  // Lower Half
+  if (36.977583 < lat1 && lat1 < 36.992444) {
+    // Lower West Half
+    if (lon1 < -122.055831) {
+      if (latitudeDecreasing(previousLocationArray)) return "ccw";
+      else return "cw";
+    }
+    // Lower East Half
+    else {
+      if (latitudeDecreasing(previousLocationArray)) return "cw";
+      else return "ccw";
+    }
+  }
+
+  // RCC Area
+  if ((36.992444 <= lat1 && lat1 < 36.993316) && (-122.066566 < lon1 && lon1 < -122.061)) {
+    if (longitudeDecreasing(previousLocationArray)) return "ccw";
+    else return "cw";
+  }
+
+  // RCC to Kresge
+  if ((36.993316 <= lat1 && lat1 < 36.999290) && lon1 < -122.062260) {
+    if (latitudeDecreasing(previousLocationArray)) return "ccw";
+    else return "cw";
+  }
+
+  // Baskin to Crown
+  if ((36.999290 <= lat1) && (-122.064560 <= lon1 && lon1 < -122.054543)) {
+    if (longitudeDecreasing(previousLocationArray)) return "ccw";
+    else return "cw";
+  }
+
+  // Crown to East Remote
+  if ((36.992444 <= lat1 && lat1 < 36.999290) && (lon1 >= -122.055831)) {
+    if (latitudeDecreasing(previousLocationArray)) return "cw";
+    else return "ccw";
+  }
+
+  // Bay and High Area
+  if (36.977119 < lat1 && lat1 < 36.9775833) {
+    // West Side
+    if (lon1 < -122.053795) {
+      if (longitudeDecreasing(previousLocationArray)) return "cw";
+      else return "ccw";
+    }
+    // East Side
+    if (lon1 >= -122.053795) {
+      if (latitudeDecreasing(previousLocationArray)) return "cw";
+      else return "ccw";
+    }
+  }
+  return "n/a";
+}
+
+
+// updates next 3 bus stops
+function nextBusStops({lat1, lon1}, previousLocationArray) {
+  let direction = calcCWorCCW({lat1, lon1}, previousLocationArray)
+
+  // If heading of bus is Clock-wise
+  if (direction == "cw") {
+    const cwData = busStops.bstop.CW;
+    // Iterates through all CW bus stops
+    let cwLength = cwData.length;
+    for (let i = 0; i < cwLength; i++) {
+      let location = cwData[i];
+      let locationName = Object.keys(location)[0];
+      let lat2 = location[locationName].lat;
+      let lon2 = location[locationName].lon;
+      // Find the bus stop closest to the bus, and store next 3 stops into an array
+      if((lat2 - 0.000450) <= lat1 <= (lat2 + 0.000450)) {
+        if ((lon2 - 0.000450) <= lon1 <= (lon2 + 0.000450)) {
+          let stops_arr = [Object.keys(cwData[(i + 1) % cwLength])[0], 
+                           Object.keys(cwData[(i + 2) % cwLength])[0], 
+                           Object.keys(cwData[(i + 3) % cwLength])[0]]
+          // Pass the array into function for database updates for CW bus stops
+          soonBusStopUpdate(stops_arr, "CW");
+        }
+      } 
+    }
+  } 
+  // If heading of bus is Counter Clock-wise
+  else if(direction == "ccw") {
+    const ccwData = busStops.bstop.CCW;
+    // Iterates through all CCW bus stops
+    let ccwLength = ccwData.length;
+    for (let i = 0; i < ccwLength; i++) {
+      let location = ccwData[i];
+      let locationName = Object.keys(location)[0];
+      let lat2 = location[locationName].lat;
+      let lon2 = location[locationName].lon;
+      // Find the bus stop closest to the bus, and store next 3 stops into an array
+      if((lat2 - 0.000450) <= lat1 <= (lat2 + 0.000450)) {
+        if ((lon2 - 0.000450) <= lon1 <= (lon2 + 0.000450)) {
+          let stops_arr = [Object.keys(ccwData[(i + 1) % ccwLength])[0], 
+                           Object.keys(ccwData[(i + 2) % ccwLength])[0], 
+                           Object.keys(ccwData[(i + 3) % ccwLength])[0]]
+          // Pass the array into function for database updates for CCW bus stops
+          soonBusStopUpdate(stops_arr, "CCW");
+        }
+      }
+    }
+  }
+}
+
+// Set bus stops "Soon" to true in the firestore DB if in array
+function soonBusStopUpdate(soonBusStops, direction) {
+  // Get a database reference to the collection of stops given a direction
+  const stopRef = defaultDatabase.collection('busStop').document(direction);
+
+  // Get all the collection values inside the doc
+  const stops =  async () => {
+    await stopRef.listCollections();
+    
+    // Iterate through each collection
+    stops.forEach(stop => {
+      
+      // If bus stop is in array, set soon = true
+      if(soonBusStops.includes(stop.id)) {
+        stop.update({
+          soon: true
+        });
+        
+      // Otherwise update soon = false
+      } else {
+        stop.update({
+          soon: false
+        });
+      };
+    });
+  };
 }
 
 module.exports = router
