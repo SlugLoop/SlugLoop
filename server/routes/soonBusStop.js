@@ -2,55 +2,63 @@ import { calcCWorCCW } from "./direction.js"
 const busStops = require('./bus-stops.json')
 const defaultDatabase = require('./firebase.js')
 
-let bussesRef;
-let busID = [];
-let previousLocationArray = [];
-let stops_arr_CW = [];
-let stops_arr_CCW = [];
-let lat1 = 0  // Current longitude
-let lon1 = 0  // Current latitude
-
 // updates next 3 bus stops for every bus
 export function nextBusStops() {
-  bussesRef = defaultDatabase.collection('busses');
+  const busCollection = [];
+  let stops_arr_CW = [];
+  let stops_arr_CCW = [];
 
   // Push all bus ID's into array
-  defaultDatabase.collection("cities").get().then(function(querySnapshot) {
-    querySnapshot.forEach(function(doc) {
-        busID.push(doc.id);
+  defaultDatabase.collection('busses').get().then(function(querySnapshot) {
+    querySnapshot.forEach(doc => {
+      // Store the busses into busCollection as an array of objects
+      busCollection.push ({
+        latitude: doc.data().lastLatitude,
+        longitude: doc.data().lastLongitude,
+        previousLocationArray: doc.data().previousLocationArray
+      });
     });
   });
 
-  // For each bus stop id, pass the id and store upcoming bus stops into array
-  busID.forEach(soonBusStop);
+  // Initialize CW array with false values
+  const cwObj = busStops.bstop.CW;
+  for (let i = 0; i < cwObj.length; i++) {
+    let locationName = Object.keys(cwObj[i])[0];
+    stops_arr_CW.push({
+      id: locationName,
+      value: false
+    })
+  }
 
-  // Update the database for each bus stops in the array
+  // Initialize CCW array with false values
+  const ccwObj = busStops.bstop.CW;
+  for (let i = 0; i < ccwObj.length; i++) {
+    let locationName = Object.keys(ccwObj[i])[0];
+    stops_arr_CCW.push({
+      id: locationName,
+      value: false
+    })
+  }
+
+  // Pass the collection and object arrays for data validation
+  for (let i = 0; i < busCollection.length; i++) {
+    soonBusStop(busCollection, stops_arr_CW, stops_arr_CCW, i);
+  }
+
+  // Update the database for each bus stops in the object array
   dbUpdate(stops_arr_CW, "CW");
   dbUpdate(stops_arr_CCW, "CCW");
-
-  // Empty the arrays
-  busID = [];
-  previousLocationArray = [];
-  stops_arr_CW = [];
-  stops_arr_CCW = [];
 
   return;
 }
   
-function soonBusStop(item) {
-  let busRef = bussesRef.doc(item);
-  // Get the previous location array of busses and the current location
-  busRef.get().then((doc) => {
-    if (doc.exists) {
-      // Fetch the current position
-      lat1 = doc.data().lastLatitude;
-      lon1 = doc.data().lastLongitude;
-      // Fetching the previousLocationArray from the database, if it exists
-      previousLocationArray = doc.data().previousLocationArray || [];
-    }
-  });
+function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
+  let direction;
+  let lat1 = ref[index].latitude;
+  let lon1 = ref[index].longitude;
+  let previousLocationArray = ref[index].previousLocationArray;
 
-  let direction = calcCWorCCW({lat1, lon1}, previousLocationArray)
+  direction = calcCWorCCW({lat1, lon1}, previousLocationArray)
   
   // If heading of bus is Clock-wise
   if (direction == "cw") {
@@ -62,15 +70,14 @@ function soonBusStop(item) {
       let locationName = Object.keys(location)[0];
       let lat2 = location[locationName].lat;
       let lon2 = location[locationName].lon;
-      // Find the bus stop closest to the bus, and store next 3 stops into an array
+      // Find the bus stop closest to the bus, and set next 3 stops in array to true
       if((lat2 - 0.000450) <= lat1 && (lat2 + 0.000450) >= lat1 
       && (lon2 - 0.000450) <= lon1 && (lon2 + 0.000450) >= lon1) {
         for (let j = 1; i <= 3; j++) {
           let stop_id = Object.keys(cwData[(i + j) % cwLength])[0];
-          // If bus stop is not in array, push into array
-          if (!stops_arr_CW.includes(stop_id)) {
-            stops_arr_CW.push(stop_id);
-          }
+          let objIndex = stops_arr_CW.findIndex((e => e.id === stop_id));
+          // If bus stop is in object array, set value to true
+          if (objIndex != -1) {stops_arr_CW[objIndex].value = true;}
         }
         return;
       }
@@ -87,15 +94,14 @@ function soonBusStop(item) {
       let locationName = Object.keys(location)[0];
       let lat2 = location[locationName].lat;
       let lon2 = location[locationName].lon;
-      // Find the bus stop closest to the bus, and store next 3 stops into an array
+      // Find the bus stop closest to the bus, and set next 3 stops in array to true
       if((lat2 - 0.000450) <= lat1 && (lat2 + 0.000450) >= lat1 
       && (lon2 - 0.000450) <= lon1 && (lon2 + 0.000450) >= lon1) {
         for (let j = 1; i <= 3; j++) {
           let stop_id = Object.keys(ccwData[(i + j) % ccwLength])[0];
-          // If bus stop is not in array, push into array
-          if (!stops_arr_CCW.includes(stop_id)) {
-            stops_arr_CCW.push(stop_id);
-          }
+          let objIndex = stops_arr_CCW.findIndex((e => e.id === stop_id));
+          // If bus stop is in object array, set value to true
+          if (objIndex != -1) {stops_arr_CCW[objIndex].value = true;}
         }
         return;
       }
@@ -106,22 +112,15 @@ function soonBusStop(item) {
 // Set bus stops "Soon" to true in the firestore DB if in array
 function dbUpdate(soonBusStops, direction) {
     // Get a database reference to the collection of stops given a direction
-    const stopRef = defaultDatabase.collection('busStop').document(direction);
+    let stopRef = defaultDatabase.collection('busStop').document(direction);
 
-    // Get all the collection values inside the doc
-    const stops =  async () => {
-        await stopRef.listCollections();
-        stops.forEach(stop => {
-        if(soonBusStops.includes(stop.id)) {
-            stop.update({
-            soon: true
-            });
-        } else {
-            stop.update({
-            soon: false
-            });
-        };
-        });
-    };
+    // Variable for setting id = true
+    let updates = {};
+    soonBusStops.forEach((soonBusStops) => {
+      updates[soonBusStops.id] = soonBusStops.value;
+    });
+
+    // Updates the firebase in one call
+    stopRef.update(updates);
 }
   
