@@ -22,7 +22,7 @@ export default function MapComponent({center, zoom}) {
 
   // Stores the buses in a state variable to rerender
 
-  const [path, setPath] = useState(true)
+  //const [path, setPath] = useState(true)
 
   function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
     const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
@@ -46,6 +46,7 @@ export default function MapComponent({center, zoom}) {
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
+  
 
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
@@ -106,22 +107,50 @@ export default function MapComponent({center, zoom}) {
     }
   }, [center])
 
-  const polylineRef = useRef(null)
-
+  const looppolylineRef = useRef(null)
+  const upperpolylineRef = useRef(null)
   const onMapLoad = ({map, maps}) => {
-    polylineRef.current = new maps.Polyline({
+    looppolylineRef.current = new maps.Polyline({
       path: loopPath,
       geodesic: true,
       strokeColor: '#FF0000',
       strokeOpacity: 1,
       strokeWeight: 4,
     })
+    upperpolylineRef.current = new maps.Polyline({
+      path: upperCampusPath,
+      geodesic: true,
+      strokeColor: '#0000FF',
+      strokeOpacity: 1,
+      strokeWeight: 4,
+    })
+   
 
-    polylineRef.current.setMap(map)
+
+    upperpolylineRef.current.setMap(map)
+    looppolylineRef.current.setMap(map)
   }
 
   useEffect(() => {
-    if (polylineRef.current) {
+    {
+      
+      if(looppolylineRef.current){
+      if (selectedRoute.includes('LOOP')) {  
+          looppolylineRef.current.setOptions({strokeOpacity:1})       
+      }
+      else{
+        looppolylineRef.current.setOptions({strokeOpacity:0})
+      }
+      }
+      if(upperpolylineRef.current){
+      if (selectedRoute.includes('UPPER CAMPUS')) {       
+          upperpolylineRef.current.setOptions({strokeOpacity:1})       
+      }
+      else{        
+        upperpolylineRef.current.setOptions({strokeOpacity:0})
+      }
+      }
+      /*
       if (path) {
         polylineRef.current.setOptions({
           path: loopPath,
@@ -139,8 +168,9 @@ export default function MapComponent({center, zoom}) {
           strokeWeight: 4,
         })
       }
+      */
     }
-  }, [path])
+  }, [selectedRoute])
 
   const isBusUpdatedWithinPast30Minutes = (lastPing) => {
     const currentTime = new Date()
