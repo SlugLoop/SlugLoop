@@ -80,8 +80,17 @@ router.post('/ping', function (req, res) {
   let data = JSON.parse(req.body.data)
   data = data[0]
 
-  // Check if the data is valid and check data length is 6
-  if (dataValidate(data)) {
+  // Check if the data is valid and check data length is 4
+  if (
+    !data ||
+    !data.id ||
+    !data.lon ||
+    !data.lat ||
+    !data.route ||
+    !data.key ||
+    !data.sid ||
+    Object.keys(data).length !== 6
+  ) {
     res.status(400).send('Invalid data')
     return
   }
@@ -208,23 +217,6 @@ function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
   // Convert to degrees
   return (bearing * 180) / Math.PI + 180
 }
-
-// Validates and confirms data
-function dataValidate(data) {
-  if (
-    !data ||
-    !data.id ||
-    !data.lon ||
-    !data.lat ||
-    !data.route ||
-    !data.key ||
-    !data.sid ||
-    Object.keys(data).length != 6
-  ) { return true;}
-  else { return false;}
-}
-
-module.exports = router
 
 // Determine if bus is going up or down
 function latitudeDecreasing(previousLocationArray) {
