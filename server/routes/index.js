@@ -79,10 +79,10 @@ router.get('/buses', function (req, res) {
 
 router.post('/updateSoon', function (req, res) {
   // Update database for which bus stops have incoming busses
-  nextBusStops();
+  nextBusStops()
 
   // Send a response to the base station
-  res.status(200).send('OK');
+  res.status(200).send('OK')
 })
 
 /* Ping the server from base stations. */
@@ -155,7 +155,7 @@ router.post('/ping', function (req, res) {
       previousLongitude: lastLong, // Previous Longitude Ping
       previousLatitude: lastLat, // Previous Latitude Ping
       previousLocationArray: previousLocationArray,
-      direction: direction, 
+      direction: direction,
       heading: heading.toString(),
       route: data.route,
       id: data.id,
@@ -200,24 +200,6 @@ router.post('/contact', function (req, res) {
   }
 })
 
-function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
-  const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
-
-  // Y variable
-  const dLong = toRad(lon2 - lon1)
-  const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
-
-  // X variable
-  const X =
-    Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
-    Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
-
-  // Calculate bearing
-  const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
-  // Convert to degrees
-  return (bearing * 180) / Math.PI + 180
-}
-
 // Validates and confirms data
 function dataValidate(data) {
   if (
@@ -229,8 +211,11 @@ function dataValidate(data) {
     !data.key ||
     !data.sid ||
     Object.keys(data).length != 6
-  ) { return true;}
-  else { return false;}
+  ) {
+    return true
+  } else {
+    return false
+  }
 }
 
 module.exports = router
