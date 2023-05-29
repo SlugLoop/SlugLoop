@@ -77,9 +77,9 @@ router.get('/buses', function (req, res) {
     })
 })
 
-router.post('/updateSoon', function (req, res) {
+router.post('/updateSoon', async function (req, res) {
   // Update database for which bus stops have incoming busses
-  nextBusStops()
+  await nextBusStops()
 
   // Send a response to the base station
   res.status(200).send('OK')
