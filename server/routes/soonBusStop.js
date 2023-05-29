@@ -3,20 +3,20 @@ const busStops = require('./bus-stops.json')
 const defaultDatabase = require('./firebase.js')
 
 // updates next 3 bus stops for every bus
-module.exports = function nextBusStops() {
+module.exports = async function nextBusStops() {
   const busCollection = [];
   let stops_arr_CW = [];
   let stops_arr_CCW = [];
 
-  // Push all bus ID's into array
-  defaultDatabase.collection('busses').get().then(function(querySnapshot) {
-    querySnapshot.forEach(doc => {
-      // Store the busses into busCollection as an array of objects
-      busCollection.push ({
-        latitude: doc.data().lastLatitude,
-        longitude: doc.data().lastLongitude,
-        previousLocationArray: doc.data().previousLocationArray
-      });
+  // Wait for the database query to complete
+  const querySnapshot = await defaultDatabase.collection('busses').get();
+  
+  // Store the busses into busCollection as an array of objects
+  querySnapshot.forEach(doc => {
+    busCollection.push({
+      latitude: doc.data().lastLatitude,
+      longitude: doc.data().lastLongitude,
+      previousLocationArray: doc.data().previousLocationArray
     });
   });
 
@@ -73,7 +73,7 @@ function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
       // Find the bus stop closest to the bus, and set next 3 stops in array to true
       if((lat2 - 0.000450) <= lat1 && (lat2 + 0.000450) >= lat1 
       && (lon2 - 0.000450) <= lon1 && (lon2 + 0.000450) >= lon1) {
-        for (let j = 1; i <= 3; j++) {
+        for (let j = 1; j <= 3; j++) {
           let stop_id = Object.keys(cwData[(i + j) % cwLength])[0];
           let objIndex = stops_arr_CW.findIndex((e => e.id === stop_id));
           // If bus stop is in object array, set value to true
@@ -112,7 +112,7 @@ function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
 // Set bus stops "Soon" to true in the firestore DB if in array
 function dbUpdate(soonBusStops, direction) {
     // Get a database reference to the collection of stops given a direction
-    let stopRef = defaultDatabase.collection('busStop').document(direction);
+    let stopRef = defaultDatabase.collection('busStop').doc(direction);
 
     // Variable for setting id = true
     let updates = {};
