@@ -19,7 +19,7 @@ export default function MapComponent({center, zoom}) {
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
-  const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
+  const [selectedRoute] = useContext(RouteContext)
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -81,14 +81,7 @@ export default function MapComponent({center, zoom}) {
 
   return (
     <>
-      <Box
-        id="map"
-        data-testid="map"
-        sx={{
-          height: window.innerHeight,
-          width: '100vw',
-        }}
-      >
+      <Box id="map" width="100%" height="100vh" data-testid="map">
         <GoogleMap
           apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
           defaultCenter={center}
@@ -100,7 +93,7 @@ export default function MapComponent({center, zoom}) {
             streetViewControl: false,
             fullscreenControl: false,
             mapTypeControl: false,
-            styles: darkMode && getStyle(darkMode),
+            styles: getStyle(darkMode),
           }}
         >
           {Object.keys(combinedBuses)
@@ -154,21 +147,6 @@ const getStyle = (darkMode) => {
         featureType: 'administrative.locality',
         elementType: 'labels.text.fill',
         stylers: [{color: '#d59563'}],
-      },
-      {
-        featureType: 'poi',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#d59563'}],
-      },
-      {
-        featureType: 'poi.park',
-        elementType: 'geometry',
-        stylers: [{color: '#263c3f'}],
-      },
-      {
-        featureType: 'poi.park',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#6b9a76'}],
       },
       {
         featureType: 'road',
@@ -225,7 +203,24 @@ const getStyle = (darkMode) => {
         elementType: 'labels.text.stroke',
         stylers: [{color: '#17263c'}],
       },
+      {
+        featureType: 'poi',
+        stylers: [{visibility: 'off'}],
+      },
+      {
+        featureType: 'poi.school',
+        stylers: [{visibility: 'on'}], // This will show only schools
+      },
     ]
   }
-  return []
+  return [
+    {
+      featureType: 'poi',
+      stylers: [{visibility: 'off'}],
+    },
+    {
+      featureType: 'poi.school',
+      stylers: [{visibility: 'on'}], // This will show only schools
+    },
+  ]
 }
