@@ -1,6 +1,7 @@
 var calcCWorCCW = require('./direction.js')
 const busStops = require('./bus-stops.json')
-const defaultDatabase = require('./firebase.js')
+const defaultDatabase = require('./firebase.js');
+const e = require('express');
 
 // updates next 3 bus stops for every bus
 module.exports = async function nextBusStops() {
@@ -57,8 +58,12 @@ function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
   let lat1 = ref[index].latitude;
   let lon1 = ref[index].longitude;
   let previousLocationArray = ref[index].previousLocationArray;
-
-  direction = calcCWorCCW({lat1, lon1}, previousLocationArray)
+  if(previousLocationArray === undefined) {
+    direction = "n/a";
+  }
+  else {
+    direction = calcCWorCCW({lat1, lon1}, previousLocationArray);
+  }
   
   // If heading of bus is Clock-wise
   if (direction == "cw") {
@@ -97,7 +102,7 @@ function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
       // Find the bus stop closest to the bus, and set next 3 stops in array to true
       if((lat2 - 0.000450) <= lat1 && (lat2 + 0.000450) >= lat1 
       && (lon2 - 0.000450) <= lon1 && (lon2 + 0.000450) >= lon1) {
-        for (let j = 1; i <= 3; j++) {
+        for (let j = 1; j <= 3; j++) {
           let stop_id = Object.keys(ccwData[(i + j) % ccwLength])[0];
           let objIndex = stops_arr_CCW.findIndex((e => e.id === stop_id));
           // If bus stop is in object array, set value to true
