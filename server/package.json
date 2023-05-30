@@ -28,7 +28,7 @@
     "https": "^1.0.0",
     "morgan": "~1.9.1",
     "openssl": "^2.0.0",
-    "swagger-ui-express": "^4.6.0"
+    "swagger-ui-express": "^4.6.3"
   },
   "jest": {
     "testTimeout": 60000,
