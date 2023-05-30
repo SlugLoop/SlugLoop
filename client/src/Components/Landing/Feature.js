@@ -33,6 +33,15 @@ export default function Features() {
           zIndex: -1,
 
           filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+          '::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
+          },
         }}
       />
       <Typography
@@ -52,12 +61,12 @@ export default function Features() {
         alignItems="center"
         justifyContent="flex-start"
         sx={{
-          paddingTop: '8vh',
+          paddingTop: '5vh',
         }}
       >
         <Box
           sx={{
-            backgroundColor: darkMode ? '' : 'rgba(255, 255, 255, 0.6)',
+            backgroundColor: darkMode ? '' : 'rgba(255, 255, 255, 0.8)',
             borderRadius: '10px',
             p: 2,
             width: '100%',
@@ -67,14 +76,16 @@ export default function Features() {
             <ListItemIcon>
               <DirectionsBusIcon color="secondary" fontSize="large" />
             </ListItemIcon>
-            <Typography variant="h5" color="text.primary">
-              Real Time Locations of All Campus Shuttles (Loop) Buses
+            <Typography variant="h7" color="text.primary">
+              With SlugLoop, effortlessly track Campus Shuttle (Loop) buses,
+              including their real-time locations and routes. Plan your journey
+              and never miss a bus again.
             </Typography>
           </Stack>
         </Box>
         <Box
           sx={{
-            backgroundColor: darkMode ? '' : 'rgba(255, 255, 255, 0.6)',
+            backgroundColor: darkMode ? '' : 'rgba(255, 255, 255, 0.8)',
             borderRadius: '10px',
             p: 2,
             width: '100%',
@@ -84,14 +95,16 @@ export default function Features() {
             <ListItemIcon>
               <TrainIcon color="secondary" fontSize="large" />
             </ListItemIcon>
-            <Typography variant="h5" color="text.primary">
-              Real Time Locations of All Santa Cruz (Metro) Buses
+            <Typography variant="h7" color="text.primary">
+              SlugLoop's service extends to Santa Cruz (Metro) buses. Stay
+              informed and ready for your commute with live tracking of
+              on-campus Metro buses, including lines 10, 15, 18, 19, and 20.
             </Typography>
           </Stack>
         </Box>
         <Box
           sx={{
-            backgroundColor: darkMode ? '' : 'rgba(255, 255, 255, 0.6)',
+            backgroundColor: darkMode ? '' : 'rgba(255, 255, 255, 0.8)',
             borderRadius: '10px',
             p: 2,
             width: '100%',
@@ -101,8 +114,9 @@ export default function Features() {
             <ListItemIcon>
               <SearchIcon color="secondary" fontSize="large" />
             </ListItemIcon>
-            <Typography variant="h5" color="text.primary">
-              Advanced filtering methods for both Loop and Metro Buses
+            <Typography variant="h7" color="text.primary">
+              Customize your tracking experience with our advanced filtering
+              options. You can choose to filter by bus route, time, and more.
             </Typography>
           </Stack>
         </Box>

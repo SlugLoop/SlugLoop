@@ -51,7 +51,9 @@ function TimelineElement({date, setBackgroundImage, events}) {
 
   useEffect(() => {
     if (entry?.isIntersecting) {
-      setBackgroundImage(events[date].url)
+      setBackgroundImage((prev) =>
+        prev === events[date].url ? prev : events[date].url,
+      )
     }
   }, [entry, date, setBackgroundImage, events])
 
@@ -60,7 +62,7 @@ function TimelineElement({date, setBackgroundImage, events}) {
       className="vertical-timeline-element--work"
       date={date}
       contentStyle={{
-        marginBottom: '50vh',
+        marginBottom: '80vh',
         color: theme.palette.text.primary,
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[0],
