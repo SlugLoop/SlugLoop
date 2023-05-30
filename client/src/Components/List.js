@@ -3,7 +3,7 @@ import List from '@mui/material/List'
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import AboutButton from './AboutButton'
-import { Box } from '@mui/material'
+import { Box, Typography} from '@mui/material'
 import AppBar from '@mui/material/AppBar';
 import Page from './Page';
 
@@ -18,26 +18,37 @@ export default function ListView() {
             <Box sx={{
                 height: window.innerHeight,
                 width: '100vw',
-            }}>
+                backgroundColor: 'background.default'
+            }}
+            
+            >
                 <AppBar sx={{
                     width: '100%',
-                    position: 'absolute',
-                    top: '0px',
-                    left: '100px'
+                    height: '5%',
+                    position: 'sticky',
+                    top: '60px',
+                    left: '0px'
                 }}>
-                    Select a Bus Stop
+                    <Typography 
+                        variant = "h7"
+                        color="text.primary" 
+                        align="center"
+                    >
+                        Select a bus stop to see estimated times
+                    </Typography>
                 </AppBar>
                 <List sx={{
                     width: '100%',
                     position: 'absolute',
                     left: '100px',
-                    top: '40px',
+                    top: '80px',
                     overflow: 'auto',
-                    maxHeight: '100%'
+                    maxHeight: '100%',
+                    backgroundColor: 'background'
                 }}>
                     {stops.map((stop) => (
                         <ListItemButton onClick ={()=> setShowPage(stop)}>
-                            <ListItemText primary={stop} />
+                            <ListItemText primary={stop} sx={{color:'text.primary'}} />
                             {showPage==stop ? <Page busStop = {stop}/>: null}
                         </ListItemButton>))}
 
@@ -45,7 +56,6 @@ export default function ListView() {
                 </List>
 
 
-                <AboutButton />
             </Box>
         </>
     )

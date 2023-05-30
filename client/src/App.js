@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 import {signIn} from './Components/Auth'
 import Map from './Components/Map'
-import Main from './Components/Main'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import About from './Components/About/AboutUs'
 import AboutDesktop from './Components/About/AboutUsDesktop'
@@ -11,6 +10,7 @@ import MainMobile from './Components/Landing/MainMobile'
 import MainDesktop from './Components/Landing/MainDesktop'
 import MyTimeline from './Components/TimeLine/TimeLine'
 import Wrapper from './Components/UIWrapper/Wrapper'
+import List from './Components/List'
 
 function App() {
   const viewportWidth = useViewportWidth()
@@ -37,6 +37,15 @@ function App() {
     {
       path: '/map',
       element: <Map />,
+    },
+    {
+      path: '/list',
+      element: (
+        <Wrapper>
+          <List />
+        </Wrapper>
+        
+      )
     },
     {
       path: '/about',

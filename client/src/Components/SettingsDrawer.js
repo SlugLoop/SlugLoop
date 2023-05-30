@@ -19,6 +19,7 @@ import {AccessTime as AccessTimeIcon} from '@mui/icons-material'
 import {Menu as MenuIcon} from '@mui/icons-material'
 import HomeIcon from '@mui/icons-material/Home'
 import TimelineIcon from '@mui/icons-material/Timeline'
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AppContext from '../appContext'
 
 export default function SettingsDrawer(props) {
@@ -93,6 +94,18 @@ export default function SettingsDrawer(props) {
               }}
             />
             Timeline
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              navigate('/list')
+            }}
+          >
+            <LocationOnIcon
+              sx={{
+                mr: 2,
+              }}
+            />
+            Stops
           </ListItemButton>
           <ListItemButton
             onClick={() => {

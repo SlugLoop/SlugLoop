@@ -73,6 +73,13 @@ export default function DesktopTopBar() {
             >
               map
             </Button>
+            <Button 
+              onClick={() => navigate('/list')}
+              variant="text"
+              color="secondary"
+              >
+              List
+            </Button>
             <IconButton onClick={handleDarkModeToggle} color="inherit">
               {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
