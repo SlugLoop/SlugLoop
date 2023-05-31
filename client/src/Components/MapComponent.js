@@ -24,7 +24,6 @@ export default function MapComponent({center, zoom}) {
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute] = useContext(RouteContext)
-
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
