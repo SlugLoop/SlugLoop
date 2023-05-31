@@ -27,26 +27,31 @@ export default function ListView() {
     }
     return (
         <>
-            <Box sx={{
-                display:'flex',
-                height: window.innerHeight,
-                width: '100vw',
+            <Box 
+                
+                display = 'flex'
+                height= 'window.innerHeight' 
+                width = 'window.innerWidth'
+                sx={{
                 flexDirection: 'column',
                 justifyContent: 'flex-start',
-                paddingTop: '5vh',
-                alignItems: 'center',
+                overflowX: 'hidden',
+                paddingTop: '3vh',
+                alignItems: 'left',
+    
                 backgroundColor: 'background.default'
             }}
             
             >
 
-                <List sx={{
-                    width: '100%',
-                    position: 'absolute',
-                    left: '100px',
-                    top: '80px',
-                    overflow: 'auto',
-                    maxHeight: '100%',
+                <List 
+                    
+                    
+                    sx={{
+                    width: 'window.innerWidth',
+                    left: '10px',
+                    top: '0px',   
+                    maxHeight: 'window.innerHeight',                   
                     backgroundColor: 'background'
                 }}>
                     {stops.map((stop) => (
@@ -57,7 +62,11 @@ export default function ListView() {
 
 
                 </List>
-                <Drawer anchor = "bottom" open = {isDrawerOpen} onClose = {handleDrawerClose}>
+                <Drawer 
+                anchor = "bottom" 
+                open = {isDrawerOpen} 
+                onClose = {handleDrawerClose}
+                >
                         <Page busStop = {stop}/>
                 </Drawer>
 
