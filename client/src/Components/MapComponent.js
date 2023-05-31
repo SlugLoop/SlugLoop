@@ -4,6 +4,7 @@ import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
+import {upperCampusPath, loopPath} from './PolylinePoints'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
@@ -18,24 +19,6 @@ export default function MapComponent({center, zoom}) {
   // Stores the buses in a state variable to rerender
 
   const [path, setPath] = useState(true)
-
-  function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
-    const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
-
-    // Y variable
-    const dLong = toRad(lon2 - lon1)
-    const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
-
-    // X variable
-    const X =
-      Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
-      Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
-
-    // Calculate bearing
-    const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
-    // Convert to degrees
-    return (bearing * 180) / Math.PI + 180
-  }
 
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
@@ -136,13 +119,6 @@ export default function MapComponent({center, zoom}) {
     }
   }, [path])
 
-  const isBusUpdatedWithinPast30Minutes = (lastPing) => {
-    const currentTime = new Date()
-    const lastPingTime = new Date(lastPing)
-    const timeDifference = currentTime - lastPingTime
-    return timeDifference < THIRTY_MINUTES
-  }
-
   return (
     <>
       <Box id="map" width="100%" height="100vh" data-testid="map">
@@ -178,6 +154,7 @@ export default function MapComponent({center, zoom}) {
                   key={key}
                   lat={parseFloat(bus.lastLatitude)}
                   lng={parseFloat(bus.lastLongitude)}
+                  direction={bus.direction}
                   lastPing={bus.lastPing}
                   route={bus.route}
                   heading={bus.heading}
