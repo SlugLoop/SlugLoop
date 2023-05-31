@@ -3,7 +3,7 @@ import List from '@mui/material/List'
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import AboutButton from './AboutButton'
-import { Box, Typography, Drawer} from '@mui/material'
+import { Box, Typography, Drawer, Modal} from '@mui/material'
 import AppBar from '@mui/material/AppBar';
 import Page from './Page';
 
@@ -45,30 +45,38 @@ export default function ListView() {
             >
 
                 <List 
-                    
-                    
                     sx={{
                     width: 'window.innerWidth',
-                    left: '10px',
-                    top: '0px',   
+                    paddingLeft: '3vw',
                     maxHeight: 'window.innerHeight',                   
-                    backgroundColor: 'background'
+                    backgroundColor: 'background',                   
                 }}>
                     {stops.map((stop) => (
-                        <ListItemButton onClick ={()=> {handleDrawerOpen(); setStop(stop)}}>
+                        <ListItemButton 
+                            onClick ={()=> {handleDrawerOpen(); setStop(stop)}}
+                            sx = {{width:'20%'}}
+                            
+                        >
                             <ListItemText primary={stop} sx={{color:'text.primary'}} />
     
                         </ListItemButton>))}
 
 
                 </List>
-                <Drawer 
+                <Modal 
                 anchor = "bottom" 
                 open = {isDrawerOpen} 
                 onClose = {handleDrawerClose}
+                sx = {{
+                    width: '50%',
+                    display: 'flex',
+                    left: '25%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
                 >
                         <Page busStop = {stop}/>
-                </Drawer>
+                </Modal>
 
 
             </Box>
