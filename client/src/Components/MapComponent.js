@@ -47,7 +47,7 @@ export default function MapComponent({center, zoom}) {
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
-  const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
+ // const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
 
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
@@ -144,12 +144,12 @@ export default function MapComponent({center, zoom}) {
             .filter(
               // Filter out buses that haven't updated in the last 30 minutes
               (key) =>
-                !filter ||
+                !settings.filter ||
                 isBusUpdatedWithinPast30Minutes(combinedBuses[key].lastPing),
             )
             .filter(
               // Filter out buses that don't match the selected routes
-              (key) => selectedRoute.includes(combinedBuses[key].route),
+              (key) => settings.selectedRoute.includes(combinedBuses[key].route),
             )
             .map((key) => {
               const bus = combinedBuses[key]
@@ -161,19 +161,19 @@ export default function MapComponent({center, zoom}) {
                   lastPing={bus.lastPing}
                   route={bus.route}
                   heading={bus.heading}
-                  displayTime={displayTime}
-                  darkMode={darkMode}
+                  displayTime={settings.displayTime}
+                  darkMode={settings.darkMode}
                 />
               )
             })}
         </GoogleMap>
       </Box>
       <SettingsDrawer
-        filter={filter}
+        filter={settings.filter}
         handleFilterToggle={handleFilterToggle}
-        displayTime={displayTime}
+        displayTime={settings.displayTime}
         toggleDisplayTime={toggleDisplayTime}
-        darkMode={darkMode}
+        darkMode={settings.darkMode}
       />
       <InstallPWAButton />
       <RouteSelector />

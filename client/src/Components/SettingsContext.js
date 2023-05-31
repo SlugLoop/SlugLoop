@@ -1,5 +1,5 @@
-import React, {createContext, useReducer } from 'react'
-//import SettingsReducer from './SettingsReducer'
+import React, {createContext} from 'react'
+
 const SettingsContext = createContext();
-//const SettingsDispatchContext = createContext();
+
 export default SettingsContext

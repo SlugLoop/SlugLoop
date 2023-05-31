@@ -3,9 +3,13 @@ export const INITIAL_STATE = {
     displayTime: localStorage.getItem('displayTime')? JSON.parse(localStorage.getItem('displayTime')):false,
     darkMode: localStorage.getItem('darkMode')? JSON.parse(localStorage.getItem('darkMode')):false,
     filter: localStorage.getItem('filter')? JSON.parse(localStorage.getItem('filter')):false,
-    path: localStorage.getItem('path')? JSON.parse(localStorage.getItem('path')):true,
-    showMap: localStorage.getItem('showMap')? JSON.parse(localStorage.getItem('showMap')):true,
-    displayUCSC: localStorage.getItem('displayUCSC')? JSON.parse(localStorage.getItem('displayUCSC')):true,
+    selectedRoute: localStorage.getItem('selectedRoute')?JSON.parse(localStorage.getItem('selectedRoute')):
+    ['10', '15', '18', '19', '20', 'LOOP',
+    'UPPER CAMPUS',
+    'LOOP OUT OF SERVICE AT BARN THEATER',
+    'OUT OF SERVICE/SORRY',
+    'SPECIAL',]
+   
 
 }
 export function SettingsReducer(state, action){
@@ -28,23 +32,23 @@ export function SettingsReducer(state, action){
                 ...state, 
                 filter: !state.filter
             }
-        case 'SET_PATH':
-            localStorage.setItem('path', JSON.stringify(!state.path))
+        case 'DELETE_ROUTE':
+            localStorage.setItem('selectedRoute', JSON.stringify(state.selectedRoute.filter((r) => r !== action.deletedRoute)))
             return {
                 ...state,
-                path: !state.path
+                selectedRoute: state.selectedRoute.filter((r) => r !== action.deletedRoute)
             }
-        case 'SET_SHOW_MAP':
-            localStorage.setItem('showMap', JSON.stringify(!state.showMap))
+        case 'ADD_ROUTE':
+            localStorage.setItem('selectedRoute', JSON.stringify([...state.selectedRoute, action.addedRoute]))
             return {
                 ...state,
-                showMap: !state.showMap
+                selectedRoute:[...state.selectedRoute, action.addedRoute]
             }
-        case 'SET_DISPLAY_UCSC':
-            localStorage.setItem('displayUCSC', JSON.stringify(!state.displayUCSC))
+        case 'CLEAR_ROUTE':
+            localStorage.setItem('selectedRoute', JSON.stringify([]))
             return {
                 ...state,
-                displayUCSC: !state.displayUCSC
+                selectedRoute:[]
             }
         default: return state
     }

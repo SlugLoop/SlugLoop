@@ -18,6 +18,7 @@ import {
 } from '@mui/icons-material'
 import {RouteContext} from '../Route'
 import routeColors from './bus.json'
+import SettingsContext from './SettingsContext'
 
 const metroRoutes = ['10', '15', '18', '19', '20']
 const loopRoutes = [
@@ -29,9 +30,10 @@ const loopRoutes = [
 ]
 
 export default function RouteSelector() {
-  const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
+  //const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
   const [open, setOpen] = useState('')
   const [isDrawerOpen, setDrawerOpen] = useState(false)
+  const {settings, dispatch} = useContext(SettingsContext)
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true)
@@ -93,10 +95,10 @@ export default function RouteSelector() {
               <ListItemButton
                 key={route}
                 onClick={() => {
-                  if (selectedRoute.includes(route)) {
-                    setSelectedRoute(selectedRoute.filter((r) => r !== route))
+                  if (settings.selectedRoute.includes(route)) {
+                    dispatch({type: "DELETE_ROUTE", deletedRoute: route})
                   } else {
-                    setSelectedRoute([...selectedRoute, route])
+                    dispatch({type: "ADD_ROUTE", addedRoute: route})
                   }
                 }}
                 sx={{
@@ -105,7 +107,7 @@ export default function RouteSelector() {
                   paddingBottom: '5px',
                 }}
               >
-                <Checkbox checked={selectedRoute.includes(route)} />
+                <Checkbox checked={settings.selectedRoute.includes(route)} />
                 <ListItemText primary={route} />
                 <ListItemIcon>
                   <img
@@ -134,10 +136,10 @@ export default function RouteSelector() {
               <ListItemButton
                 key={route}
                 onClick={() => {
-                  if (selectedRoute.includes(route)) {
-                    setSelectedRoute(selectedRoute.filter((r) => r !== route))
+                  if (settings.selectedRoute.includes(route)) {
+                    dispatch({type:"DELETE_ROUTE", deletedRoute: route})
                   } else {
-                    setSelectedRoute([...selectedRoute, route])
+                    dispatch({type: "ADD_ROUTE", addedRoute: route})
                   }
                 }}
                 sx={{
@@ -146,7 +148,7 @@ export default function RouteSelector() {
                   paddingBottom: '5px',
                 }}
               >
-                <Checkbox checked={selectedRoute.includes(route)} />
+                <Checkbox checked={settings.selectedRoute.includes(route)} />
                 <ListItemText primary={route} />
                 <ListItemIcon>
                   <img
@@ -160,7 +162,7 @@ export default function RouteSelector() {
           </Collapse>
           <ListItemButton
             onClick={() => {
-              setSelectedRoute([])
+              dispatch({type: "CLEAR_ROUTE"})
             }}
           >
             <ListItemText primary="Clear Routes" />
