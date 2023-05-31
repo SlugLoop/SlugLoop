@@ -6,17 +6,11 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
 
-export default function Page({ busStop }) {
-
+export default function Page({busStop}) {
+   
+    
     return (
-        <Box sx={{
-            position: 'fixed',
-            width: '100%',
-            height: '100%',
-            left: '300px',
-            top: '80px', 
-         
-        }}>
+        
           <Card>
             <CardContent>
                 <Typography sx = {{fontSize: 12 }} color = "text.primary">
@@ -37,7 +31,7 @@ export default function Page({ busStop }) {
                 
             </CardContent>
           </Card>
-        </Box>
+
     )
 }
 
