@@ -25,8 +25,6 @@ export default function MapComponent({center, zoom}) {
   const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute] = useContext(RouteContext)
 
-  
-
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -86,43 +84,44 @@ export default function MapComponent({center, zoom}) {
     }
   }, [center])
 
-  const looppolylineRef = useRef(null)
-  const upperpolylineRef = useRef(null)
   const polylineRefs = useRef({})
   const onMapLoad = ({map, maps}) => {
-    const routes = [{
-      name: 'LOOP',
-      path: loopPath,
-      strokeColor: '#FF0000',
-    },{
-      name: 'UPPER CAMPUS',
-      path: upperCampusPath,
-      strokeColor: '#0000FF',
-    }]
+    const routes = [
+      {
+        name: 'LOOP',
+        path: loopPath,
+        strokeColor: '#FF0000',
+      },
+      {
+        name: 'UPPER CAMPUS',
+        path: upperCampusPath,
+        strokeColor: '#0000FF',
+      },
+    ]
     routes.forEach((route) => {
       polylineRefs.current[route.name] = new maps.Polyline({
-          path: route.path,
-          geodesic: true,
-          strokeColor: route.strokeColor,
-          strokeOpacity: 1,
-          strokeWeight: 4,
+        path: route.path,
+        geodesic: true,
+        strokeColor: route.strokeColor,
+        strokeOpacity: 1,
+        strokeWeight: 4,
       })
       polylineRefs.current[route.name].setMap(map)
-  })
+    })
   }
 
   useEffect(() => {
     const routeNames = Object.keys(polylineRefs.current)
 
-    routeNames.forEach(routeName => {
-        // For each route, if it is selected, set its opacity to 1, else set it to 0
-        if (polylineRefs.current[routeName]) {
-            if (selectedRoute.includes(routeName)) {
-                polylineRefs.current[routeName].setOptions({strokeOpacity:1})
-            } else {
-                polylineRefs.current[routeName].setOptions({strokeOpacity:0})
-            }
+    routeNames.forEach((routeName) => {
+      // For each route, if it is selected, set its opacity to 1, else set it to 0
+      if (polylineRefs.current[routeName]) {
+        if (selectedRoute.includes(routeName)) {
+          polylineRefs.current[routeName].setOptions({strokeOpacity: 1})
+        } else {
+          polylineRefs.current[routeName].setOptions({strokeOpacity: 0})
         }
+      }
     })
   }, [selectedRoute])
 
