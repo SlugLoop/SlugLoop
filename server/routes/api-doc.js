@@ -112,6 +112,20 @@ const apiDoc = {
         },
       },
     },
+    '/updateSoon': {
+      // Update the soon buses
+      post: {
+        description: 'Update the soon buses',
+        responses: {
+          200: {
+            description: 'OK',
+          },
+          500: {
+            description: 'Error updating buses',
+          },
+        },
+      },
+    },
     '/contact': {
       // For the contact us form
       post: {

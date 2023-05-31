@@ -26,6 +26,15 @@ export default function Hero() {
           zIndex: -1,
 
           filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+          '::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
+          },
         }}
       />
 

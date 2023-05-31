@@ -3,17 +3,13 @@ import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
-import SettingsButton from './SettingsButton'
-import AboutButton from './AboutButton'
-import Button from '@mui/material/Button'
-import {upperCampusPath, loopPath} from './PolylinePoints'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
+import {upperCampusPath, loopPath} from './PolylinePoints'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
 import AppContext from '../appContext'
-const THIRTY_MINUTES = 30 * 60 * 1000
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
@@ -24,28 +20,11 @@ export default function MapComponent({center, zoom}) {
 
   //const [path, setPath] = useState(true)
 
-  function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
-    const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
-
-    // Y variable
-    const dLong = toRad(lon2 - lon1)
-    const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
-
-    // X variable
-    const X =
-      Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
-      Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
-
-    // Calculate bearing
-    const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
-    // Convert to degrees
-    return (bearing * 180) / Math.PI + 180
-  }
-
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
-  const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
+  const [selectedRoute] = useContext(RouteContext)
+
   
 
   function toggleDisplayTime() {
@@ -147,23 +126,9 @@ export default function MapComponent({center, zoom}) {
     })
   }, [selectedRoute])
 
-  const isBusUpdatedWithinPast30Minutes = (lastPing) => {
-    const currentTime = new Date()
-    const lastPingTime = new Date(lastPing)
-    const timeDifference = currentTime - lastPingTime
-    return timeDifference < THIRTY_MINUTES
-  }
-
   return (
     <>
-      <Box
-        id="map"
-        data-testid="map"
-        sx={{
-          height: window.innerHeight,
-          width: '100vw',
-        }}
-      >
+      <Box id="map" width="100%" height="100vh" data-testid="map">
         <GoogleMap
           apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
           defaultCenter={center}
@@ -175,7 +140,7 @@ export default function MapComponent({center, zoom}) {
             streetViewControl: false,
             fullscreenControl: false,
             mapTypeControl: false,
-            styles: darkMode && getStyle(darkMode),
+            styles: getStyle(darkMode),
           }}
         >
           {Object.keys(combinedBuses)
@@ -196,6 +161,7 @@ export default function MapComponent({center, zoom}) {
                   key={key}
                   lat={parseFloat(bus.lastLatitude)}
                   lng={parseFloat(bus.lastLongitude)}
+                  direction={bus.direction}
                   lastPing={bus.lastPing}
                   route={bus.route}
                   heading={bus.heading}
@@ -229,21 +195,6 @@ const getStyle = (darkMode) => {
         featureType: 'administrative.locality',
         elementType: 'labels.text.fill',
         stylers: [{color: '#d59563'}],
-      },
-      {
-        featureType: 'poi',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#d59563'}],
-      },
-      {
-        featureType: 'poi.park',
-        elementType: 'geometry',
-        stylers: [{color: '#263c3f'}],
-      },
-      {
-        featureType: 'poi.park',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#6b9a76'}],
       },
       {
         featureType: 'road',
@@ -300,7 +251,24 @@ const getStyle = (darkMode) => {
         elementType: 'labels.text.stroke',
         stylers: [{color: '#17263c'}],
       },
+      {
+        featureType: 'poi',
+        stylers: [{visibility: 'off'}],
+      },
+      {
+        featureType: 'poi.school',
+        stylers: [{visibility: 'on'}], // This will show only schools
+      },
     ]
   }
-  return []
+  return [
+    {
+      featureType: 'poi',
+      stylers: [{visibility: 'off'}],
+    },
+    {
+      featureType: 'poi.school',
+      stylers: [{visibility: 'on'}], // This will show only schools
+    },
+  ]
 }
