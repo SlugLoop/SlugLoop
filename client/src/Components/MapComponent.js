@@ -109,67 +109,42 @@ export default function MapComponent({center, zoom}) {
 
   const looppolylineRef = useRef(null)
   const upperpolylineRef = useRef(null)
+  const polylineRefs = useRef({})
   const onMapLoad = ({map, maps}) => {
-    looppolylineRef.current = new maps.Polyline({
+    const routes = [{
+      name: 'LOOP',
       path: loopPath,
-      geodesic: true,
       strokeColor: '#FF0000',
-      strokeOpacity: 1,
-      strokeWeight: 4,
-    })
-    upperpolylineRef.current = new maps.Polyline({
+    },{
+      name: 'UPPER CAMPUS',
       path: upperCampusPath,
-      geodesic: true,
       strokeColor: '#0000FF',
-      strokeOpacity: 1,
-      strokeWeight: 4,
-    })
-   
-
-
-    upperpolylineRef.current.setMap(map)
-    looppolylineRef.current.setMap(map)
+    }]
+    routes.forEach((route) => {
+      polylineRefs.current[route.name] = new maps.Polyline({
+          path: route.path,
+          geodesic: true,
+          strokeColor: route.strokeColor,
+          strokeOpacity: 1,
+          strokeWeight: 4,
+      })
+      polylineRefs.current[route.name].setMap(map)
+  })
   }
 
   useEffect(() => {
-    {
-      
-      if(looppolylineRef.current){
-      if (selectedRoute.includes('LOOP')) {  
-          looppolylineRef.current.setOptions({strokeOpacity:1})       
-      }
-      else{
-        looppolylineRef.current.setOptions({strokeOpacity:0})
-      }
-      }
-      if(upperpolylineRef.current){
-      if (selectedRoute.includes('UPPER CAMPUS')) {       
-          upperpolylineRef.current.setOptions({strokeOpacity:1})       
-      }
-      else{        
-        upperpolylineRef.current.setOptions({strokeOpacity:0})
-      }
-      }
-      /*
-      if (path) {
-        polylineRef.current.setOptions({
-          path: loopPath,
-          geodesic: true,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1,
-          strokeWeight: 4,
-        })
-      } else {
-        polylineRef.current.setOptions({
-          path: upperCampusPath,
-          geodesic: true,
-          strokeColor: '#0000FF',
-          strokeOpacity: 1,
-          strokeWeight: 4,
-        })
-      }
-      */
-    }
+    const routeNames = Object.keys(polylineRefs.current)
+
+    routeNames.forEach(routeName => {
+        // For each route, if it is selected, set its opacity to 1, else set it to 0
+        if (polylineRefs.current[routeName]) {
+            if (selectedRoute.includes(routeName)) {
+                polylineRefs.current[routeName].setOptions({strokeOpacity:1})
+            } else {
+                polylineRefs.current[routeName].setOptions({strokeOpacity:0})
+            }
+        }
+    })
   }, [selectedRoute])
 
   const isBusUpdatedWithinPast30Minutes = (lastPing) => {
