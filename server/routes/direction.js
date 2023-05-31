@@ -57,15 +57,17 @@ module.exports = function calcCWorCCW ({lat1, lon1}, previousLocationArray) {
 // Determine if bus is going up or down
 function latitudeDecreasing(previousLocationArray) {
   total = 0;
-  for (let i = 0; i < previousLocationArray.length - 1; i++) {
-    if((previousLocationArray[i].lat - previousLocationArray[i+1].lat) > 0) {
+  for (let i = previousLocationArray.length - 1; i >= 1; i--) {
+    if((previousLocationArray[i].lat - previousLocationArray[i-1].lat) > 0) {
       total += 1;
     }
     else {
       total -= 1;
     }
   }
-  if (total > 0) return false;
+  if (total > 0) { 
+    return false;
+  }
   return true;
     
 }
@@ -73,14 +75,16 @@ function latitudeDecreasing(previousLocationArray) {
 // Determine if bus is going left or right
 function longitudeDecreasing(previousLocationArray) {
   total = 0;
-  for (let i = 0; i < previousLocationArray.length - 1; i++) {
-    if((previousLocationArray[i].lon - previousLocationArray[i+1].lon) > 0) {
+  for (let i = previousLocationArray.length - 1; i >= 1; i--) {
+    if((previousLocationArray[i].lon - previousLocationArray[i-1].lon) > 0) {
       total += 1;
     }
     else {
       total -= 1;
     }
   }
-  if (total > 0) return false;
-    return true;
+  if (total > 0) { 
+    return false; 
   }
+  return true;
+}
