@@ -58,7 +58,7 @@ export default function FeaturesDesktop() {
           display="flex"
           flexDirection="column"
           alignItems="center"
-          justifyContent="center"
+          justifyContent="flex-start"
           padding={5}
           backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
           borderRadius="10px"
@@ -67,11 +67,14 @@ export default function FeaturesDesktop() {
             <ListItemIcon>
               <DirectionsBusIcon color="secondary" fontSize="large" />
             </ListItemIcon>
+            <Typography variant="h5" color="text.primary" align="center">
+              Track campus shuttles in real time
+            </Typography>
             <Typography variant="h6" color="text.primary">
-              Track campus shuttles in real time: Using our app, you can get the
-              real-time location of all Campus Shuttles (Loop) buses. Never miss
-              your bus again, and optimize your time by knowing when to head to
-              the stop.
+              With SlugLoop, you get real-time locations of all loop buses,
+              complete with route names. This feature lets you know not just
+              when, but also where the loop buses are heading, eliminating the
+              need to be physically present at the bus station.
             </Typography>
           </Stack>
         </Box>
@@ -81,7 +84,7 @@ export default function FeaturesDesktop() {
           display="flex"
           flexDirection="column"
           alignItems="center"
-          justifyContent="center"
+          justifyContent="flex-start"
           padding={5}
           backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
           borderRadius="10px"
@@ -90,10 +93,15 @@ export default function FeaturesDesktop() {
             <ListItemIcon>
               <TrainIcon color="secondary" fontSize="large" />
             </ListItemIcon>
+            <Typography variant="h5" color="text.primary" align="center">
+              Live locations of Santa Cruz (Metro) buses
+            </Typography>
             <Typography variant="h6" color="text.primary">
-              Live locations of Santa Cruz (Metro) buses: In addition to Campus
-              Shuttles, our service also provides live location data for all
-              Santa Cruz (Metro) buses.
+              Beyond Campus Shuttles, SlugLoop extends its service by providing
+              live location data for metro buses. Importantly, we track all the
+              metro buses that come on campus, including lines 10, 15, 18, 19,
+              and 20, keeping you well-informed and ready for all your on-campus
+              commutes.
             </Typography>
           </Stack>
         </Box>
@@ -103,7 +111,7 @@ export default function FeaturesDesktop() {
           display="flex"
           flexDirection="column"
           alignItems="center"
-          justifyContent="center"
+          justifyContent="flex-start"
           padding={5}
           backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
           borderRadius="10px"
@@ -112,10 +120,12 @@ export default function FeaturesDesktop() {
             <ListItemIcon>
               <SearchIcon color="secondary" fontSize="large" />
             </ListItemIcon>
+            <Typography variant="h5" color="text.primary" align="center">
+              Advanced Filtering for both Loop and Metro Buses
+            </Typography>
             <Typography variant="h6" color="text.primary">
-              Advanced Filtering for both Loop and Metro Buses: Customize your
-              tracking experience with our advanced filtering options. You can
-              choose to filter by bus route, time, and more.
+              Customize your tracking experience with our advanced filtering
+              options. You can choose to filter by bus route, time, and more.
             </Typography>
           </Stack>
         </Box>
