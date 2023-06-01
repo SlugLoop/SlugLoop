@@ -122,6 +122,8 @@ export default function MapComponent({center, zoom}) {
                   lat={parseFloat(bus.lastLatitude)}
                   lng={parseFloat(bus.lastLongitude)}
                   lastPing={bus.lastPing}
+                  fleetId={bus.fleetId}
+                  direction={bus.direction}
                   route={bus.route}
                   heading={bus.heading}
                   displayTime={displayTime}

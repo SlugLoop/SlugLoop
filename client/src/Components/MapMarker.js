@@ -1,4 +1,4 @@
-import {Box, Typography} from '@mui/material'
+import {Box, Typography, Tooltip} from '@mui/material'
 import React, {useState} from 'react'
 import busColors from './bus.json'
 
@@ -40,7 +40,6 @@ export default function MapMarker(props) {
         justifyContent: 'center',
       }}
     >
-      {/* DON't TOUCH IT BREAKS IF YOU REMOVE*/}
       <img
         src={busColors[props.route]}
         alt="bus"
@@ -62,15 +61,29 @@ export default function MapMarker(props) {
               {convertDateToHumanReadableTime(props.lastPing)}
             </Typography>
           )}
-          <Box
-            component="img"
-            src={busColors[props.route]}
-            alt="bus"
-            sx={{
-              //Rotate the marker based on the heading of the bus in radians
-              transform: `rotate(${props.heading}deg)`,
-            }}
-          />
+          <Tooltip
+            title={
+              <Box>
+                <Typography variant="caption" display="block">
+                  Fleet ID: {props.fleetId}
+                </Typography>
+                <Typography variant="caption" display="block">
+                  Direction: {props.direction}
+                </Typography>
+              </Box>
+            }
+            placement="top"
+          >
+            <Box
+              component="img"
+              src={busColors[props.route]}
+              alt="bus"
+              sx={{
+                //Rotate the marker based on the heading of the bus in radians
+                transform: `rotate(${props.heading}deg)`,
+              }}
+            />
+          </Tooltip>
         </>
       )}
     </Box>
