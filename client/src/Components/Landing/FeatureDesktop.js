@@ -68,7 +68,7 @@ export default function FeaturesDesktop() {
               <DirectionsBusIcon color="secondary" fontSize="large" />
             </ListItemIcon>
             <Typography variant="h5" color="text.primary" align="center">
-              Track campus shuttles and metro in real time
+              Track campus shuttles in real time
             </Typography>
             <Typography variant="h6" color="text.primary">
               With SlugLoop, you get real-time locations of all loop buses,
