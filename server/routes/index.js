@@ -123,7 +123,7 @@ router.post('/ping', function (req, res) {
         // If the bus exists, we will get the last ping location
         lastLong = doc.data().lastLongitude || 0
         lastLat = doc.data().lastLatitude || 0
-        fleedId = doc.data().fleetId || 999
+        fleetId = doc.data().fleetId || 999
         // Fetching the previousLocationArray from the database, if it exists
         previousLocationArray = doc.data().previousLocationArray || []
       }
