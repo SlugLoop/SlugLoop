@@ -10,7 +10,6 @@ import {
 import IosShareIcon from '@mui/icons-material/IosShare'
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
 import CloseIcon from '@mui/icons-material/Close'
-import {color} from 'framer-motion'
 
 export default function InstallPWAButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
