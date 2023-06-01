@@ -1,5 +1,6 @@
 import {Box, Button, Stack, Typography} from '@mui/material'
 import AppContext from '../../appContext'
+import {motion} from 'framer-motion'
 import React, {useContext} from 'react'
 
 export default function HeroDesktop() {
@@ -42,11 +43,15 @@ export default function HeroDesktop() {
       />
 
       <Stack
+        component={motion.div}
         direction="column"
         spacing={2}
         alignItems="center"
         justifyContent="flex-start"
         paddingTop="20vh"
+        initial={{y: -50, opacity: 0}}
+        animate={{y: 0, opacity: 1}}
+        transition={{delay: 0, duration: 0.5}}
       >
         <Typography variant="h2" color="text.primary">
           Slug Loop
@@ -72,12 +77,18 @@ export default function HeroDesktop() {
         >
           Map
         </Button>
-        <Typography variant="h5" align="center" color="text.primary">
-          Made By Students
-        </Typography>
-        <Typography variant="h5" align="center" color="text.primary">
-          For Students
-        </Typography>
+        <motion.div
+          initial={{opacity: 0}}
+          animate={{opacity: 1}}
+          transition={{delay: 0.5, duration: 0.5}}
+        >
+          <Typography variant="h5" align="center" color="text.primary">
+            Made By Students
+          </Typography>
+          <Typography variant="h5" align="center" color="text.primary">
+            For Students
+          </Typography>
+        </motion.div>
       </Stack>
     </Box>
   )

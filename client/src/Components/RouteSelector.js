@@ -10,6 +10,7 @@ import {
   Drawer,
   IconButton,
   Typography,
+  useTheme,
 } from '@mui/material'
 import {
   ExpandLess,
@@ -32,6 +33,7 @@ export default function RouteSelector() {
   const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
   const [open, setOpen] = useState('')
   const [isDrawerOpen, setDrawerOpen] = useState(false)
+  const theme = useTheme()
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true)
@@ -45,7 +47,7 @@ export default function RouteSelector() {
     <>
       <IconButton
         edge="start"
-        color="inherit"
+        color="primary"
         aria-label="menu"
         onClick={handleDrawerOpen}
         sx={{
@@ -53,7 +55,7 @@ export default function RouteSelector() {
           top: '30px',
           right: '30px',
           borderRadius: '50%',
-          backgroundColor: 'white',
+          backgroundColor: theme.palette.background.paper,
         }}
       >
         <MenuIcon />

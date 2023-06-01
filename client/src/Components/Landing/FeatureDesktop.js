@@ -2,8 +2,8 @@ import React, {useContext} from 'react'
 import {Box, Stack, Typography, ListItemIcon} from '@mui/material'
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus'
 import TrainIcon from '@mui/icons-material/Train'
-import SearchIcon from '@mui/icons-material/Search'
 import AppContext from '../../appContext'
+import GetAppIcon from '@mui/icons-material/GetApp'
 
 export default function FeaturesDesktop() {
   const {darkMode} = useContext(AppContext)
@@ -118,14 +118,17 @@ export default function FeaturesDesktop() {
         >
           <Stack direction="column" alignItems="center" spacing={1}>
             <ListItemIcon>
-              <SearchIcon color="secondary" fontSize="large" />
+              <GetAppIcon color="secondary" fontSize="large" />
             </ListItemIcon>
             <Typography variant="h5" color="text.primary" align="center">
-              Advanced Filtering for both Loop and Metro Buses
+              Save SlugLoop as a Progressive Web App
             </Typography>
             <Typography variant="h6" color="text.primary">
-              Customize your tracking experience with our advanced filtering
-              options. You can choose to filter by bus route, time, and more.
+              You can install SlugLoop on your device for even quicker access.
+              Just use your browser's 'Add to Home screen' option and enjoy our
+              service as a Progressive Web App. This allows for a full-screen
+              experience and faster load times, making campus navigation easier
+              than ever.
             </Typography>
           </Stack>
         </Box>
