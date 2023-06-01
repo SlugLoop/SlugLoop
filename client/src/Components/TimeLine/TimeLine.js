@@ -150,7 +150,12 @@ export default function MyTimeline() {
   const {darkMode} = useContext(AppContext)
 
   return (
-    <div>
+    <div
+      style={{
+        width: '100%',
+        overflowX: 'hidden',
+      }}
+    >
       <AnimatePresence>
         <motion.section
           key={backgroundImage}

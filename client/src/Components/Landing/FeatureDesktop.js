@@ -94,7 +94,7 @@ export default function FeaturesDesktop() {
               <TrainIcon color="secondary" fontSize="large" />
             </ListItemIcon>
             <Typography variant="h5" color="text.primary" align="center">
-              Live locations of Santa Cruz (Metro) buses
+              Live locations of Metro buses
             </Typography>
             <Typography variant="h6" color="text.primary">
               Beyond Campus Shuttles, SlugLoop extends its service by providing
@@ -121,7 +121,7 @@ export default function FeaturesDesktop() {
               <GetAppIcon color="secondary" fontSize="large" />
             </ListItemIcon>
             <Typography variant="h5" color="text.primary" align="center">
-              Save SlugLoop as a Progressive Web App
+              Progressive Web App
             </Typography>
             <Typography variant="h6" color="text.primary">
               You can install SlugLoop on your device for even quicker access.
