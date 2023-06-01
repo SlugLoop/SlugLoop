@@ -74,6 +74,7 @@ export default function SettingsDrawer(props) {
           <Divider />
           <ListItemButton
             onClick={() => {
+              handleDrawerClose()
               navigate('/')
             }}
           >
@@ -86,6 +87,7 @@ export default function SettingsDrawer(props) {
           </ListItemButton>
           <ListItemButton
             onClick={() => {
+              handleDrawerClose()
               navigate('/timeline')
             }}
           >
@@ -98,6 +100,7 @@ export default function SettingsDrawer(props) {
           </ListItemButton>
           <ListItemButton
             onClick={() => {
+              handleDrawerClose()
               navigate('/contact')
             }}
           >
@@ -110,6 +113,7 @@ export default function SettingsDrawer(props) {
           </ListItemButton>
           <ListItemButton
             onClick={() => {
+              handleDrawerClose()
               navigate('/about')
             }}
             autoFocus
