@@ -6,14 +6,21 @@ import MapMarker from './MapMarker'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
+import MainWizard from './Wizard/MainWizard'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
 import AppContext from '../appContext'
+import {AnimatePresence} from 'framer-motion'
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
   const {darkMode} = useContext(AppContext)
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
+
+  // Wizard State
+  const [wizardOpen, setWizardOpen] = useState(
+    localStorage.getItem('wizard') !== 'false',
+  )
 
   // Stores the buses in a state variable to rerender
   const [buses, setBuses] = useState([])
@@ -124,6 +131,17 @@ export default function MapComponent({center, zoom}) {
             })}
         </GoogleMap>
       </Box>
+      <AnimatePresence mode="wait">
+        {wizardOpen && (
+          <MainWizard
+            closeWizard={() => setWizardOpen(false)}
+            neverShowAgain={() => {
+              localStorage.setItem('wizard', false)
+              setWizardOpen(false)
+            }}
+          />
+        )}
+      </AnimatePresence>
       <SettingsDrawer
         filter={filter}
         handleFilterToggle={handleFilterToggle}

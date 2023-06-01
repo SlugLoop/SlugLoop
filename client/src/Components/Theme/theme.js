@@ -12,7 +12,7 @@ export const themeOptions = (isDarkMode) =>
       },
       background: {
         default: isDarkMode ? '#121212' : '#ffffff',
-        paper: isDarkMode ? '#1e272e' : '#f8f8f8',
+        paper: isDarkMode ? '#1e272e' : '#bbdffc',
       },
       text: {
         primary: isDarkMode ? '#ffffff' : '#000000',
