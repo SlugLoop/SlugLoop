@@ -9,7 +9,6 @@ import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
 import AppContext from '../appContext'
-const THIRTY_MINUTES = 30 * 60 * 1000
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
@@ -20,13 +19,10 @@ export default function MapComponent({center, zoom}) {
 
   //const [path, setPath] = useState(true)
 
-
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute] = useContext(RouteContext)
-  
-
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -99,48 +95,34 @@ export default function MapComponent({center, zoom}) {
     }]
     routes.forEach((route) => {
       polylineRefs.current[route.name] = new maps.Polyline({
-          path: route.path,
-          geodesic: true,
-          strokeColor: route.strokeColor,
-          strokeOpacity: 1,
-          strokeWeight: 4,
+        path: route.path,
+        geodesic: true,
+        strokeColor: route.strokeColor,
+        strokeOpacity: 1,
+        strokeWeight: 4,
       })
       polylineRefs.current[route.name].setMap(map)
-  })
+    })
   }
 
   useEffect(() => {
     const routeNames = Object.keys(polylineRefs.current)
 
-    routeNames.forEach(routeName => {
-        // For each route, if it is selected, set its opacity to 1, else set it to 0
-        if (polylineRefs.current[routeName]) {
-            if (selectedRoute.includes(routeName)) {
-                polylineRefs.current[routeName].setOptions({strokeOpacity:1})
-            } else {
-                polylineRefs.current[routeName].setOptions({strokeOpacity:0})
-            }
+    routeNames.forEach((routeName) => {
+      // For each route, if it is selected, set its opacity to 1, else set it to 0
+      if (polylineRefs.current[routeName]) {
+        if (selectedRoute.includes(routeName)) {
+          polylineRefs.current[routeName].setOptions({strokeOpacity: 1})
+        } else {
+          polylineRefs.current[routeName].setOptions({strokeOpacity: 0})
         }
+      }
     })
   }, [selectedRoute])
 
-  const isBusUpdatedWithinPast30Minutes = (lastPing) => {
-    const currentTime = new Date()
-    const lastPingTime = new Date(lastPing)
-    const timeDifference = currentTime - lastPingTime
-    return timeDifference < THIRTY_MINUTES
-  }
-
   return (
     <>
-      <Box
-        id="map"
-        data-testid="map"
-        sx={{
-          height: window.innerHeight,
-          width: '100vw',
-        }}
-      >
+      <Box id="map" width="100%" height="100vh" data-testid="map">
         <GoogleMap
           apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
           defaultCenter={center}
@@ -152,7 +134,7 @@ export default function MapComponent({center, zoom}) {
             streetViewControl: false,
             fullscreenControl: false,
             mapTypeControl: false,
-            styles: darkMode && getStyle(darkMode),
+            styles: getStyle(darkMode),
           }}
         >
           {Object.keys(combinedBuses)
@@ -173,6 +155,7 @@ export default function MapComponent({center, zoom}) {
                   key={key}
                   lat={parseFloat(bus.lastLatitude)}
                   lng={parseFloat(bus.lastLongitude)}
+                  direction={bus.direction}
                   lastPing={bus.lastPing}
                   route={bus.route}
                   heading={bus.heading}
@@ -206,21 +189,6 @@ const getStyle = (darkMode) => {
         featureType: 'administrative.locality',
         elementType: 'labels.text.fill',
         stylers: [{color: '#d59563'}],
-      },
-      {
-        featureType: 'poi',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#d59563'}],
-      },
-      {
-        featureType: 'poi.park',
-        elementType: 'geometry',
-        stylers: [{color: '#263c3f'}],
-      },
-      {
-        featureType: 'poi.park',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#6b9a76'}],
       },
       {
         featureType: 'road',
@@ -277,7 +245,24 @@ const getStyle = (darkMode) => {
         elementType: 'labels.text.stroke',
         stylers: [{color: '#17263c'}],
       },
+      {
+        featureType: 'poi',
+        stylers: [{visibility: 'off'}],
+      },
+      {
+        featureType: 'poi.school',
+        stylers: [{visibility: 'on'}], // This will show only schools
+      },
     ]
   }
-  return []
+  return [
+    {
+      featureType: 'poi',
+      stylers: [{visibility: 'off'}],
+    },
+    {
+      featureType: 'poi.school',
+      stylers: [{visibility: 'on'}], // This will show only schools
+    },
+  ]
 }
