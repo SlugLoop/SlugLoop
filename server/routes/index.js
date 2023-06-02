@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const metro = require('./metro')
 require('dotenv').config()
+var calcCWorCCW = require('./direction.js')
+var nextBusStops = require('./soonBusStop.js')
 
 // Helper functions
 const {
@@ -75,22 +77,21 @@ router.get('/buses', function (req, res) {
     })
 })
 
+router.post('/updateSoon', async function (req, res) {
+  // Update database for which bus stops have incoming busses
+  await nextBusStops()
+
+  // Send a response to the base station
+  res.status(200).send('OK')
+})
+
 /* Ping the server from base stations. */
 router.post('/ping', function (req, res) {
   let data = JSON.parse(req.body.data)
   data = data[0]
 
   // Check if the data is valid and check data length is 4
-  if (
-    !data ||
-    !data.id ||
-    !data.lon ||
-    !data.lat ||
-    !data.route ||
-    !data.key ||
-    !data.sid ||
-    Object.keys(data).length !== 6
-  ) {
+  if (dataValidate(data)) {
     res.status(400).send('Invalid data')
     return
   }
@@ -112,71 +113,88 @@ router.post('/ping', function (req, res) {
 
   let lastLong = 0 // Current longitude
   let lastLat = 0 // Current latitude
+  let fleetId = 999 // Default fleet ID
   let previousLocationArray = []
+  let previousLongitude = 0
+  let previousLatitude = 0
 
   // Get the last ping location of the bus
-  busRef.get().then((doc) => {
-    if (doc.exists) {
-      // If the bus exists, we will get the last ping location
-      lastLong = doc.data().lastLongitude
-      lastLat = doc.data().lastLatitude
-      // Fetching the previousLocationArray from the database, if it exists
-      previousLocationArray = doc.data().previousLocationArray || []
-    }
+  try {
+    busRef.get().then((doc) => {
+      if (doc.exists) {
+        // If the bus exists, we will get the last ping location
+        lastLong = doc.data().lastLongitude || 0
+        lastLat = doc.data().lastLatitude || 0
+        fleetId = doc.data().fleetId || 999
+        // Fetching the previousLocationArray from the database, if it exists
+        previousLocationArray = doc.data().previousLocationArray || []
+        previousLongitude = doc.data().previousLongitude
+        previousLatitude = doc.data().previousLatitude
+      }
 
-    // Calculate heading
-    const currLocation = {lat1: data.lat, lon1: data.lon}
-    const prevLocation = {lat2: lastLat, lon2: lastLong}
-    const heading = headingBetweenPoints(currLocation, prevLocation)
+      // Calculate heading
+      const currLocation = {lat1: data.lat, lon1: data.lon}
+      const prevLocation = {lat2: lastLat, lon2: lastLong}
+      const heading = headingBetweenPoints(currLocation, prevLocation)
 
-    // Calculate the distance between the current and the last locations
-    const distance = getDistanceFromLatLonInMeters(
-      lastLat,
-      lastLong,
-      data.lat,
-      data.lon,
-    )
-    if (distance > 30.48) {
-      // Check if the distance is greater than 100ft (~30.48m)
-      // Append the current location to the previousLocationArray
-      previousLocationArray.push({lat: data.lat, lon: data.lon})
-      previousLocationArray = previousLocationArray.slice(-5)
-    }
+      // Calculate the distance between the current and the last locations
+      const distance = getDistanceFromLatLonInMeters(
+        lastLat,
+        lastLong,
+        data.lat,
+        data.lon,
+      )
+      if (distance > 30.48) {
+        // Check if the distance is greater than 100ft (~30.48m)
+        // Append the current location to the previousLocationArray
+        previousLocationArray.push({lat: data.lat, lon: data.lon})
+        previousLocationArray = previousLocationArray.slice(-5)
+        previousLongitude = lastLong
+        previousLatitude = lastLat
+      }
 
-    // Calculate direction
-    const direction = calcCWorCCW(currLocation, previousLocationArray)
+      // Calculate direction
+      const direction = calcCWorCCW(currLocation, previousLocationArray)
 
-
-    //We will update the bus's last ping location and time
-    busRef.set({
-      lastPing: new Date().toISOString(),
-      lastLongitude: data.lon, // Current Longitutde Ping
-      lastLatitude: data.lat, // Current Latitude Ping
-      previousLongitude: lastLong, // Previous Longitude Ping
-      previousLatitude: lastLat, // Previous Latitude Ping
-      previousLocationArray: previousLocationArray,
-      direction: direction, 
-      heading: heading.toString(),
-      route: data.route,
-      id: data.id,
-      sid: data.sid,
+      //We will update the bus's last ping location and time
+      busRef.set({
+        lastPing: new Date().toISOString(),
+        lastLongitude: data.lon, // Current Longitutde Ping
+        lastLatitude: data.lat, // Current Latitude Ping
+        previousLongitude: previousLongitude, // Previous Longitude Ping
+        previousLatitude: previousLatitude, // Previous Latitude Ping
+        previousLocationArray: previousLocationArray,
+        direction: direction,
+        heading: heading.toString(),
+        fleetId: fleetId,
+        route: data.route,
+        id: data.id,
+        sid: data.sid,
+      })
     })
-  })
+    // Debugging purposes
+    let countRef = defaultDatabase.collection('count').doc('count')
+    countRef.get().then((doc) => {
+      // We update the sid count
+      let sidCount = doc.data()[data.sid]
+      if (sidCount === undefined) {
+        sidCount = 0
+      }
+      sidCount++
+      countRef.set(
+        {
+          [data.sid]: sidCount,
+          [data.sid + 'timestamp']: new Date().toISOString(),
+        },
+        {merge: true},
+      )
+    })
 
-  // Debugging purposes
-  let countRef = defaultDatabase.collection('count').doc('count')
-  countRef.get().then((doc) => {
-    // We update the sid count
-    let sidCount = doc.data()[data.sid]
-    if (sidCount === undefined) {
-      sidCount = 0
-    }
-    sidCount++
-    countRef.set({[data.sid]: sidCount}, {merge: true})
-  })
-
-  // Send a response to the base station
-  res.status(200).send('OK')
+    // Send a response to the base station
+    res.status(200).send('OK')
+  } catch (err) {
+    console.log(err)
+  }
 })
 
 // For the contact us form
@@ -200,109 +218,22 @@ router.post('/contact', function (req, res) {
   }
 })
 
-function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
-  const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
-
-  // Y variable
-  const dLong = toRad(lon2 - lon1)
-  const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
-
-  // X variable
-  const X =
-    Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
-    Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
-
-  // Calculate bearing
-  const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
-  // Convert to degrees
-  return (bearing * 180) / Math.PI + 180
-}
-
-// Determine if bus is going up or down
-function latitudeDecreasing(previousLocationArray) {
-  total = 0;
-  for (let i = 0; i < previousLocationArray.length - 1; i++) {
-    if((previousLocationArray[i].lat - previousLocationArray[i+1].lat) > 0) {
-      total += 1;
-    }
-    else {
-      total -= 1;
-    }
+// Validates and confirms data
+function dataValidate(data) {
+  if (
+    !data ||
+    !data.id ||
+    !data.lon ||
+    !data.lat ||
+    !data.route ||
+    !data.key ||
+    !data.sid ||
+    Object.keys(data).length != 6
+  ) {
+    return true
+  } else {
+    return false
   }
-  if (total > 0) return false;
-  return true;
-  
-}
-
-// Determine if bus is going left or right
-function longitudeDecreasing(previousLocationArray) {
-  total = 0;
-  for (let i = 0; i < previousLocationArray.length - 1; i++) {
-    if((previousLocationArray[i].lon - previousLocationArray[i+1].lon) > 0) {
-      total += 1;
-    }
-    else {
-      total -= 1;
-    }
-  }
-  if (total > 0) return false;
-  return true;
-}
-
-// Calculate direction of bus
-function calcCWorCCW({lat1, lon1}, previousLocationArray) {
-  // Lower Half
-  if (36.977583 < lat1 && lat1 < 36.992444) {
-    // Lower West Half
-    if (lon1 < -122.055831) {
-      if (latitudeDecreasing(previousLocationArray)) return "ccw";
-      else return "cw";
-    }
-    // Lower East Half
-    else {
-      if (latitudeDecreasing(previousLocationArray)) return "cw";
-      else return "ccw";
-    }
-  }
-
-  // RCC Area
-  if ((36.992444 <= lat1 && lat1 < 36.993316) && (-122.066566 < lon1 && lon1 < -122.061)) {
-    if (longitudeDecreasing(previousLocationArray)) return "ccw";
-    else return "cw";
-  }
-
-  // RCC to Kresge
-  if ((36.993316 <= lat1 && lat1 < 36.999290) && lon1 < -122.062260) {
-    if (latitudeDecreasing(previousLocationArray)) return "ccw";
-    else return "cw";
-  }
-
-  // Baskin to Crown
-  if ((36.999290 <= lat1) && (-122.064560 <= lon1 && lon1 < -122.054543)) {
-    if (longitudeDecreasing(previousLocationArray)) return "ccw";
-    else return "cw";
-  }
-
-  // Crown to East Remote
-  if ((36.992444 <= lat1 && lat1 < 36.999290) && (lon1 >= -122.055831)) {
-    if (latitudeDecreasing(previousLocationArray)) return "cw";
-    else return "ccw";
-  }
-
-  // Bay and High Area
-  if (36.977119 < lat1 && lat1 < 36.9775833) {
-    // West Side
-    if (lon1 < -122.053795) {
-      if (longitudeDecreasing(previousLocationArray)) return "cw";
-      else return "ccw";
-    }
-    // East Side
-    if (lon1 >= -122.053795) {
-      if (latitudeDecreasing(previousLocationArray)) return "cw";
-      else return "ccw";
-    }
-  }
-  return "n/a";
 }
 
 module.exports = router
