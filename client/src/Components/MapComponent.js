@@ -3,11 +3,7 @@ import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
-import SettingsButton from './SettingsButton'
-import AboutButton from './AboutButton'
-import Button from '@mui/material/Button'
 import {upperCampusPath, loopPath} from './PolylinePoints'
-import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
@@ -24,28 +20,11 @@ export default function MapComponent({center, zoom}) {
 
   //const [path, setPath] = useState(true)
 
-  function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
-    const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
-
-    // Y variable
-    const dLong = toRad(lon2 - lon1)
-    const Y = Math.sin(dLong) * Math.cos(toRad(lat2))
-
-    // X variable
-    const X =
-      Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
-      Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLong)
-
-    // Calculate bearing
-    const bearing = (toRad(360) + Math.atan2(Y, X)) % toRad(360)
-    // Convert to degrees
-    return (bearing * 180) / Math.PI + 180
-  }
 
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
-  const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
+  const [selectedRoute] = useContext(RouteContext)
   
 
   function toggleDisplayTime() {
@@ -107,18 +86,16 @@ export default function MapComponent({center, zoom}) {
     }
   }, [center])
 
-  const looppolylineRef = useRef(null)
-  const upperpolylineRef = useRef(null)
   const polylineRefs = useRef({})
   const onMapLoad = ({map, maps}) => {
     const routes = [{
       name: 'LOOP',
       path: loopPath,
-      strokeColor: '#FF0000',
+      strokeColor: '#e8248c',
     },{
       name: 'UPPER CAMPUS',
       path: upperCampusPath,
-      strokeColor: '#0000FF',
+      strokeColor: '#ffa404',
     }]
     routes.forEach((route) => {
       polylineRefs.current[route.name] = new maps.Polyline({
