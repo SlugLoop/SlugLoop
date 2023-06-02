@@ -16,7 +16,6 @@ import {
   ExpandMore,
   DirectionsBus as MenuIcon,
 } from '@mui/icons-material'
-import {RouteContext} from '../Route'
 import routeColors from './bus.json'
 import SettingsContext from './SettingsContext'
 

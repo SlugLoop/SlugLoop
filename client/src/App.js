@@ -2,7 +2,6 @@
 import {useEffect, useReducer, useState} from 'react'
 import {signIn} from './Components/Auth'
 import Map from './Components/Map'
-import Main from './Components/Main'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import About from './Components/About/AboutUs'
 import AboutDesktop from './Components/About/AboutUsDesktop'
