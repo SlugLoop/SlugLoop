@@ -2,9 +2,7 @@ import React, { useState } from 'react'
 import List from '@mui/material/List'
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
-import AboutButton from './AboutButton'
-import { Box, Typography, Drawer, Modal} from '@mui/material'
-import AppBar from '@mui/material/AppBar';
+import { Box, Typography,Modal} from '@mui/material'
 import Page from './Page';
 
 
@@ -54,10 +52,13 @@ export default function ListView() {
                     {stops.map((stop) => (
                         <ListItemButton 
                             onClick ={()=> {handleDrawerOpen(); setStop(stop)}}
-                            sx = {{width:'20%'}}
+                            sx = {{width: '50%', }}
                             
                         >
-                            <ListItemText primary={stop} sx={{color:'text.primary'}} />
+                            <Typography primary={stop} sx={{color:'text.primary'}}>
+                                {stop}
+                            </Typography>
+                            <ListItemText />
     
                         </ListItemButton>))}
 
