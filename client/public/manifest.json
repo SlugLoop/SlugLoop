@@ -1,7 +1,7 @@
 {
   "short_name": "SlugLoop",
-  "name": "SlugLoop Loop Bus Tracker Tool",
-  "description": "SlugLoop is a tool for tracking the UCSC Loop Bus in real time.",
+  "name": "SlugLoop Bus Tracker Tool",
+  "description": "SlugLoop is a tool for tracking the UCSC Loop  and Metro Buses in real time.",
   "icons": [
     {
       "src": "icons/favicon-32x32.png",
@@ -27,7 +27,7 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff",
+  "theme_color": "#ffc72c",
+  "background_color": "#ffc72c",
   "splash_pages": "splash.jpg"
 }
