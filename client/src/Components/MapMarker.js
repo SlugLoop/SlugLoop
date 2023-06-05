@@ -40,7 +40,6 @@ export default function MapMarker(props) {
         justifyContent: 'center',
       }}
     >
-      {/* DON't TOUCH IT BREAKS IF YOU REMOVE*/}
       <img
         src={busColors[props.route]}
         alt="bus"
@@ -62,7 +61,19 @@ export default function MapMarker(props) {
               {convertDateToHumanReadableTime(props.lastPing)}
             </Typography>
           )}
-          <Tooltip title={`Direction ${props.direction}`} placement="top">
+          <Tooltip
+            title={
+              <Box>
+                <Typography variant="caption" display="block">
+                  Fleet ID: {props.fleetId}
+                </Typography>
+                <Typography variant="caption" display="block">
+                  Direction: {props.direction}
+                </Typography>
+              </Box>
+            }
+            placement="top"
+          >
             <Box
               component="img"
               src={busColors[props.route]}
