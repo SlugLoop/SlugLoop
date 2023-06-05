@@ -1,44 +1,26 @@
-import React, {useState, useEffect, useContext, useRef} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
-<<<<<<< HEAD
-=======
 import {isBusUpdatedWithinPast30Minutes} from './helper'
-import {upperCampusPath, loopPath} from './PolylinePoints'
->>>>>>> 9a66801275936eeb45492b7fb9db572a0a981e35
 import RouteSelector from './RouteSelector'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
-import AppContext from '../appContext'
-<<<<<<< HEAD
 import SettingsContext from './SettingsContext'
-const THIRTY_MINUTES = 30 * 60 * 1000
-=======
->>>>>>> 9a66801275936eeb45492b7fb9db572a0a981e35
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
-  const {settings, dispatch} = useContext(SettingsContext)
+  const {settings} = useContext(SettingsContext)
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Stores the buses in a state variable to rerender
 
-<<<<<<< HEAD
-=======
-  const [path, setPath] = useState(true)
->>>>>>> 9a66801275936eeb45492b7fb9db572a0a981e35
 
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
-<<<<<<< HEAD
- // const [selectedRoute, setSelectedRoute] = useContext(RouteContext)
 
-=======
-  const [selectedRoute] = useContext(RouteContext)
->>>>>>> 9a66801275936eeb45492b7fb9db572a0a981e35
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -113,11 +95,7 @@ export default function MapComponent({center, zoom}) {
             streetViewControl: false,
             fullscreenControl: false,
             mapTypeControl: false,
-<<<<<<< HEAD
-            styles: settings.darkMode && getStyle(settings.darkMode),
-=======
-            styles: getStyle(darkMode),
->>>>>>> 9a66801275936eeb45492b7fb9db572a0a981e35
+            styles: getStyle(settings.darkMode),
           }}
         >
           {Object.keys(combinedBuses)
