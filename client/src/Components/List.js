@@ -4,9 +4,10 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import { Box, Typography,Modal} from '@mui/material'
 import Page from './Page';
-
+import {useViewportWidth} from '../App'
 
 export default function ListView() {
+    const viewportWidth = useViewportWidth()
     const stops = ['Main Entrance', 'Lower Campus', 'Village/Farm',
         'East Remote', 'East Field/OPERS', 'Cowell', 'Crown', '9/10', 'Science Hill',
         'Kresge', 'Kerr Hall', 'RCC/Porter', 'Family Student Housing', 'Oakes/West Remote', 'Arboretum'];
@@ -52,7 +53,7 @@ export default function ListView() {
                     {stops.map((stop) => (
                         <ListItemButton 
                             onClick ={()=> {handleDrawerOpen(); setStop(stop)}}
-                            sx = {{width: '50%', }}
+                            sx = {{ width: viewportWidth > 600 ? '20%' : '50%' }}
                             
                         >
                             <Typography primary={stop} sx={{color:'text.primary'}}>
