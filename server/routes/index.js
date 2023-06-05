@@ -115,6 +115,8 @@ router.post('/ping', function (req, res) {
   let lastLat = 0 // Current latitude
   let fleetId = 999 // Default fleet ID
   let previousLocationArray = []
+  let previousLongitude = 0
+  let previousLatitude = 0
 
   // Get the last ping location of the bus
   try {
@@ -123,9 +125,11 @@ router.post('/ping', function (req, res) {
         // If the bus exists, we will get the last ping location
         lastLong = doc.data().lastLongitude || 0
         lastLat = doc.data().lastLatitude || 0
-        fleedId = doc.data().fleetId || 999
+        fleetId = doc.data().fleetId || 999
         // Fetching the previousLocationArray from the database, if it exists
         previousLocationArray = doc.data().previousLocationArray || []
+        previousLongitude = doc.data().previousLongitude
+        previousLatitude = doc.data().previousLatitude
       }
 
       // Calculate heading
@@ -145,6 +149,8 @@ router.post('/ping', function (req, res) {
         // Append the current location to the previousLocationArray
         previousLocationArray.push({lat: data.lat, lon: data.lon})
         previousLocationArray = previousLocationArray.slice(-5)
+        previousLongitude = lastLong
+        previousLatitude = lastLat
       }
 
       // Calculate direction
@@ -155,8 +161,8 @@ router.post('/ping', function (req, res) {
         lastPing: new Date().toISOString(),
         lastLongitude: data.lon, // Current Longitutde Ping
         lastLatitude: data.lat, // Current Latitude Ping
-        previousLongitude: lastLong, // Previous Longitude Ping
-        previousLatitude: lastLat, // Previous Latitude Ping
+        previousLongitude: previousLongitude, // Previous Longitude Ping
+        previousLatitude: previousLatitude, // Previous Latitude Ping
         previousLocationArray: previousLocationArray,
         direction: direction,
         heading: heading.toString(),
