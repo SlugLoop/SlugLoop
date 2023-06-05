@@ -24,7 +24,7 @@
     "express-rate-limit": "^6.7.0",
     "firebase-admin": "^11.8.0",
     "google-maps-react": "^2.0.6",
-    "http-errors": "~1.6.3",
+    "http-errors": "~2.0.0",
     "https": "^1.0.0",
     "morgan": "~1.10.0",
     "openssl": "^2.0.0",
