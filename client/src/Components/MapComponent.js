@@ -3,12 +3,12 @@ import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
+import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
 import AppContext from '../appContext'
-const THIRTY_MINUTES = 30 * 60 * 1000
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
@@ -22,7 +22,6 @@ export default function MapComponent({center, zoom}) {
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute] = useContext(RouteContext)
-
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -83,23 +82,9 @@ export default function MapComponent({center, zoom}) {
   }, [center])
 
 
-  const isBusUpdatedWithinPast30Minutes = (lastPing) => {
-    const currentTime = new Date()
-    const lastPingTime = new Date(lastPing)
-    const timeDifference = currentTime - lastPingTime
-    return timeDifference < THIRTY_MINUTES
-  }
-
   return (
     <>
-      <Box
-        id="map"
-        data-testid="map"
-        sx={{
-          height: window.innerHeight,
-          width: '100vw',
-        }}
-      >
+      <Box id="map" width="100%" height="100vh" data-testid="map">
         <GoogleMap
           apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
           defaultCenter={center}
@@ -110,7 +95,7 @@ export default function MapComponent({center, zoom}) {
             streetViewControl: false,
             fullscreenControl: false,
             mapTypeControl: false,
-            styles: darkMode && getStyle(darkMode),
+            styles: getStyle(darkMode),
           }}
         >
           {Object.keys(combinedBuses)
@@ -131,6 +116,7 @@ export default function MapComponent({center, zoom}) {
                   key={key}
                   lat={parseFloat(bus.lastLatitude)}
                   lng={parseFloat(bus.lastLongitude)}
+                  direction={bus.direction}
                   lastPing={bus.lastPing}
                   route={bus.route}
                   heading={bus.heading}
@@ -164,21 +150,6 @@ const getStyle = (darkMode) => {
         featureType: 'administrative.locality',
         elementType: 'labels.text.fill',
         stylers: [{color: '#d59563'}],
-      },
-      {
-        featureType: 'poi',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#d59563'}],
-      },
-      {
-        featureType: 'poi.park',
-        elementType: 'geometry',
-        stylers: [{color: '#263c3f'}],
-      },
-      {
-        featureType: 'poi.park',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#6b9a76'}],
       },
       {
         featureType: 'road',
@@ -235,7 +206,24 @@ const getStyle = (darkMode) => {
         elementType: 'labels.text.stroke',
         stylers: [{color: '#17263c'}],
       },
+      {
+        featureType: 'poi',
+        stylers: [{visibility: 'off'}],
+      },
+      {
+        featureType: 'poi.school',
+        stylers: [{visibility: 'on'}], // This will show only schools
+      },
     ]
   }
-  return []
+  return [
+    {
+      featureType: 'poi',
+      stylers: [{visibility: 'off'}],
+    },
+    {
+      featureType: 'poi.school',
+      stylers: [{visibility: 'on'}], // This will show only schools
+    },
+  ]
 }
