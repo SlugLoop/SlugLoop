@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import {Box, Stack, Typography, ListItemIcon} from '@mui/material'
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus'
 import TrainIcon from '@mui/icons-material/Train'
-import SearchIcon from '@mui/icons-material/Search'
+import GetAppIcon from '@mui/icons-material/GetApp'
 import AppContext from '../../appContext'
 
 export default function Features() {
@@ -112,11 +112,13 @@ export default function Features() {
         >
           <Stack direction="row" alignItems="center" spacing={1}>
             <ListItemIcon>
-              <SearchIcon color="secondary" fontSize="large" />
+              <GetAppIcon color="secondary" fontSize="large" />
             </ListItemIcon>
             <Typography variant="h7" color="text.primary">
-              Customize your tracking experience with our advanced filtering
-              options. You can choose to filter by bus route, time, and more.
+              Enjoy faster, full-screen access to SlugLoop by installing it as a
+              Progressive Web App. Simply use your browser's 'Add to Home
+              screen' option for improved convenience and seamless campus
+              navigation.
             </Typography>
           </Stack>
         </Box>

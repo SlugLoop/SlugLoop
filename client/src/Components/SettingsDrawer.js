@@ -6,6 +6,7 @@ import {
   IconButton,
   Typography,
   Divider,
+  useTheme,
 } from '@mui/material'
 import {useNavigate} from 'react-router-dom'
 import {Info as InfoIcon} from '@mui/icons-material'
@@ -25,6 +26,7 @@ export default function SettingsDrawer(props) {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
   const navigate = useNavigate()
   const {darkMode, setDarkMode} = useContext(AppContext)
+  const theme = useTheme()
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true)
@@ -38,7 +40,7 @@ export default function SettingsDrawer(props) {
     <>
       <IconButton
         edge="start"
-        color="inherit"
+        color="primary"
         aria-label="menu"
         onClick={handleDrawerOpen}
         sx={{
@@ -46,7 +48,7 @@ export default function SettingsDrawer(props) {
           right: '30px',
           top: '90px',
           borderRadius: '50%',
-          backgroundColor: 'white',
+          backgroundColor: theme.palette.background.paper,
         }}
       >
         <MenuIcon />
@@ -72,6 +74,7 @@ export default function SettingsDrawer(props) {
           <Divider />
           <ListItemButton
             onClick={() => {
+              handleDrawerClose()
               navigate('/')
             }}
           >
@@ -84,6 +87,7 @@ export default function SettingsDrawer(props) {
           </ListItemButton>
           <ListItemButton
             onClick={() => {
+              handleDrawerClose()
               navigate('/timeline')
             }}
           >
@@ -96,6 +100,7 @@ export default function SettingsDrawer(props) {
           </ListItemButton>
           <ListItemButton
             onClick={() => {
+              handleDrawerClose()
               navigate('/contact')
             }}
           >
@@ -108,6 +113,7 @@ export default function SettingsDrawer(props) {
           </ListItemButton>
           <ListItemButton
             onClick={() => {
+              handleDrawerClose()
               navigate('/about')
             }}
             autoFocus
