@@ -3,6 +3,7 @@ import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
+import BusStopMarker from './BusStopMarker'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
 import {upperCampusPath, loopPath} from './PolylinePoints'
 import RouteSelector from './RouteSelector'
@@ -10,6 +11,7 @@ import {RouteContext} from '../Route'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
 import AppContext from '../appContext'
+import busStops from './bus-stops.json'
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
@@ -24,6 +26,8 @@ export default function MapComponent({center, zoom}) {
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute] = useContext(RouteContext)
+  const cwStops = busStops.bstop.CW
+  const ccwStops = busStops.bstop.CCW
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -163,6 +167,28 @@ export default function MapComponent({center, zoom}) {
                 />
               )
             })}
+          {cwStops
+            .map((key) => {
+              const stop = Object.keys(key)[0]
+              return (
+                <BusStopMarker
+                  lat={key[stop].lat}
+                  lng={key[stop].lon}
+                />
+              )
+            })
+          }
+          {ccwStops
+            .map((key) => {
+              const stop = Object.keys(key)[0]
+              return (
+                <BusStopMarker
+                  lat={key[stop].lat}
+                  lng={key[stop].lon}
+                />
+              )
+            })
+            }
         </GoogleMap>
       </Box>
       <SettingsDrawer

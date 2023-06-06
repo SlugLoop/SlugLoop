@@ -6,6 +6,8 @@ export default function BusStopMarker(props) {
   return (
     <Box
       sx={{
+        position: 'absolute',
+        transform: 'translate(-50%, -50%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -14,7 +16,7 @@ export default function BusStopMarker(props) {
     >
       {/* DON't TOUCH IT BREAKS IF YOU REMOVE*/}
       <img
-        src="/busStop.ico"
+        src="busStop.ico"
         alt="busStop"
         onLoad={() => setIsImageLoaded(true)}
         style={{display: 'none'}}
@@ -22,7 +24,7 @@ export default function BusStopMarker(props) {
       {isImageLoaded && (
         <Box
           component="img"
-          src="/busStop.ico"
+          src="busStop.ico"
           alt="busStop"
         />
       )}

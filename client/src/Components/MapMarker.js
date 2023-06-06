@@ -34,6 +34,8 @@ export default function MapMarker(props) {
   return (
     <Box
       sx={{
+        position: 'absolute',
+        transform: 'translate(-50%,-50%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -47,7 +49,7 @@ export default function MapMarker(props) {
         onLoad={() => setIsImageLoaded(true)}
         style={{display: 'none'}}
       />
-      {isImageLoaded && (
+      {isImageLoaded && ( 
         <>
           {props.displayTime && (
             <Typography
