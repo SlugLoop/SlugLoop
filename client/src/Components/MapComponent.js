@@ -9,6 +9,7 @@ import {RouteContext} from '../Route'
 import MainWizard from './Wizard/MainWizard'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
+import SettingsContext from './SettingsContext'
 import AppContext from '../appContext'
 import {AnimatePresence} from 'framer-motion'
 
