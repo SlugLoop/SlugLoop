@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Modal, Box, Typography, IconButton, Stack} from '@mui/material'
+import {
+  Button,
+  Modal,
+  Box,
+  Typography,
+  IconButton,
+  useTheme,
+} from '@mui/material'
 import IosShareIcon from '@mui/icons-material/IosShare'
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
 import CloseIcon from '@mui/icons-material/Close'
@@ -9,6 +16,7 @@ export default function InstallPWAButton() {
   const [isInstallable, setIsInstallable] = useState(false)
   const [open, setOpen] = useState(false)
   const [showIosPrompt, setShowIosPrompt] = useState(false)
+  const theme = useTheme()
 
   useEffect(() => {
     const beforeInstallPromptHandler = (e) => {
@@ -72,11 +80,11 @@ export default function InstallPWAButton() {
         mb: 2,
         mx: 2,
         p: 2,
-        bgcolor: 'grey.200',
         borderRadius: '15px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
+        bgcolor: theme.palette.background.default,
       }}
     >
       <div
@@ -86,12 +94,17 @@ export default function InstallPWAButton() {
           flexWrap: 'wrap',
         }}
       >
-        <Typography variant="body1">
+        <Typography variant="body1" color="text.primary">
           To install this app, tap on the icon{' '}
         </Typography>
-        <IosShareIcon sx={{ml: 1}} />
-        <Typography variant="body1">and then 'Add to Home Screen'</Typography>
-        <AddBoxOutlinedIcon sx={{ml: 1}} />
+        <IosShareIcon sx={{ml: 1, color: theme.palette.text.primary}} />
+        <Typography variant="body1" color="text.primary">
+          and then 'Add to Home Screen'
+        </Typography>
+        <AddBoxOutlinedIcon
+          sx={{ml: 1, color: theme.palette.text.primary}}
+          color="text.primary"
+        />
       </div>
 
       <IconButton
