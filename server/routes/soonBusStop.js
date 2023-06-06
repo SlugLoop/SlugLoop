@@ -69,10 +69,9 @@ function areListsEqual(list1, list2) {
     return false;
   }
 
-  // Compare each object in the lists
+  // Compare each object in the lists by converting them to strings
   for (let i = 0; i < list1.length; i++) {
-    // Check if the current object properties are equal
-    if (!isObjectEqual(list1[i], list2[i])) {
+    if (JSON.stringify(list1[i]) !== JSON.stringify(list2[i])) {
       return false;
     }
   }
@@ -81,25 +80,6 @@ function areListsEqual(list1, list2) {
   return true;
 }
 
-function isObjectEqual(obj1, obj2) {
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
-
-  // Check if the objects have the same number of properties
-  if (keys1.length !== keys2.length) {
-    return false;
-  }
-
-  // Compare each property in the objects
-  for (let key of keys1) {
-    if (obj1[key] !== obj2[key]) {
-      return false;
-    }
-  }
-
-  // If all properties are equal, return true
-  return true;
-}
   
 function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
   let direction;
