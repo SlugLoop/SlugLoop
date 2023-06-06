@@ -30,10 +30,10 @@ export default function ListView() {
         if(isClockwise){
             console.log(stop)
             console.log(soonStops[0][stop])   
-            setSoon(soonStops[0][stop])
+            setSoon(soonStops[1][stop])
         }
         else{
-            setSoon(soonStops[1][stop])
+            setSoon(soonStops[0][stop])
         }
         
         
@@ -58,8 +58,7 @@ export default function ListView() {
         }
         else{
             getStopInfo()
-        }
-        
+        }      
     },[stop])
     
     return (

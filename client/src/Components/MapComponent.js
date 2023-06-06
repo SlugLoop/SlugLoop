@@ -112,10 +112,10 @@ export default function MapComponent({center, zoom}) {
     if(isClockwise){
         console.log(stop)
         console.log(soonStops[0][stop])   
-        setSoon(soonStops[0][stop])
+        setSoon(soonStops[1][stop])
     }
     else{
-        setSoon(soonStops[1][stop])
+        setSoon(soonStops[0][stop])
     }
     
     
