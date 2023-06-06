@@ -4,6 +4,8 @@ const defaultDatabase = require('./firebase.js');
 const e = require('express');
 
 const radius = 0.001
+var oldUpdateCW = []
+var oldUpdateCCW = []
 
 // updates next 3 bus stops for every bus
 module.exports = async function nextBusStops() {
@@ -48,11 +50,55 @@ module.exports = async function nextBusStops() {
     soonBusStop(busCollection, stops_arr_CW, stops_arr_CCW, i);
   }
 
-  // Update the database for each bus stops in the object array
-  dbUpdate(stops_arr_CW, "CW");
-  dbUpdate(stops_arr_CCW, "CCW");
+  // Update the database for each bus stops in the object array if different to old update
+  if (!areListsEqual(stops_arr_CW, oldUpdateCW))
+    dbUpdate(stops_arr_CW, "CW");
+  
+  if (!areListsEqual(stops_arr_CCW, oldUpdateCCW))
+    dbUpdate(stops_arr_CW, "CCW");
+
+  oldUpdateCW = stops_arr_CW;
+  oldUpdateCCW = stops_arr_CCW;
 
   return;
+}
+
+function areListsEqual(list1, list2) {
+  // Check if the lengths of the lists are equal
+  if (list1.length !== list2.length) {
+    return false;
+  }
+
+  // Compare each object in the lists
+  for (let i = 0; i < list1.length; i++) {
+    // Check if the current object properties are equal
+    if (!isObjectEqual(list1[i], list2[i])) {
+      return false;
+    }
+  }
+
+  // If all objects are equal, return true
+  return true;
+}
+
+function isObjectEqual(obj1, obj2) {
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  // Check if the objects have the same number of properties
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  // Compare each property in the objects
+  for (let key of keys1) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  // If all properties are equal, return true
+  return true;
 }
   
 function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
