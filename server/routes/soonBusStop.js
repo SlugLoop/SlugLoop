@@ -51,14 +51,15 @@ module.exports = async function nextBusStops() {
   }
 
   // Update the database for each bus stops in the object array if different to old update
-  if (!areListsEqual(stops_arr_CW, oldUpdateCW))
+  if (!areListsEqual(stops_arr_CW, oldUpdateCW)) {
     dbUpdate(stops_arr_CW, "CW");
+    oldUpdateCW = stops_arr_CW;
+  }
   
-  if (!areListsEqual(stops_arr_CCW, oldUpdateCCW))
+  if (!areListsEqual(stops_arr_CCW, oldUpdateCCW)) {
     dbUpdate(stops_arr_CW, "CCW");
-
-  oldUpdateCW = stops_arr_CW;
-  oldUpdateCCW = stops_arr_CCW;
+    oldUpdateCCW = stops_arr_CCW;
+  }
 
   return;
 }
