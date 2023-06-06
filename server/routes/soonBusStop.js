@@ -3,6 +3,8 @@ const busStops = require('./bus-stops.json')
 const defaultDatabase = require('./firebase.js');
 const e = require('express');
 
+const radius = 0.001
+
 // updates next 3 bus stops for every bus
 module.exports = async function nextBusStops() {
   const busCollection = [];
@@ -76,8 +78,8 @@ function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
       let lat2 = location[locationName].lat;
       let lon2 = location[locationName].lon;
       // Find the bus stop closest to the bus, and set next 3 stops in array to true
-      if((lat2 - 0.000450) <= lat1 && (lat2 + 0.000450) >= lat1 
-      && (lon2 - 0.000450) <= lon1 && (lon2 + 0.000450) >= lon1) {
+      if((lat2 - radius) <= lat1 && (lat2 + radius) >= lat1 
+      && (lon2 - radius) <= lon1 && (lon2 + radius) >= lon1) {
         for (let j = 1; j <= 3; j++) {
           let stop_id = Object.keys(cwData[(i + j) % cwLength])[0];
           let objIndex = stops_arr_CW.findIndex((e => e.id === stop_id));
@@ -100,8 +102,8 @@ function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
       let lat2 = location[locationName].lat;
       let lon2 = location[locationName].lon;
       // Find the bus stop closest to the bus, and set next 3 stops in array to true
-      if((lat2 - 0.000450) <= lat1 && (lat2 + 0.000450) >= lat1 
-      && (lon2 - 0.000450) <= lon1 && (lon2 + 0.000450) >= lon1) {
+      if((lat2 - radius) <= lat1 && (lat2 + radius) >= lat1 
+      && (lon2 - radius) <= lon1 && (lon2 + radius) >= lon1) {
         for (let j = 1; j <= 3; j++) {
           let stop_id = Object.keys(ccwData[(i + j) % ccwLength])[0];
           let objIndex = stops_arr_CCW.findIndex((e => e.id === stop_id));
