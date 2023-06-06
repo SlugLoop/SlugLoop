@@ -166,6 +166,7 @@ export default function MapComponent({center, zoom}) {
                   direction={bus.direction}
                   lastPing={bus.lastPing}
                   fleetId={bus.fleetId}
+                  direction={bus.direction}
                   route={bus.route}
                   heading={bus.heading}
                   displayTime={displayTime}
