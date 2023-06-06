@@ -5,17 +5,16 @@ import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
-import {RouteContext} from '../Route'
 import MainWizard from './Wizard/MainWizard'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
-import SettingsContext from './SettingsContext'
-import AppContext from '../appContext'
+import SettingsContext from '../SettingsContext'
 import {AnimatePresence} from 'framer-motion'
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
   const {settings} = useContext(SettingsContext)
+  
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Wizard State
@@ -128,7 +127,6 @@ export default function MapComponent({center, zoom}) {
                   direction={bus.direction}
                   lastPing={bus.lastPing}
                   fleetId={bus.fleetId}
-                  direction={bus.direction}
                   route={bus.route}
                   heading={bus.heading}
                   displayTime={settings.displayTime}

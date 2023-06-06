@@ -2,7 +2,7 @@ import {Dialog, DialogTitle, IconButton} from '@mui/material'
 import React, {useContext, useState} from 'react'
 import SettingsIcon from '@mui/icons-material/Settings'
 import Button from '@mui/material/Button'
-import SettingsContext from './SettingsContext'
+import SettingsContext from '../SettingsContext'
 //import makeStyles from "@mui/styles/makeStyles";
 
 //import ListItemButton from "@mui/material";

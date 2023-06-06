@@ -18,7 +18,7 @@ import {
   DirectionsBus as MenuIcon,
 } from '@mui/icons-material'
 import routeColors from './bus.json'
-import SettingsContext from './SettingsContext'
+import SettingsContext from '../SettingsContext'
 
 const metroRoutes = ['10', '15', '18', '19', '20']
 const loopRoutes = [

@@ -3,7 +3,7 @@ import React, {useState, useContext} from 'react'
 import HelpOutlineSharpIcon from '@mui/icons-material/HelpOutlineSharp'
 import {useNavigate} from 'react-router-dom'
 import Button from '@mui/material/Button'
-import SettingsContext from './SettingsContext'
+import SettingsContext from '../SettingsContext'
 //import makeStyles from "@mui/styles/makeStyles";
 
 //import ListItemButton from "@mui/material";

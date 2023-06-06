@@ -11,8 +11,8 @@ import {
 import About from './Components/About/AboutUs'
 import AboutDesktop from './Components/About/AboutUsDesktop'
 import Contact from './Components/Contact'
-import SettingsContext from './Components/SettingsContext'
-import {SettingsReducer, INITIAL_STATE} from './Components/SettingsReducer'
+import SettingsContext from './SettingsContext'
+import {SettingsReducer, INITIAL_STATE} from './SettingsReducer'
 import {RouteProvider} from './Route'
 import MainMobile from './Components/Landing/MainMobile'
 import MainDesktop from './Components/Landing/MainDesktop'
@@ -49,6 +49,7 @@ function App() {
   const providerState = {
     settings, dispatch
   }
+  console.log(settings)
   const viewportWidth = useViewportWidth()
   useEffect(() => {
     signIn()

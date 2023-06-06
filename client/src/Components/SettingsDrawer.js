@@ -20,7 +20,7 @@ import {AccessTime as AccessTimeIcon} from '@mui/icons-material'
 import {Menu as MenuIcon} from '@mui/icons-material'
 import HomeIcon from '@mui/icons-material/Home'
 import TimelineIcon from '@mui/icons-material/Timeline'
-import SettingsContext from './SettingsContext'
+import SettingsContext from '../SettingsContext'
 export default function SettingsDrawer(props) {
   const {settings, dispatch} = useContext(SettingsContext)
   const [isDrawerOpen, setDrawerOpen] = useState(false)
