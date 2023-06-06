@@ -4,12 +4,12 @@ import React from 'react'
 import MobileTopBar from '../TopBar/TopBarMobile'
 import DesktopTopBar from '../TopBar/TopBarDesktop'
 import {useViewportWidth} from '../../App'
-export default function Wrapper({children}) {
+export default function Wrapper({children, sx}) {
   const viewportWidth = useViewportWidth()
   return (
-    <>
+    <div style={sx}>
       {viewportWidth > 600 ? <DesktopTopBar /> : <MobileTopBar />}
       {children}
-    </>
+    </div>
   )
 }
