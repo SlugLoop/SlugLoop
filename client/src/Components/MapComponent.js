@@ -1,11 +1,10 @@
-import React, {useState, useEffect, useContext, useRef} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
 import BusStopMarker from './BusStopMarker'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
-import {upperCampusPath, loopPath} from './PolylinePoints'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
 import MainWizard from './Wizard/MainWizard'
@@ -27,7 +26,6 @@ export default function MapComponent({center, zoom}) {
 
   // Stores the buses in a state variable to rerender
 
-  const [path, setPath] = useState(true)
 
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
@@ -94,41 +92,6 @@ export default function MapComponent({center, zoom}) {
     }
   }, [center])
 
-  const polylineRef = useRef(null)
-
-  const onMapLoad = ({map, maps}) => {
-    polylineRef.current = new maps.Polyline({
-      path: loopPath,
-      geodesic: true,
-      strokeColor: '#FF0000',
-      strokeOpacity: 1,
-      strokeWeight: 4,
-    })
-
-    polylineRef.current.setMap(map)
-  }
-
-  useEffect(() => {
-    if (polylineRef.current) {
-      if (path) {
-        polylineRef.current.setOptions({
-          path: loopPath,
-          geodesic: true,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1,
-          strokeWeight: 4,
-        })
-      } else {
-        polylineRef.current.setOptions({
-          path: upperCampusPath,
-          geodesic: true,
-          strokeColor: '#0000FF',
-          strokeOpacity: 1,
-          strokeWeight: 4,
-        })
-      }
-    }
-  }, [path])
 
   return (
     <>
@@ -137,7 +100,6 @@ export default function MapComponent({center, zoom}) {
           apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
           defaultCenter={center}
           defaultZoom={zoom}
-          onGoogleApiLoaded={onMapLoad}
           key={darkMode ? 'dark' : 'light'}
           options={{
             zoomControl: false,
