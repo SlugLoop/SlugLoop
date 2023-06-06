@@ -1,24 +1,33 @@
 import React, { useState } from 'react'
 import List from '@mui/material/List'
-import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
-import { Box, Typography,Modal} from '@mui/material'
+import { Box, Typography,Modal, Card, CardContent, Button} from '@mui/material'
 import Page from './Page';
 import {useViewportWidth} from '../App'
+import BusStops from './bus-stops.json'
 
 export default function ListView() {
     const viewportWidth = useViewportWidth()
-    const stops = ['Main Entrance', 'Lower Campus', 'Village/Farm',
+    /*
+    const stops = ['Main Entrance CW', 'Main Entrance CCW','Lower Campus', 'Village/Farm',
         'East Remote', 'East Field/OPERS', 'Cowell', 'Crown', '9/10', 'Science Hill',
         'Kresge', 'Kerr Hall', 'RCC/Porter', 'Family Student Housing', 'Oakes/West Remote', 'Arboretum'];
+        */
     //const [showPage, setShowPage] = useState('');
+    const cwstops = BusStops.bstop.CW.map((key)=>Object.keys(key)[0])
+    const ccwstops = BusStops.bstop.CCW.map((key)=>Object.keys(key)[0])
     const [isDrawerOpen, setDrawerOpen] = useState(false)
+    const [isDirModalOpen, setDirModal] = useState(true)
+    const [isClockwise, setDirection] = useState(true)
     const [stop,displayStop] = useState('')
+    const handleDirModalClose = () => {
+        setDirModal(false)
+    }
     const handleDrawerOpen = () => {
         setDrawerOpen(true)
       }
     
-      const handleDrawerClose = () => {
+    const handleDrawerClose = () => {
         setDrawerOpen(false)
       }
     const setStop = (newStop) => {
@@ -42,7 +51,33 @@ export default function ListView() {
             }}
             
             >
-
+                <Modal  
+                anchor = "bottom" 
+                open = {isDirModalOpen} 
+                onClose = {handleDirModalClose}
+                sx = {{
+                    width: '50%',
+                    display: 'flex',
+                    left: '25%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    
+                }}
+                >
+                    <Card>
+                        <CardContent>
+                        <Typography sx={{fontSize: '15', color:'text.primary'}}>
+                            Choose a direction
+                        </Typography>
+                        <Button onClick = {()=> {setDirection(true); handleDirModalClose()}}>
+                            Clockwise
+                        </Button>
+                        <Button onClick = {()=> {setDirection(false); handleDirModalClose()}}>
+                            Counterclockwise
+                        </Button>
+                        </CardContent>
+                    </Card>
+                </Modal>
                 <List 
                     sx={{
                     width: 'window.innerWidth',
@@ -50,7 +85,18 @@ export default function ListView() {
                     maxHeight: 'window.innerHeight',                   
                     backgroundColor: 'background',                   
                 }}>
-                    {stops.map((stop) => (
+                    <ListItemButton 
+                        onClick = {()=> setDirection(!isClockwise)}
+                        sx = {{width: viewportWidth > 600 ? '40%' : '60%'}}
+                    >
+                        <Typography sx = {{color:'text.primary'}}>
+                        Your direction is {isClockwise ? 'clockwise' : 'counterclockwise'}.  Click to change directions
+                    
+                        </Typography>
+                    </ListItemButton>  
+                    { 
+                        
+                        (isClockwise?cwstops:ccwstops).map((stop) => (
                         <ListItemButton 
                             onClick ={()=> {handleDrawerOpen(); setStop(stop)}}
                             sx = {{ width: viewportWidth > 600 ? '20%' : '50%' }}
@@ -59,9 +105,9 @@ export default function ListView() {
                             <Typography primary={stop} sx={{color:'text.primary'}}>
                                 {stop}
                             </Typography>
-                            <ListItemText />
-    
-                        </ListItemButton>))}
+                        </ListItemButton>))
+                        
+                        }
 
 
                 </List>
@@ -77,7 +123,7 @@ export default function ListView() {
                     justifyContent: 'center',
                 }}
                 >
-                        <Page busStop = {stop}/>
+                    <Page busStop = {stop}/>
                 </Modal>
 
 
@@ -85,3 +131,4 @@ export default function ListView() {
         </>
     )
 }
+
