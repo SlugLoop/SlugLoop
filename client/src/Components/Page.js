@@ -4,11 +4,11 @@ import React from 'react'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import { getSoonBusStops } from './firebase';
 
-
-export default function Page({busStop, direction}) {
+export default function Page({busStop, isClockwise}) {
    
-    
+    const direction = isClockwise?"clockwise":"counterclockwise"
     return (
         
           <Card>
@@ -20,13 +20,15 @@ export default function Page({busStop, direction}) {
                     Metro ETA 
                 </Typography>
                 <Typography >
-                    12 Minutes
+                    FUNCTIONALITY IN PROGRESS
                 </Typography>
                 <Typography sx = {{fontSize: 15}} color = "text.primary">
-                    Loop ETA 
+                    Loop Coming
                 </Typography>
                 <Typography >
-                    12 Minutes
+                    {
+
+                    }
                 </Typography>
                 
             </CardContent>

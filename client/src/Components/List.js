@@ -48,8 +48,7 @@ export default function ListView() {
                 alignItems: 'left',
     
                 backgroundColor: 'background.default'
-            }}
-            
+            }}          
             >
                 <Modal  
                 anchor = "bottom" 
@@ -123,7 +122,7 @@ export default function ListView() {
                     justifyContent: 'center',
                 }}
                 >
-                    <Page busStop = {stop}/>
+                    <Page busStop = {stop} isClockwise = {isClockwise}/>
                 </Modal>
 
 
