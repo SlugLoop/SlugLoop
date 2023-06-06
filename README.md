@@ -1,7 +1,7 @@
 # SlugLoop
 
 [![Demo Link](https://img.shields.io/badge/-Demo%20Link-blue)](https://slugloop.tech/)
-[![Demo Video](https://img.shields.io/badge/-Demo%20Video-red)](https://www.youtube.com/watch?v=fEAl8MajeOs)
+[![Demo Video](https://img.shields.io/badge/-Demo%20Video-red)](https://www.youtube.com/watch?v=DlAGp-IjtJM)
 
 ## Overview
 
@@ -40,31 +40,32 @@ Students at the University of California are frustrated at the rough scheduling 
 - Enable UCSC students to make informed decisions about their transportation
 - Relieve pressure on metro buses during peak hours
 - Be maintainable and built upon by the school community
+- Allow transport officials to monitor bus locations and routes and adjust schedules accordingly
 
 ## Built With
 
-- GPS emitting hardware on loop buses, installed by the school for tracking purposes
+- Reprogrammed GPS emitting hardware on loop buses, installed by the school a decade ago for tracking purposes
 - Raw data processed in ExpressJS and stored on a Firebase database
-- Frontend UI built with React and Node.js, displaying bus location data from Firebase on a map
-- Seamless user experience through a simple, attractive, and mobile-friendly interface
+- Frontend UI built with React and Node.js, displaying bus location data from Firebase and metro bus locations on a map
+- Seamless user experience through a simple, attractive, and mobile-friendly interface that can be downloaded as a PWA
 
 ## Challenges
 
-- Obtaining data from relay stations on campus
-- Functionality issues with some GPS stations
-- Gaining access to servers through communication with UCSC staff
+- Gaining access to basestations through communication with UCSC staff
 - Data transfer from receivers to server using LibCurl library and C
 - Technical issue with hosting service temporarily hindering project progress
 - Limited data availability from loop buses due to restricted operating hours on weekends
+- Hardware issues with some loop buses, gaining access to buses for repairs
+
 
 ## Accomplishments
-
-We are proud to have created SlugLoop since when it is launched it will have an immediate impact on the lives of students at UC Santa Cruz.
 
 1.  Our group has created an application that will have an immediate and positive effect on the lives of the students at UC Santa Cruz.
 2.  Our Application has a simple and attractive interface that allows the user to quickly access the data through their mobile device.
 3.  This project provides accurate and up-to-date information to the students of UC Santa Crus to reduce the pressure on the city metro buses during peak hours.
-4.  This application uses multiple frameworks that all work together in order to provide an incredibly useful service to students.
+4.  Repairing and reprogramming the GPS emitting hardware on the loop buses and basestations allows us to track the buses in real time.
+5.  This application uses multiple frameworks that all work together in order to provide an incredibly useful service to students.
+6.  Our application is built with the future in mind. It is open source and can be built upon by the school community.
 
 ## What We Learned
 
@@ -78,7 +79,6 @@ Throughout the development of SlugLoop, our team learned:
 ## What's Next
 
 - Collect data to train a machine learning model for estimating bus arrival times at given stops
-- Upgrade or replace existing hardware on campus to fill coverage gaps
 - Install required hardware on all loop buses to ensure comprehensive tracking
 - Obtain official school sponsorship
 

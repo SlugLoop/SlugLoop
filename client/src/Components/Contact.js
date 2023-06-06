@@ -75,10 +75,19 @@ export default function Contact() {
   }
 
   return (
-    <motion.div initial="hidden" animate="visible" variants={containerVariant}>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariant}
+      sx={{
+        overflow: 'hidden',
+        width: '100%',
+        height: '100%',
+      }}
+    >
       <Box
-        width="100vw"
-        height="100vh"
+        width="100%"
+        height="100%"
         sx={{
           position: 'fixed',
           top: 0,
@@ -91,6 +100,8 @@ export default function Contact() {
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+
+          overflow: 'hidden',
 
           zIndex: -1,
           filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',

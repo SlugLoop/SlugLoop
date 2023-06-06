@@ -78,7 +78,7 @@ export default function DesktopTopBar() {
               variant="text"
               color="secondary"
               >
-              List
+              Stops
             </Button>
             <IconButton onClick={handleDarkModeToggle} color="inherit">
               {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
