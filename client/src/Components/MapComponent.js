@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useEffect, useContext, useRef} from 'react'
 import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
-import {Box} from '@mui/material'
+import {Box, Modal, Button} from '@mui/material'
 import MapMarker from './MapMarker'
 import BusStopMarker from './BusStopMarker'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
@@ -13,6 +13,8 @@ import SettingsDrawer from './SettingsDrawer'
 import AppContext from '../appContext'
 import busStops from './bus-stops.json'
 import {AnimatePresence} from 'framer-motion'
+import Page from './Page'
+import { getSoonBusStops } from './firebase'
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
@@ -31,6 +33,11 @@ export default function MapComponent({center, zoom}) {
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute] = useContext(RouteContext)
+  const [isDrawerOpen, setDrawerOpen] = useState(false)
+  const [stop,displayStop] = useState('')
+  const [soon, setSoon] = useState(false)
+  const [isClockwise, setDirection] = useState(true)
+  const [soonStops,setSoonStops] = useState([])
   const cwStops = busStops.bstop.CW
   const ccwStops = busStops.bstop.CCW
   function toggleDisplayTime() {
@@ -39,6 +46,13 @@ export default function MapComponent({center, zoom}) {
 
   function handleFilterToggle() {
     setFilter(!filter)
+  }
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true)
+  }
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false)
   }
 
   useEffect(() => {
@@ -91,8 +105,33 @@ export default function MapComponent({center, zoom}) {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [center])
-
-
+  const getStopInfo = () => {
+    getSoonBusStops().then((stops)=>{
+        setSoonStops(stops)
+    })
+    if(isClockwise){
+        console.log(stop)
+        console.log(soonStops[0][stop])   
+        setSoon(soonStops[0][stop])
+    }
+    else{
+        setSoon(soonStops[1][stop])
+    }
+    
+    
+}
+  const initialLoad = useRef(true)
+    useEffect(()=>{
+        if(initialLoad.current){
+            initialLoad.current = false
+            getSoonBusStops().then((stops)=>{
+                setSoonStops(stops)
+            })
+        }
+        else{
+            getStopInfo()
+        }      
+    },[stop])
   return (
     <>
       <Box id="map" width="100%" height="100vh" data-testid="map">
@@ -141,10 +180,14 @@ export default function MapComponent({center, zoom}) {
             .map((key) => {
               const stop = Object.keys(key)[0]
               return (
-                <BusStopMarker
+                <Button
+                  sx ={{position: 'aboslute' ,transform: 'translate(-50%,-50%)'}}
                   lat={key[stop].lat}
                   lng={key[stop].lon}
-                />
+                  onClick = {()=>{handleDrawerOpen(); displayStop(stop); setDirection(true)}}
+                >
+                  stop
+                </Button>
               )
             })
           }
@@ -152,15 +195,34 @@ export default function MapComponent({center, zoom}) {
             .map((key) => {
               const stop = Object.keys(key)[0]
               return (
-                <BusStopMarker
+                <Button
+                  sx ={{position: 'aboslute' ,transform: 'translate(-50%,-50%)'}}
                   lat={key[stop].lat}
                   lng={key[stop].lon}
-                />
+                  onClick = {()=>{handleDrawerOpen(); displayStop(stop); setDirection(false)}}
+                >
+                  stop
+                </Button>
               )
             })
             }
         </GoogleMap>
+        
       </Box>
+      <Modal
+        anchor="bottom"
+        open={isDrawerOpen}
+        onClose={handleDrawerClose}
+        sx={{
+          width: '50%',
+          display: 'flex',
+          left: '25%',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Page busStop={stop} isClockwise={isClockwise} soon={soon} />
+      </Modal>
       <AnimatePresence mode="wait">
         {wizardOpen && (
           <MainWizard

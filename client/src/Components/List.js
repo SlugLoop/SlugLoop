@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton';
 import { Box, Typography,Modal, Card, CardContent, Button} from '@mui/material'
 import Page from './Page';
 import {useViewportWidth} from '../App'
 import BusStops from './bus-stops.json'
+import { getSoonBusStops, getAllMetroBuses } from './firebase';
 
 export default function ListView() {
     const viewportWidth = useViewportWidth()
@@ -19,7 +20,24 @@ export default function ListView() {
     const [isDrawerOpen, setDrawerOpen] = useState(false)
     const [isDirModalOpen, setDirModal] = useState(true)
     const [isClockwise, setDirection] = useState(true)
+    const [soonStops,setSoonStops] = useState([])
     const [stop,displayStop] = useState('')
+    const [soon, setSoon] = useState(false)
+    const getStopInfo = () => {
+        getSoonBusStops().then((stops)=>{
+            setSoonStops(stops)
+        })
+        if(isClockwise){
+            console.log(stop)
+            console.log(soonStops[0][stop])   
+            setSoon(soonStops[0][stop])
+        }
+        else{
+            setSoon(soonStops[1][stop])
+        }
+        
+        
+    }
     const handleDirModalClose = () => {
         setDirModal(false)
     }
@@ -30,9 +48,20 @@ export default function ListView() {
     const handleDrawerClose = () => {
         setDrawerOpen(false)
       }
-    const setStop = (newStop) => {
-        displayStop(newStop)
-    }
+    const initialLoad = useRef(true)
+    useEffect(()=>{
+        if(initialLoad.current){
+            initialLoad.current = false
+            getSoonBusStops().then((stops)=>{
+                setSoonStops(stops)
+            })
+        }
+        else{
+            getStopInfo()
+        }
+        
+    },[stop])
+    
     return (
         <>
             <Box 
@@ -97,9 +126,9 @@ export default function ListView() {
                         
                         (isClockwise?cwstops:ccwstops).map((stop) => (
                         <ListItemButton 
-                            onClick ={()=> {handleDrawerOpen(); setStop(stop)}}
+                            onClick ={()=> {handleDrawerOpen(); displayStop(stop); }}
                             sx = {{ width: viewportWidth > 600 ? '20%' : '50%' }}
-                            
+                            key= {stop}
                         >
                             <Typography primary={stop} sx={{color:'text.primary'}}>
                                 {stop}
@@ -122,7 +151,7 @@ export default function ListView() {
                     justifyContent: 'center',
                 }}
                 >
-                    <Page busStop = {stop} isClockwise = {isClockwise}/>
+                    <Page busStop = {stop} isClockwise = {isClockwise} soon = {soon}/>
                 </Modal>
 
 

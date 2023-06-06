@@ -1,20 +1,22 @@
-import React from 'react'
+import React ,{useState, useEffect} from 'react'
 
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { getSoonBusStops } from './firebase';
+import { getSoonBusStops, getAllMetroBuses } from './firebase';
 
-export default function Page({busStop, isClockwise}) {
+export default function Page(props) {
    
-    const direction = isClockwise?"clockwise":"counterclockwise"
+    const direction = props.isClockwise?"clockwise":"counterclockwise"
+   // const [soonStops,setSoonStops] = useState([])
+    
     return (
         
           <Card>
             <CardContent>
                 <Typography sx = {{fontSize: 12 }} color = "text.primary">
-                    The next buses for {busStop} going {direction}
+                    The next buses for {props.busStop} going {direction}
                 </Typography>
                 <Typography sx = {{fontSize: 15}} color = "text.primary">
                     Metro ETA 
@@ -27,7 +29,7 @@ export default function Page({busStop, isClockwise}) {
                 </Typography>
                 <Typography >
                     {
-
+                        props.soon?"SOON":"In a bit (>3 stops away)"
                     }
                 </Typography>
                 
