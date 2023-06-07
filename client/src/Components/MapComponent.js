@@ -146,7 +146,7 @@ export default function MapComponent({center, zoom}) {
         path: route.path,
         geodesic: true,
         strokeColor: route.strokeColor,
-        strokeOpacity: 1,
+        strokeOpacity: settings.selectedRoute.includes(route.name)?1:0,
         strokeWeight: 4,
       })
       polylineRefs.current[route.name].setMap(map)
