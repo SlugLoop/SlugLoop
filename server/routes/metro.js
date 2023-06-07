@@ -145,7 +145,7 @@ router.get('/metroRoutes', function (req, res) {
 })
 
 //Get metro route directions
-router.get('', function (req, res) {
+router.get('/metroRouteDirections', function (req, res) {
   const baseUrl = `${process.env.METRO_URL}/getdirections`
   const routes = [10, 15, 18, 19, 20]
   const apiKey = process.env.METRO_KEY
