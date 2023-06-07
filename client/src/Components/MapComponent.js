@@ -6,11 +6,10 @@ import MapMarker from './MapMarker'
 import BusStopMarker from './BusStopMarker'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
-import {RouteContext} from '../Route'
 import MainWizard from './Wizard/MainWizard'
 import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
-import AppContext from '../appContext'
+import SettingsContext from '../SettingsContext'
 import busStops from './bus-stops.json'
 import {AnimatePresence} from 'framer-motion'
 import {loopPath, upperCampusPath} from './PolylinePoints'
@@ -19,7 +18,8 @@ import { getSoonBusStops } from './firebase'
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
-  const {darkMode} = useContext(AppContext)
+  const {settings} = useContext(SettingsContext)
+  
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Wizard State
@@ -33,7 +33,6 @@ export default function MapComponent({center, zoom}) {
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
-  const [selectedRoute] = useContext(RouteContext)
   const [isDrawerOpen, setDrawerOpen] = useState(false)
   const [stop,displayStop] = useState('')
   const [soon, setSoon] = useState(false)
@@ -147,7 +146,7 @@ export default function MapComponent({center, zoom}) {
         path: route.path,
         geodesic: true,
         strokeColor: route.strokeColor,
-        strokeOpacity: 1,
+        strokeOpacity: settings.selectedRoute.includes(route.name)?1:0,
         strokeWeight: 4,
       })
       polylineRefs.current[route.name].setMap(map)
@@ -160,14 +159,14 @@ export default function MapComponent({center, zoom}) {
     routeNames.forEach((routeName) => {
       // For each route, if it is selected, set its opacity to 1, else set it to 0
       if (polylineRefs.current[routeName]) {
-        if (selectedRoute.includes(routeName)) {
+        if (settings.selectedRoute.includes(routeName)) {
           polylineRefs.current[routeName].setOptions({strokeOpacity: 1})
         } else {
           polylineRefs.current[routeName].setOptions({strokeOpacity: 0})
         }
       }
     })
-  }, [selectedRoute])
+  }, [settings.selectedRoute])
 
 
    
@@ -178,26 +177,26 @@ export default function MapComponent({center, zoom}) {
           apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
           defaultCenter={center}
           defaultZoom={zoom}
+          key={settings.darkMode ? 'dark' : 'light'}
           onGoogleApiLoaded={onMapLoad}
-          key={darkMode ? 'dark' : 'light'}
           options={{
             zoomControl: false,
             streetViewControl: false,
             fullscreenControl: false,
             mapTypeControl: false,
-            styles: getStyle(darkMode),
+            styles: getStyle(settings.darkMode),
           }}
         >
           {Object.keys(combinedBuses)
             .filter(
               // Filter out buses that haven't updated in the last 30 minutes
               (key) =>
-                !filter ||
+                !settings.filter ||
                 isBusUpdatedWithinPast30Minutes(combinedBuses[key].lastPing),
             )
             .filter(
               // Filter out buses that don't match the selected routes
-              (key) => selectedRoute.includes(combinedBuses[key].route),
+              (key) => settings.selectedRoute.includes(combinedBuses[key].route),
             )
             .map((key) => {
               const bus = combinedBuses[key]
@@ -211,8 +210,8 @@ export default function MapComponent({center, zoom}) {
                   fleetId={bus.fleetId}
                   route={bus.route}
                   heading={bus.heading}
-                  displayTime={displayTime}
-                  darkMode={darkMode}
+                  displayTime={settings.displayTime}
+                  darkMode={settings.darkMode}
                 />
               )
             })}
@@ -280,11 +279,11 @@ export default function MapComponent({center, zoom}) {
         )}
       </AnimatePresence>
       <SettingsDrawer
-        filter={filter}
+        filter={settings.filter}
         handleFilterToggle={handleFilterToggle}
-        displayTime={displayTime}
+        displayTime={settings.displayTime}
         toggleDisplayTime={toggleDisplayTime}
-        darkMode={darkMode}
+        darkMode={settings.darkMode}
       />
       <InstallPWAButton />
       <RouteSelector />

@@ -20,13 +20,13 @@ import {AccessTime as AccessTimeIcon} from '@mui/icons-material'
 import {Menu as MenuIcon} from '@mui/icons-material'
 import HomeIcon from '@mui/icons-material/Home'
 import TimelineIcon from '@mui/icons-material/Timeline'
+import SettingsContext from '../SettingsContext'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import AppContext from '../appContext'
 
 export default function SettingsDrawer(props) {
+  const {settings, dispatch} = useContext(SettingsContext)
   const [isDrawerOpen, setDrawerOpen] = useState(false)
   const navigate = useNavigate()
-  const {darkMode, setDarkMode} = useContext(AppContext)
   const theme = useTheme()
 
   const handleDrawerOpen = () => {
@@ -145,7 +145,7 @@ export default function SettingsDrawer(props) {
           <Divider />
           <ListItemButton
             onClick={() => {
-              props.toggleDisplayTime()
+              dispatch({type:"SET_DISPLAY_TIME"})
             }}
           >
             <AccessTimeIcon
@@ -153,14 +153,14 @@ export default function SettingsDrawer(props) {
                 mr: 2,
               }}
             />
-            {props.displayTime ? 'Hide Time' : 'Show Time'}
+            {settings.displayTime ? 'Hide Time' : 'Show Time'}
           </ListItemButton>
           <ListItemButton
             onClick={() => {
-              setDarkMode(!darkMode)
+              dispatch({type:"SET_DARK_MODE"})
             }}
           >
-            {props.darkMode ? (
+            {settings.darkMode ? (
               <Brightness7Icon
                 sx={{
                   mr: 2,
@@ -173,11 +173,11 @@ export default function SettingsDrawer(props) {
                 }}
               />
             )}
-            {props.darkMode ? 'Light Mode' : 'Dark Mode'}
+            {settings.darkMode ? 'Light Mode' : 'Dark Mode'}
           </ListItemButton>
           <ListItemButton
             onClick={() => {
-              props.handleFilterToggle()
+              dispatch({type:"SET_FILTER"})
             }}
           >
             <FilterListIcon
@@ -185,7 +185,7 @@ export default function SettingsDrawer(props) {
                 mr: 2,
               }}
             />
-            {props.filter ? 'Show Past Buses' : 'Show Recent Buses'}
+            {settings.filter ? 'Show Past Buses' : 'Show Recent Buses'}
           </ListItemButton>
         </List>
       </Drawer>

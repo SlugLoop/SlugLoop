@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef , useContext} from 'react'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton';
 import { Box, Typography,Modal, Card, CardContent, Button} from '@mui/material'
 import Page from './Page';
 import BusStops from './bus-stops.json'
 import { getSoonBusStops} from './firebase';
+import SettingsContext from '../SettingsContext';
 
 export default function ListView() {
     /*
@@ -15,6 +16,7 @@ export default function ListView() {
     //const [showPage, setShowPage] = useState('');
     const cwstops = BusStops.bstop.CW.map((key)=>Object.keys(key)[0])
     const ccwstops = BusStops.bstop.CCW.map((key)=>Object.keys(key)[0])
+    const {settings} = useContext(SettingsContext)
     const [isDrawerOpen, setDrawerOpen] = useState(false)
     const [isDirModalOpen, setDirModal] = useState(true)
     const [isClockwise, setDirection] = useState(true)
@@ -73,7 +75,7 @@ export default function ListView() {
                 paddingTop: '3vh',
                 alignItems: 'left',
     
-                backgroundColor: 'background.default'
+                backgroundColor: settings.darkMode?'#121212' : '#ffffff'
             }}          
             >
                 <Modal  
@@ -108,7 +110,7 @@ export default function ListView() {
                     width: 'window.innerWidth',
                     paddingLeft: '3vw',
                     maxHeight: 'window.innerHeight',                   
-                    backgroundColor: 'background',                   
+                    backgroundColor: settings.darkMode?'#121212' : '#ffffff'                  
                 }}>
                     <ListItemButton 
                         onClick = {()=> setDirection(!isClockwise)}

@@ -8,8 +8,7 @@ import {
   Button,
 } from '@mui/material'
 import {useNavigate} from 'react-router-dom'
-
-import AppContext from '../../appContext'
+import SettingsContext from '../../SettingsContext'
 
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
@@ -17,11 +16,8 @@ import Brightness7Icon from '@mui/icons-material/Brightness7'
 export default function DesktopTopBar() {
   const navigate = useNavigate()
 
-  const {darkMode, setDarkMode} = useContext(AppContext)
+  const {settings, dispatch} = useContext(SettingsContext)
 
-  const handleDarkModeToggle = () => {
-    setDarkMode(!darkMode)
-  }
 
   return (
     <>
@@ -80,8 +76,10 @@ export default function DesktopTopBar() {
               >
               Stops
             </Button>
-            <IconButton onClick={handleDarkModeToggle} color="inherit">
-              {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+            <IconButton onClick={() => {
+              dispatch({ type: "SET_DARK_MODE" })
+            }} color="inherit">
+              {settings.darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </Stack>
         </Toolbar>
