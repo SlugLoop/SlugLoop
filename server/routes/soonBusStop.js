@@ -3,6 +3,10 @@ const busStops = require('./bus-stops.json')
 const defaultDatabase = require('./firebase.js');
 const e = require('express');
 
+const radius = 0.001
+var oldUpdateCW = []
+var oldUpdateCCW = []
+
 // updates next 3 bus stops for every bus
 module.exports = async function nextBusStops() {
   const busCollection = [];
@@ -46,12 +50,37 @@ module.exports = async function nextBusStops() {
     soonBusStop(busCollection, stops_arr_CW, stops_arr_CCW, i);
   }
 
-  // Update the database for each bus stops in the object array
-  dbUpdate(stops_arr_CW, "CW");
-  dbUpdate(stops_arr_CCW, "CCW");
+  // Update the database for each bus stops in the object array if different to old update
+  if (!areListsEqual(stops_arr_CW, oldUpdateCW)) {
+    dbUpdate(stops_arr_CW, "CW");
+    oldUpdateCW = stops_arr_CW;
+  }
+  
+  if (!areListsEqual(stops_arr_CCW, oldUpdateCCW)) {
+    dbUpdate(stops_arr_CW, "CCW");
+    oldUpdateCCW = stops_arr_CCW;
+  }
 
   return;
 }
+
+function areListsEqual(list1, list2) {
+  // Check if the lengths of the lists are equal
+  if (list1.length !== list2.length) {
+    return false;
+  }
+
+  // Compare each object in the lists by converting them to strings
+  for (let i = 0; i < list1.length; i++) {
+    if (JSON.stringify(list1[i]) !== JSON.stringify(list2[i])) {
+      return false;
+    }
+  }
+
+  // If all objects are equal, return true
+  return true;
+}
+
   
 function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
   let direction;
@@ -76,8 +105,8 @@ function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
       let lat2 = location[locationName].lat;
       let lon2 = location[locationName].lon;
       // Find the bus stop closest to the bus, and set next 3 stops in array to true
-      if((lat2 - 0.000450) <= lat1 && (lat2 + 0.000450) >= lat1 
-      && (lon2 - 0.000450) <= lon1 && (lon2 + 0.000450) >= lon1) {
+      if((lat2 - radius) <= lat1 && (lat2 + radius) >= lat1 
+      && (lon2 - radius) <= lon1 && (lon2 + radius) >= lon1) {
         for (let j = 1; j <= 3; j++) {
           let stop_id = Object.keys(cwData[(i + j) % cwLength])[0];
           let objIndex = stops_arr_CW.findIndex((e => e.id === stop_id));
@@ -100,8 +129,8 @@ function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
       let lat2 = location[locationName].lat;
       let lon2 = location[locationName].lon;
       // Find the bus stop closest to the bus, and set next 3 stops in array to true
-      if((lat2 - 0.000450) <= lat1 && (lat2 + 0.000450) >= lat1 
-      && (lon2 - 0.000450) <= lon1 && (lon2 + 0.000450) >= lon1) {
+      if((lat2 - radius) <= lat1 && (lat2 + radius) >= lat1 
+      && (lon2 - radius) <= lon1 && (lon2 + radius) >= lon1) {
         for (let j = 1; j <= 3; j++) {
           let stop_id = Object.keys(ccwData[(i + j) % ccwLength])[0];
           let objIndex = stops_arr_CCW.findIndex((e => e.id === stop_id));

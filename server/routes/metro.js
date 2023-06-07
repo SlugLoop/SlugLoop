@@ -4,6 +4,7 @@ const axios = require('axios')
 const rateLimit = require('express-rate-limit')
 require('dotenv').config()
 const defaultDatabase = require('./firebase.js')
+const nextBusStops = require('./soonBusStop.js')
 
 // const lockName = 'myLock'
 // let myLock = false
@@ -195,6 +196,7 @@ const limiter = rateLimit({
 router.put('/updateMetroBuses', limiter, async (req, res) => {
   try {
     const status = await updateMetroBuses()
+    await nextBusStops()
     res.status(status).send('Updated metro buses')
   } catch (error) {
     console.error(`Failed to update buses: ${error}`)
