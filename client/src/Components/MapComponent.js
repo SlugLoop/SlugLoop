@@ -178,6 +178,7 @@ export default function MapComponent({center, zoom}) {
           defaultCenter={center}
           defaultZoom={zoom}
           key={settings.darkMode ? 'dark' : 'light'}
+          onGoogleApiLoaded={onMapLoad}
           options={{
             zoomControl: false,
             streetViewControl: false,
