@@ -204,4 +204,36 @@ router.put('/updateMetroBuses', limiter, async (req, res) => {
   }
 })
 
+async function metroETA(stop_id) {
+  const baseUrl = 'http://rt.scmetro.org/bustime/api/v3/getpredictions'
+  const apiKey = process.env.METRO_KEY
+
+  return (response = await axios.get(
+    `${baseUrl}?key=${apiKey}&stpid=${stop_id}&format=json`,
+  ))
+}
+
+router.get('/metroEta', async function (req, res) {
+  const stopId = req.query.stopId
+
+  if (!stopId) {
+    res.status(400).send('Invalid stop ID')
+    return
+  }
+
+  try {
+    const etas = await metroETA(stopId)
+
+    // If there's an error in the response, forward it
+    if (etas.error) {
+      res.status(500).send(etas.error)
+    } else {
+      res.status(200).send(etas.data['bustime-response'].prd)
+    }
+  } catch (err) {
+    console.log('Error getting ETAs', err)
+    res.status(500).send('Error getting ETAs')
+  }
+})
+
 module.exports = router
