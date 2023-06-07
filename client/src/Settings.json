@@ -2,5 +2,5 @@
     "displayTime": false,
     "darkMode": false,
     "filter": false,
-    "selectedRoute": "['10', '15', '18', '19', '20', 'LOOP', 'UPPER CAMPUS','LOOP OUT OF SERVICE AT BARN THEATER','OUT OF SERVICE/SORRY','SPECIAL',]"
+    "selectedRoute": ["10", "15", "18", "19", "20", "LOOP", "UPPER CAMPUS","LOOP OUT OF SERVICE AT BARN THEATER","OUT OF SERVICE/SORRY","SPECIAL"]
 }

@@ -35,7 +35,6 @@ export default function RouteSelector() {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
   const {settings, dispatch} = useContext(SettingsContext)
   const theme = useTheme()
-
   const handleDrawerOpen = () => {
     setDrawerOpen(true)
   }

@@ -1,5 +1,6 @@
 
 import Settings from './Settings.json'
+//export const INITIAL_STATE = Settings
 export const INITIAL_STATE = localStorage.getItem('settings')?JSON.parse(localStorage.getItem('settings')):Settings
 //console.log(localStorage.getItem('settings'))
 
@@ -14,6 +15,7 @@ export function SettingsReducer(state, action){
                 displayTime: state.displayTime
             }
         case 'SET_DARK_MODE':
+            console.log("darkmode"+typeof(state.darkMode))
             state.darkMode = !state.darkMode
             localStorage.setItem('settings', JSON.stringify(state))
             console.log(state)
@@ -29,6 +31,7 @@ export function SettingsReducer(state, action){
                 filter: state.filter
             }
         case 'DELETE_ROUTE':
+            console.log("reducer" + typeof(state.selectedRoute))
             state.selectedRoute = state.selectedRoute.filter((r) => r !== action.deletedRoute)
             localStorage.setItem('settings', JSON.stringify(state))
             return {
