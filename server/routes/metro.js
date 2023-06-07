@@ -204,4 +204,18 @@ router.put('/updateMetroBuses', limiter, async (req, res) => {
   }
 })
 
+async function soonMetroStops(stop_id) {
+  const baseUrl = 'http://[host:port]/bustime/api/v3/getpredictions';
+  const routes = [10, 15, 18, 19, 20]
+  const apiKey = process.env.METRO_KEY
+  try {
+    axios
+    const response = await axios.get(
+      `${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`,
+    )
+  } catch {
+    res.status(500).send('Error fetching buses')
+  }
+}
+
 module.exports = router
