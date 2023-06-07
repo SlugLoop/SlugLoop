@@ -16,7 +16,7 @@ export default function BusStopMarker(props) {
     >
       {/* DON't TOUCH IT BREAKS IF YOU REMOVE*/}
       <img
-        src="/8.ico"
+        src="/busStop.ico"
         alt="busStop"
         onLoad={() => setIsImageLoaded(true)}
         style={{display: 'none'}}
@@ -24,8 +24,9 @@ export default function BusStopMarker(props) {
       {isImageLoaded && (
         <Box
           component="img"
-          src="/8.ico"
+          src="/busStop.ico"
           alt="busStop"
+          sx={{height:'50px', width:'50px'}}
         />
       )}
     </Box>

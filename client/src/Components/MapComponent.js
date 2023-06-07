@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, useRef} from 'react'
 import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
-import {Box, Modal, Button} from '@mui/material'
+import {Box, Modal,} from '@mui/material'
 import MapMarker from './MapMarker'
 import BusStopMarker from './BusStopMarker'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
@@ -105,33 +105,32 @@ export default function MapComponent({center, zoom}) {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [center])
-  const getStopInfo = () => {
-    getSoonBusStops().then((stops)=>{
-        setSoonStops(stops)
-    })
-    if(isClockwise){
-        console.log(stop)
-        console.log(soonStops[0][stop])   
-        setSoon(soonStops[1][stop])
-    }
-    else{
-        setSoon(soonStops[0][stop])
-    }
-    
-    
-}
+ 
   const initialLoad = useRef(true)
-    useEffect(()=>{
-        if(initialLoad.current){
-            initialLoad.current = false
-            getSoonBusStops().then((stops)=>{
-                setSoonStops(stops)
-            })
-        }
-        else{
-            getStopInfo()
-        }      
-    },[stop])
+  useEffect(() => {
+    const getStopInfo = () => {
+      getSoonBusStops().then((stops) => {
+        setSoonStops(stops)
+      })
+      if (isClockwise) {
+        setSoon(soonStops[1][stop])
+      }
+      else {
+        setSoon(soonStops[0][stop])
+      }
+
+
+    }
+    if (initialLoad.current) {
+      initialLoad.current = false
+      getSoonBusStops().then((stops) => {
+        setSoonStops(stops)
+      })
+    }
+    else {
+      getStopInfo()
+    }
+  }, [stop, isClockwise, soonStops])
   return (
     <>
       <Box id="map" width="100%" height="100vh" data-testid="map">
@@ -180,14 +179,16 @@ export default function MapComponent({center, zoom}) {
             .map((key) => {
               const stop = Object.keys(key)[0]
               return (
-                <Button
+                <Box
+                lat={key[stop].lat}
+                lng={key[stop].lon}
+                onClick = {()=>{handleDrawerOpen(); console.log(stop);displayStop(stop); setDirection(true)}}>
+                <BusStopMarker
                   sx ={{position: 'aboslute' ,transform: 'translate(-50%,-50%)'}}
-                  lat={key[stop].lat}
-                  lng={key[stop].lon}
-                  onClick = {()=>{handleDrawerOpen(); displayStop(stop); setDirection(true)}}
-                >
-                  stop
-                </Button>
+                  
+                />
+                </Box>
+                 
               )
             })
           }
@@ -195,14 +196,17 @@ export default function MapComponent({center, zoom}) {
             .map((key) => {
               const stop = Object.keys(key)[0]
               return (
-                <Button
-                  sx ={{position: 'aboslute' ,transform: 'translate(-50%,-50%)'}}
+                <Box
                   lat={key[stop].lat}
                   lng={key[stop].lon}
-                  onClick = {()=>{handleDrawerOpen(); displayStop(stop); setDirection(false)}}
+                  onClick={() => { handleDrawerOpen(); displayStop(stop); setDirection(false) }}
                 >
-                  stop
-                </Button>
+                  <BusStopMarker
+                    sx={{ position: 'aboslute', transform: 'translate(-50%,-50%)' }}
+
+                  />
+                </Box>
+                
               )
             })
             }
