@@ -3,12 +3,10 @@ import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton';
 import { Box, Typography,Modal, Card, CardContent, Button} from '@mui/material'
 import Page from './Page';
-import {useViewportWidth} from '../App'
 import BusStops from './bus-stops.json'
-import { getSoonBusStops, getAllMetroBuses } from './firebase';
+import { getSoonBusStops} from './firebase';
 
 export default function ListView() {
-    const viewportWidth = useViewportWidth()
     /*
     const stops = ['Main Entrance CW', 'Main Entrance CCW','Lower Campus', 'Village/Farm',
         'East Remote', 'East Field/OPERS', 'Cowell', 'Crown', '9/10', 'Science Hill',
@@ -114,7 +112,7 @@ export default function ListView() {
                 }}>
                     <ListItemButton 
                         onClick = {()=> setDirection(!isClockwise)}
-                        sx = {{width: viewportWidth > 600 ? '40%' : '60%'}}
+                        sx = {{width: '100%', marginBottom: '10px'}}
                     >
                         <Typography sx = {{color:'text.primary'}}>
                         Your direction is {isClockwise ? 'clockwise' : 'counterclockwise'}.  Click to change directions
@@ -126,11 +124,11 @@ export default function ListView() {
                         (isClockwise?cwstops:ccwstops).map((stop) => (
                         <ListItemButton 
                             onClick ={()=> {handleDrawerOpen(); displayStop(stop); }}
-                            sx = {{ width: viewportWidth > 600 ? '20%' : '50%' }}
+                            sx = {{ width: '100%', marginBottom: '10px' }}
                             key= {stop}
                         >
                             <Typography primary={stop} sx={{color:'text.primary'}}>
-                                {stop}
+                                {stop}  
                             </Typography>
                         </ListItemButton>))
                         
