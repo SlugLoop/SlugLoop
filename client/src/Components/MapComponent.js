@@ -25,7 +25,7 @@ export default function MapComponent({center, zoom}) {
 
   // Stores the buses in a state variable to rerender
 
-  const [path, setPath] = useState(true)
+  //const [path, setPath] = useState(true)
 
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
@@ -90,41 +90,43 @@ export default function MapComponent({center, zoom}) {
     }
   }, [center])
 
-  const polylineRef = useRef(null)
-
+  const polylineRefs = useRef({})
   const onMapLoad = ({map, maps}) => {
-    polylineRef.current = new maps.Polyline({
+    const routes = [{
+      name: 'LOOP',
       path: loopPath,
-      geodesic: true,
-      strokeColor: '#FF0000',
-      strokeOpacity: 1,
-      strokeWeight: 4,
+      strokeColor: '#2894f4',
+    },{
+      name: 'UPPER CAMPUS',
+      path: upperCampusPath,
+      strokeColor: '#50ac54',
+    }]
+    routes.forEach((route) => {
+      polylineRefs.current[route.name] = new maps.Polyline({
+        path: route.path,
+        geodesic: true,
+        strokeColor: route.strokeColor,
+        strokeOpacity: 1,
+        strokeWeight: 4,
+      })
+      polylineRefs.current[route.name].setMap(map)
     })
-
-    polylineRef.current.setMap(map)
   }
 
   useEffect(() => {
-    if (polylineRef.current) {
-      if (path) {
-        polylineRef.current.setOptions({
-          path: loopPath,
-          geodesic: true,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1,
-          strokeWeight: 4,
-        })
-      } else {
-        polylineRef.current.setOptions({
-          path: upperCampusPath,
-          geodesic: true,
-          strokeColor: '#0000FF',
-          strokeOpacity: 1,
-          strokeWeight: 4,
-        })
+    const routeNames = Object.keys(polylineRefs.current)
+
+    routeNames.forEach((routeName) => {
+      // For each route, if it is selected, set its opacity to 1, else set it to 0
+      if (polylineRefs.current[routeName]) {
+        if (selectedRoute.includes(routeName)) {
+          polylineRefs.current[routeName].setOptions({strokeOpacity: 1})
+        } else {
+          polylineRefs.current[routeName].setOptions({strokeOpacity: 0})
+        }
       }
-    }
-  }, [path])
+    })
+  }, [selectedRoute])
 
   return (
     <>
@@ -164,7 +166,6 @@ export default function MapComponent({center, zoom}) {
                   direction={bus.direction}
                   lastPing={bus.lastPing}
                   fleetId={bus.fleetId}
-                  direction={bus.direction}
                   route={bus.route}
                   heading={bus.heading}
                   displayTime={displayTime}
