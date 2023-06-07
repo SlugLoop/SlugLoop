@@ -15,6 +15,7 @@ import MainMobile from './Components/Landing/MainMobile'
 import MainDesktop from './Components/Landing/MainDesktop'
 import MyTimeline from './Components/TimeLine/TimeLine'
 import Wrapper from './Components/UIWrapper/Wrapper'
+import List from './Components/List'
 import {AnimatePresence, motion} from 'framer-motion'
 
 const AnimatedOutlet = () => {
@@ -82,6 +83,14 @@ function App() {
           element: (
             <Wrapper>
               <Contact />
+            </Wrapper>
+          ),
+        },
+        {
+          path: 'list',
+          element: (
+            <Wrapper>
+              <List />
             </Wrapper>
           ),
         },
