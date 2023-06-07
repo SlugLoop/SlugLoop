@@ -13,6 +13,7 @@ import SettingsDrawer from './SettingsDrawer'
 import AppContext from '../appContext'
 import busStops from './bus-stops.json'
 import {AnimatePresence} from 'framer-motion'
+import {loopPath, upperCampusPath} from './PolylinePoints'
 import Page from './Page'
 import { getSoonBusStops } from './firebase'
 
@@ -118,8 +119,6 @@ export default function MapComponent({center, zoom}) {
       else {
         setSoon(soonStops[0][stop])
       }
-
-
     }
     if (initialLoad.current) {
       initialLoad.current = false
@@ -131,6 +130,47 @@ export default function MapComponent({center, zoom}) {
       getStopInfo()
     }
   }, [stop, isClockwise, soonStops])
+
+  const polylineRefs = useRef({})
+  const onMapLoad = ({map, maps}) => {
+    const routes = [{
+      name: 'LOOP',
+      path: loopPath,
+      strokeColor: '#2894f4',
+    },{
+      name: 'UPPER CAMPUS',
+      path: upperCampusPath,
+      strokeColor: '#50ac54',
+    }]
+    routes.forEach((route) => {
+      polylineRefs.current[route.name] = new maps.Polyline({
+        path: route.path,
+        geodesic: true,
+        strokeColor: route.strokeColor,
+        strokeOpacity: 1,
+        strokeWeight: 4,
+      })
+      polylineRefs.current[route.name].setMap(map)
+    })
+  }
+
+  useEffect(() => {
+    const routeNames = Object.keys(polylineRefs.current)
+
+    routeNames.forEach((routeName) => {
+      // For each route, if it is selected, set its opacity to 1, else set it to 0
+      if (polylineRefs.current[routeName]) {
+        if (selectedRoute.includes(routeName)) {
+          polylineRefs.current[routeName].setOptions({strokeOpacity: 1})
+        } else {
+          polylineRefs.current[routeName].setOptions({strokeOpacity: 0})
+        }
+      }
+    })
+  }, [selectedRoute])
+
+
+   
   return (
     <>
       <Box id="map" width="100%" height="100vh" data-testid="map">
@@ -138,6 +178,7 @@ export default function MapComponent({center, zoom}) {
           apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
           defaultCenter={center}
           defaultZoom={zoom}
+          onMapLoad={onMapLoad()}
           key={darkMode ? 'dark' : 'light'}
           options={{
             zoomControl: false,
