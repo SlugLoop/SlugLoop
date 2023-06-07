@@ -155,7 +155,7 @@ router.get('/metroRouteDirections', function (req, res) {
       axios
         .get(`${baseUrl}?key=${apiKey}&rt=${route}&format=json`)
         .then((response) => {
-          const routeDirections = response.data['bustime-response'].dir
+          const routeDirections = response.data['bustime-response'].directions
           routeDirections.forEach((direction) => {
             routeDirectionsArray.push({
               routeID:route,
@@ -174,11 +174,11 @@ router.get('/metroRouteDirections', function (req, res) {
 
 //Get route predictions
 router.get('/metroRoutePredictions', function (req, res) {
-  const baseUrl = `${process.env.METRO_URL}/`
+  const baseUrl = `${process.env.METRO_URL}/getpredictions`
   const routes = [10, 15, 18, 19, 20]
   const apiKey = process.env.METRO_KEY
   try {
-    predictionArray = []
+    let predictionArray = []
     axios
       .get(`${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`)
       .then((response) => {
