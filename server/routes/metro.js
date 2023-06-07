@@ -205,7 +205,7 @@ router.put('/updateMetroBuses', limiter, async (req, res) => {
 })
 
 async function soonMetroStops(stop_id) {
-  const baseUrl = `${process.env.METRO_URL}/getpredictions`;
+  const baseUrl = 'http://rt.scmetro.org/bustime/api/v3/getpredictions';
   const routes = [10, 15, 18, 19, 20]
   const apiKey = process.env.METRO_KEY
 
