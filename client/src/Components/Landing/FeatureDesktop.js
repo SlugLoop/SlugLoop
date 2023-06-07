@@ -2,11 +2,11 @@ import React, {useContext} from 'react'
 import {Box, Stack, Typography, ListItemIcon} from '@mui/material'
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus'
 import TrainIcon from '@mui/icons-material/Train'
-import AppContext from '../../appContext'
+import SettingsContext from '../../SettingsContext'
 import GetAppIcon from '@mui/icons-material/GetApp'
 
 export default function FeaturesDesktop() {
-  const {darkMode} = useContext(AppContext)
+  const {settings} = useContext(SettingsContext)
   return (
     <Box
       width="100%"
@@ -31,7 +31,7 @@ export default function FeaturesDesktop() {
           position: 'absolute',
           zIndex: -1,
 
-          filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+          filter: settings.darkMode ? 'brightness(0.5)' : 'brightness(1)',
 
           '::after': {
             content: '""',
@@ -40,7 +40,7 @@ export default function FeaturesDesktop() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
+            background: settings.darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
           },
         }}
       />
@@ -60,7 +60,7 @@ export default function FeaturesDesktop() {
           alignItems="center"
           justifyContent="flex-start"
           padding={5}
-          backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
+          backgroundColor={settings.darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
           borderRadius="10px"
         >
           <Stack direction="column" alignItems="center" spacing={1}>
@@ -86,7 +86,7 @@ export default function FeaturesDesktop() {
           alignItems="center"
           justifyContent="flex-start"
           padding={5}
-          backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
+          backgroundColor={settings.darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
           borderRadius="10px"
         >
           <Stack direction="column" alignItems="center" spacing={1}>
@@ -113,7 +113,7 @@ export default function FeaturesDesktop() {
           alignItems="center"
           justifyContent="flex-start"
           padding={5}
-          backgroundColor={darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
+          backgroundColor={settings.darkMode ? '' : 'rgba(255, 255, 255, 0.8)'}
           borderRadius="10px"
         >
           <Stack direction="column" alignItems="center" spacing={1}>

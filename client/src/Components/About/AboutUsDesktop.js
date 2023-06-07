@@ -8,7 +8,8 @@ import {
   Avatar,
   Paper,
 } from '@mui/material'
-import AppContext from '../../appContext'
+import SettingsContext from '../../SettingsContext'
+
 
 const team = [
   {
@@ -42,7 +43,7 @@ const team = [
 ]
 
 export default function AboutDesktop() {
-  const {darkMode} = useContext(AppContext)
+  const {settings} = useContext(SettingsContext)
 
   return (
     <Box
@@ -75,7 +76,7 @@ export default function AboutDesktop() {
           overflow: 'hidden',
 
           zIndex: -1,
-          filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+          filter: settings.darkMode ? 'brightness(0.5)' : 'brightness(1)',
           '::after': {
             content: '""',
             position: 'absolute',
@@ -83,7 +84,7 @@ export default function AboutDesktop() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
+            background: settings.darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
           },
         }}
       />
@@ -118,7 +119,7 @@ export default function AboutDesktop() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                bgcolor: darkMode
+                bgcolor: settings.darkMode
                   ? 'rgba(0, 0, 0, 0.5)'
                   : 'rgba(255, 255, 255, 0.7)',
               }}
@@ -154,7 +155,7 @@ export default function AboutDesktop() {
         sx={{
           p: 2,
           mb: 2,
-          bgcolor: darkMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.7)',
+          bgcolor: settings.darkMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.7)',
         }}
       >
         <Typography

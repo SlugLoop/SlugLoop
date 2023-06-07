@@ -10,7 +10,7 @@ import LaptopIcon from '@mui/icons-material/Laptop'
 import AutoGraphIcon from '@mui/icons-material/AutoGraph'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
-import AppContext from '../../appContext'
+import SettingsContext from '../../SettingsContext'
 import {motion, AnimatePresence} from 'framer-motion'
 import {useViewportWidth} from '../../App'
 
@@ -146,8 +146,7 @@ export default function MyTimeline() {
     events['January 2023'].url,
   )
   const theme = useTheme()
-
-  const {darkMode} = useContext(AppContext)
+  const {settings} = useContext(SettingsContext)
 
   return (
     <div
@@ -173,7 +172,7 @@ export default function MyTimeline() {
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+            filter: settings.darkMode ? 'brightness(0.5)' : 'brightness(1)',
             overflow: 'hidden',
             zIndex: -1,
           }}
@@ -183,7 +182,7 @@ export default function MyTimeline() {
         variant="h3"
         marginTop="5vh"
         align="center"
-        color={darkMode ? 'white' : 'black'}
+        color={settings.darkMode ? 'white' : 'black'}
       >
         Timeline
       </Typography>

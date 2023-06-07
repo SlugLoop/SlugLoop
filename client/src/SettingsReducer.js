@@ -1,12 +1,14 @@
 
 import Settings from './Settings.json'
-export const INITIAL_STATE = Settings
+export const INITIAL_STATE = localStorage.getItem('settings')?JSON.parse(localStorage.getItem('settings')):Settings
+//console.log(localStorage.getItem('settings'))
 
 export function SettingsReducer(state, action){
     switch (action.type){
         case 'SET_DISPLAY_TIME':
             state.displayTime = !state.displayTime
             localStorage.setItem('settings', JSON.stringify(state))
+            
             return {
                 ...state, 
                 displayTime: state.displayTime
@@ -14,6 +16,7 @@ export function SettingsReducer(state, action){
         case 'SET_DARK_MODE':
             state.darkMode = !state.darkMode
             localStorage.setItem('settings', JSON.stringify(state))
+            console.log(state)
             return {
                 ...state, 
                 darkMode: state.darkMode

@@ -1,10 +1,10 @@
 import {Box, Button, Stack, Typography} from '@mui/material'
-import AppContext from '../../appContext'
+import SettingsContext from '../../SettingsContext'
 import {motion} from 'framer-motion'
 import React, {useContext} from 'react'
 
 export default function HeroDesktop() {
-  const {darkMode} = useContext(AppContext)
+  const {settings} = useContext(SettingsContext)
   console.log('HeroDesktop')
   return (
     <Box
@@ -28,7 +28,7 @@ export default function HeroDesktop() {
           left: 0,
           zIndex: -1,
 
-          filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+          filter: settings.darkMode ? 'brightness(0.5)' : 'brightness(1)',
 
           '::after': {
             content: '""',
@@ -37,7 +37,7 @@ export default function HeroDesktop() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
+            background: settings.darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
           },
         }}
       />
