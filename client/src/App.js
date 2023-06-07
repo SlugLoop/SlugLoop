@@ -1,4 +1,3 @@
-
 import {useEffect, useReducer, useState} from 'react'
 import {signIn} from './Components/Auth'
 import Map from './Components/Map'
@@ -20,6 +19,8 @@ import MyTimeline from './Components/TimeLine/TimeLine'
 import Wrapper from './Components/UIWrapper/Wrapper'
 import List from './Components/List'
 import {AnimatePresence, motion} from 'framer-motion'
+import {ThemeProvider} from '@mui/material/styles'
+import {themeOptions} from './Components/Theme/theme'
 
 const AnimatedOutlet = () => {
   const o = useOutlet()
@@ -45,10 +46,10 @@ const RootContainer = () => {
 }
 
 function App() {
-   
-  const [settings, dispatch] = useReducer(SettingsReducer, INITIAL_STATE);
+  const [settings, dispatch] = useReducer(SettingsReducer, INITIAL_STATE)
   const providerState = {
-    settings, dispatch
+    settings,
+    dispatch,
   }
   console.log(settings)
   const viewportWidth = useViewportWidth()
@@ -109,9 +110,15 @@ function App() {
   // I dont know why there needs to be two RouteProviders, but it doesnt work without two
   return (
     <SettingsContext.Provider value={providerState}>
-      <RouteProvider>
-        <RouterProvider router={router} />
-      </RouteProvider>
+      <SettingsContext.Consumer>
+        {({settings}) => (
+          <RouteProvider>
+            <ThemeProvider theme={themeOptions(settings.darkMode)}>
+              <RouterProvider router={router} />
+            </ThemeProvider>
+          </RouteProvider>
+        )}
+      </SettingsContext.Consumer>
     </SettingsContext.Provider>
   )
 }
