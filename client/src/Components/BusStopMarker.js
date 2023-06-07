@@ -6,6 +6,8 @@ export default function BusStopMarker(props) {
   return (
     <Box
       sx={{
+        position: 'absolute',
+        transform: 'translate(-50%, -50%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -24,6 +26,7 @@ export default function BusStopMarker(props) {
           component="img"
           src="/busStop.ico"
           alt="busStop"
+          sx={{height:'50px', width:'50px'}}
         />
       )}
     </Box>

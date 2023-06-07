@@ -22,3 +22,13 @@ export async function getAllMetroBuses() {
   })
   return busses
 }
+
+export async function getSoonBusStops() {
+  const stopsRef = collection(database, 'busStop')
+  const snapshot = await getDocs(stopsRef)
+  const stops = []
+  snapshot.forEach((doc) => {
+    stops.push(doc.data())
+  })
+  return stops
+}

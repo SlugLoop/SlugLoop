@@ -21,6 +21,8 @@ import {Menu as MenuIcon} from '@mui/icons-material'
 import HomeIcon from '@mui/icons-material/Home'
 import TimelineIcon from '@mui/icons-material/Timeline'
 import SettingsContext from '../SettingsContext'
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+
 export default function SettingsDrawer(props) {
   const {settings, dispatch} = useContext(SettingsContext)
   const [isDrawerOpen, setDrawerOpen] = useState(false)
@@ -96,6 +98,19 @@ export default function SettingsDrawer(props) {
               }}
             />
             Timeline
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              handleDrawerClose()
+              navigate('/list')
+            }}
+          >
+            <LocationOnIcon
+              sx={{
+                mr: 2,
+              }}
+            />
+            Stops
           </ListItemButton>
           <ListItemButton
             onClick={() => {

@@ -180,6 +180,22 @@ export default function MobileTopBar() {
               >
                 Contact
               </MotionTypography>
+              <MotionTypography
+                initial={{x: -100, opacity: 0}}
+                animate={{x: 0, opacity: 1}}
+                exit={{x: -100, opacity: 0}}
+                transition={{
+                  delay: 0.7,
+                  duration: 0.3,
+                  type: 'spring',
+                  stiffness: 80,
+                }}
+                variant="h6"
+                color="text.primary"
+                onClick={() => handlePageChange('/list')}
+              >
+                Stops
+              </MotionTypography>
             </Box>
           </MotionBox>
         )}
