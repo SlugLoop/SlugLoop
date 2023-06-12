@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, useRef} from 'react'
 import {getAllBuses, getAllMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
-import {Box, Modal,} from '@mui/material'
+import {Box, Modal} from '@mui/material'
 import MapMarker from './MapMarker'
 import BusStopMarker from './BusStopMarker'
 import {isBusUpdatedWithinPast30Minutes} from './helper'
@@ -14,12 +14,12 @@ import busStops from './bus-stops.json'
 import {AnimatePresence} from 'framer-motion'
 import {loopPath, upperCampusPath} from './PolylinePoints'
 import Page from './Page'
-import { getSoonBusStops } from './firebase'
+import {getSoonBusStops} from './firebase'
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
   const {settings} = useContext(SettingsContext)
-  
+
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
   // Wizard State
@@ -29,15 +29,16 @@ export default function MapComponent({center, zoom}) {
 
   // Stores the buses in a state variable to rerender
 
-
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
   const [isDrawerOpen, setDrawerOpen] = useState(false)
-  const [stop,displayStop] = useState('')
+  const [stop, displayStop] = useState('')
   const [soon, setSoon] = useState(false)
+  const [metroId, setMetroId] = useState('')
+  const [name, setName] = useState('')
   const [isClockwise, setDirection] = useState(true)
-  const [soonStops,setSoonStops] = useState([])
+  const [soonStops, setSoonStops] = useState([])
   const cwStops = busStops.bstop.CW
   const ccwStops = busStops.bstop.CCW
   function toggleDisplayTime() {
@@ -105,7 +106,7 @@ export default function MapComponent({center, zoom}) {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [center])
- 
+
   const initialLoad = useRef(true)
   useEffect(() => {
     const getStopInfo = () => {
@@ -114,8 +115,7 @@ export default function MapComponent({center, zoom}) {
       })
       if (isClockwise) {
         setSoon(soonStops[1][stop])
-      }
-      else {
+      } else {
         setSoon(soonStops[0][stop])
       }
     }
@@ -124,29 +124,31 @@ export default function MapComponent({center, zoom}) {
       getSoonBusStops().then((stops) => {
         setSoonStops(stops)
       })
-    }
-    else {
+    } else {
       getStopInfo()
     }
   }, [stop, isClockwise, soonStops])
 
   const polylineRefs = useRef({})
   const onMapLoad = ({map, maps}) => {
-    const routes = [{
-      name: 'LOOP',
-      path: loopPath,
-      strokeColor: '#2894f4',
-    },{
-      name: 'UPPER CAMPUS',
-      path: upperCampusPath,
-      strokeColor: '#50ac54',
-    }]
+    const routes = [
+      {
+        name: 'LOOP',
+        path: loopPath,
+        strokeColor: '#2894f4',
+      },
+      {
+        name: 'UPPER CAMPUS',
+        path: upperCampusPath,
+        strokeColor: '#50ac54',
+      },
+    ]
     routes.forEach((route) => {
       polylineRefs.current[route.name] = new maps.Polyline({
         path: route.path,
         geodesic: true,
         strokeColor: route.strokeColor,
-        strokeOpacity: settings.selectedRoute.includes(route.name)?1:0,
+        strokeOpacity: settings.selectedRoute.includes(route.name) ? 1 : 0,
         strokeWeight: 4,
       })
       polylineRefs.current[route.name].setMap(map)
@@ -168,8 +170,6 @@ export default function MapComponent({center, zoom}) {
     })
   }, [settings.selectedRoute])
 
-
-   
   return (
     <>
       <Box id="map" width="100%" height="100vh" data-testid="map">
@@ -196,7 +196,8 @@ export default function MapComponent({center, zoom}) {
             )
             .filter(
               // Filter out buses that don't match the selected routes
-              (key) => settings.selectedRoute.includes(combinedBuses[key].route),
+              (key) =>
+                settings.selectedRoute.includes(combinedBuses[key].route),
             )
             .map((key) => {
               const bus = combinedBuses[key]
@@ -215,43 +216,47 @@ export default function MapComponent({center, zoom}) {
                 />
               )
             })}
-          {cwStops
-            .map((key) => {
-              const stop = Object.keys(key)[0]
-              return (
-                <Box
+          {cwStops.map((key) => {
+            const stop = Object.keys(key)[0]
+            return (
+              <Box
                 lat={key[stop].lat}
                 lng={key[stop].lon}
-                onClick = {()=>{handleDrawerOpen(); console.log(stop);displayStop(stop); setDirection(true)}}>
+                onClick={() => {
+                  handleDrawerOpen()
+                  setMetroId(key[stop].metro)
+                  displayStop(stop)
+                  setName(key[stop].name)
+                  setDirection(true)
+                }}
+              >
                 <BusStopMarker
-                  sx ={{position: 'aboslute' ,transform: 'translate(-50%,-50%)'}}
-                  
+                  sx={{position: 'aboslute', transform: 'translate(-50%,-50%)'}}
                 />
-                </Box>
-                 
-              )
-            })
-          }
-          {ccwStops
-            .map((key) => {
-              const stop = Object.keys(key)[0]
-              return (
-                <Box
-                  lat={key[stop].lat}
-                  lng={key[stop].lon}
-                  onClick={() => { handleDrawerOpen(); displayStop(stop); setDirection(false) }}
-                >
-                  <BusStopMarker
-                    sx={{ position: 'aboslute', transform: 'translate(-50%,-50%)' }}
-
-                  />
-                </Box>
-                
-              )
-            })
-            }
+              </Box>
+            )
+          })}
+          {ccwStops.map((key) => {
+            const stop = Object.keys(key)[0]
+            return (
+              <Box
+                lat={key[stop].lat}
+                lng={key[stop].lon}
+                onClick={() => {
+                  handleDrawerOpen()
+                  setName(key[stop].name)
+                  setMetroId(key[stop].metro)
+                  displayStop(stop)
+                  setDirection(false)
+                }}
+              >
+                <BusStopMarker
+                  sx={{position: 'aboslute', transform: 'translate(-50%,-50%)'}}
+                />
+              </Box>
+            )
+          })}
         </GoogleMap>
-        
       </Box>
       <Modal
         anchor="bottom"
@@ -265,7 +270,13 @@ export default function MapComponent({center, zoom}) {
           justifyContent: 'center',
         }}
       >
-        <Page busStop={stop} isClockwise={isClockwise} soon={soon} />
+        <Page
+          busStop={stop}
+          isClockwise={isClockwise}
+          soon={soon}
+          id={metroId}
+          name={name}
+        />
       </Modal>
       <AnimatePresence mode="wait">
         {wizardOpen && (
@@ -333,16 +344,6 @@ const getStyle = (darkMode) => {
         stylers: [{color: '#f3d19c'}],
       },
       {
-        featureType: 'transit',
-        elementType: 'geometry',
-        stylers: [{color: '#2f3948'}],
-      },
-      {
-        featureType: 'transit.station',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#d59563'}],
-      },
-      {
         featureType: 'water',
         elementType: 'geometry',
         stylers: [{color: '#17263c'}],
@@ -365,11 +366,19 @@ const getStyle = (darkMode) => {
         featureType: 'poi.school',
         stylers: [{visibility: 'on'}], // This will show only schools
       },
+      {
+        featureType: 'transit',
+        stylers: [{visibility: 'off'}],
+      },
     ]
   }
   return [
     {
       featureType: 'poi',
+      stylers: [{visibility: 'off'}],
+    },
+    {
+      featureType: 'transit',
       stylers: [{visibility: 'off'}],
     },
     {
