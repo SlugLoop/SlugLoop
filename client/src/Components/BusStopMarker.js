@@ -26,7 +26,7 @@ export default function BusStopMarker(props) {
           component="img"
           src="/busStop.ico"
           alt="busStop"
-          sx={{height:'170px', width:'170px', objectFit: 'cover'}}
+          sx={{height:'25px', width:'25px'}}
         />
       )}
     </Box>

@@ -59,7 +59,7 @@ export default function Page(props) {
         
           <Card>
             <CardContent>
-                <Typography variant = 'body2' sx = {{fontSize: 15 }} color = "text.primary">
+                <Typography variant = 'h4' sx = {{fontSize: 15 }} color = "text.primary">
                     The next buses for {props.name} going {direction}
                 </Typography>
                 <Typography variant = 'h6' sx = {{fontSize: 15}} color = "text.primary">
