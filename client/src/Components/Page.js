@@ -20,12 +20,12 @@ async function getMetroEta(id) {
                 return
             }
         }).then((body) => {
-            console.log("body" + body)
             return body
         })
     }
     catch {
         console.log('error fetching')
+        return {}
     }
 }
 
@@ -34,14 +34,21 @@ export default function Page(props) {
     
    // const [soonStops,setSoonStops] = useState([])
     const [metroBuses,setMetroBuses] = useState([])
+    const [noMetro, setNoMetro ] = useState(false)
     useEffect(()=>{
         let busarr =[]
         getMetroEta(props.id).then((result) => {
+            console.log(Object.keys(result)+"result")
+            if(Object.keys(result).length>0){
             result.forEach((bus) => {
 
                 busarr.push(bus)
                
             })
+        }
+        else{
+            setNoMetro(true)
+        }
             setMetroBuses(busarr)
         })    
         
@@ -62,13 +69,16 @@ export default function Page(props) {
                     
                 <Typography>
                 {
+                !noMetro?
                 metroBuses.map((bus)=>{
                     return(
                     <Typography sx = {{fontSize: 15}} color = "text.primary">
                         Bus {bus.rt} is coming {bus.prdctdn=="DUE"?"< 1 minute":"in "+bus.prdctdn+" minutes"}
                     </Typography>
                     )
-                })}
+                }):(<Typography sx = {{fontSize: 15}} color = "text.primary">
+                        Metro bus is greater than 30 minutes away
+                    </Typography>)}
                 </Typography>
                 
                 <Typography sx = {{fontSize: 15}} color = "text.primary">
