@@ -2,7 +2,7 @@ import React ,{useState, useEffect} from 'react'
 
 
 import Card from '@mui/material/Card';
-import {Box, Modal,} from '@mui/material'
+import {Box, Modal,Paper} from '@mui/material'
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { getSoonBusStops, getAllMetroBuses } from './firebase';
@@ -59,10 +59,10 @@ export default function Page(props) {
         
           <Card>
             <CardContent>
-                <Typography sx = {{fontSize: 12 }} color = "text.primary">
+                <Typography variant = 'body2' sx = {{fontSize: 15 }} color = "text.primary">
                     The next buses for {props.name} going {direction}
                 </Typography>
-                <Typography sx = {{fontSize: 15}} color = "text.primary">
+                <Typography variant = 'h6' sx = {{fontSize: 15}} color = "text.primary">
                     Metro ETA 
                 </Typography>
                 
@@ -72,24 +72,23 @@ export default function Page(props) {
                 !noMetro?
                 metroBuses.map((bus)=>{
                     return(
-                    <Typography sx = {{fontSize: 15}} color = "text.primary">
+                    <Typography variant = 'body1' sx = {{fontSize: 15}} color = "text.primary">
                         Bus {bus.rt} is coming {bus.prdctdn=="DUE"?"< 1 minute":"in "+bus.prdctdn+" minutes"}
                     </Typography>
                     )
-                }):(<Typography sx = {{fontSize: 15}} color = "text.primary">
+                }):(<Typography variant = 'body1' sx = {{fontSize: 15}} color = "text.primary">
                         Metro bus is greater than 30 minutes away
                     </Typography>)}
                 </Typography>
                 
-                <Typography sx = {{fontSize: 15}} color = "text.primary">
+                <Typography variant = 'h6' sx = {{fontSize: 15}} color = "text.primary">
                     Loop Coming
                 </Typography>
-                <Typography >
+                <Typography variant = 'body1' sx = {{fontSize: 15}} color = "text.primary">
                     {
                         props.soon?"SOON (3 stops away or closer)":"In a bit (>3 stops away)"
                     }
                 </Typography>
-                
             </CardContent>
           </Card>
 
