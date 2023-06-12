@@ -14,22 +14,23 @@ export default function ListView() {
         'Kresge', 'Kerr Hall', 'RCC/Porter', 'Family Student Housing', 'Oakes/West Remote', 'Arboretum'];
         */
     //const [showPage, setShowPage] = useState('');
-    const cwstops = BusStops.bstop.CW.map((key)=>Object.keys(key)[0])
-    const ccwstops = BusStops.bstop.CCW.map((key)=>Object.keys(key)[0])
+    const cwstops = BusStops.bstop.CW
+    console.log(cwstops)
+    const ccwstops = BusStops.bstop.CCW
     const {settings} = useContext(SettingsContext)
     const [isDrawerOpen, setDrawerOpen] = useState(false)
     const [isDirModalOpen, setDirModal] = useState(true)
     const [isClockwise, setDirection] = useState(true)
     const [soonStops,setSoonStops] = useState([])
+    const [metroId, setMetroId] = useState('')
+    const [name, setName] = useState('')
     const [stop,displayStop] = useState('')
     const [soon, setSoon] = useState(false)
     const getStopInfo = () => {
         getSoonBusStops().then((stops)=>{
             setSoonStops(stops)
         })
-        if(isClockwise){
-            console.log(stop)
-            console.log(soonStops[0][stop])   
+        if(isClockwise){ 
             setSoon(soonStops[1][stop])
         }
         else{
@@ -75,7 +76,7 @@ export default function ListView() {
                 paddingTop: '3vh',
                 alignItems: 'left',
     
-                backgroundColor: settings.darkMode?'#121212' : '#ffffff'
+                backgroundColor: 'background.default'
             }}          
             >
                 <Modal  
@@ -110,7 +111,7 @@ export default function ListView() {
                     width: 'window.innerWidth',
                     paddingLeft: '3vw',
                     maxHeight: 'window.innerHeight',                   
-                    backgroundColor: settings.darkMode?'#121212' : '#ffffff'                  
+                    backgroundColor: 'background.default',                   
                 }}>
                     <ListItemButton 
                         onClick = {()=> setDirection(!isClockwise)}
@@ -123,16 +124,20 @@ export default function ListView() {
                     </ListItemButton>  
                     { 
                         
-                        (isClockwise?cwstops:ccwstops).map((stop) => (
+                        (isClockwise?cwstops:ccwstops).map((key, index) => {
+                            const busstop = Object.keys(key)[0]
+
+                            console.log(index + 'index')
+                        return(
                         <ListItemButton 
-                            onClick ={()=> {handleDrawerOpen(); displayStop(stop); }}
+                            onClick ={()=> {handleDrawerOpen(); displayStop(busstop); setMetroId(key[busstop].metro); setName(key[busstop].name)}}
                             sx = {{ width: '100%', marginBottom: '10px' }}
-                            key= {stop}
+                            key= {busstop}
                         >
-                            <Typography primary={stop} sx={{color:'text.primary'}}>
-                                {stop}  
+                            <Typography primary={busstop} sx={{color:'text.primary'}}>
+                                {key[busstop].name}  
                             </Typography>
-                        </ListItemButton>))
+                        </ListItemButton>)})
                         
                         }
 
@@ -150,7 +155,7 @@ export default function ListView() {
                     justifyContent: 'center',
                 }}
                 >
-                    <Page busStop = {stop} isClockwise = {isClockwise} soon = {soon}/>
+                    <Page busStop = {stop} isClockwise = {isClockwise} soon = {soon} id ={metroId} name = {name} />
                 </Modal>
 
 

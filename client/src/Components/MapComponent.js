@@ -36,6 +36,8 @@ export default function MapComponent({center, zoom}) {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
   const [stop,displayStop] = useState('')
   const [soon, setSoon] = useState(false)
+  const [metroId, setMetroId] = useState('')
+  const [name, setName] = useState('')
   const [isClockwise, setDirection] = useState(true)
   const [soonStops,setSoonStops] = useState([])
   const cwStops = busStops.bstop.CW
@@ -222,7 +224,7 @@ export default function MapComponent({center, zoom}) {
                 <Box
                 lat={key[stop].lat}
                 lng={key[stop].lon}
-                onClick = {()=>{handleDrawerOpen(); console.log(stop);displayStop(stop); setDirection(true)}}>
+                onClick = {()=>{handleDrawerOpen();setMetroId(key[stop].metro);displayStop(stop); setName(key[stop].name);setDirection(true)}}>
                 <BusStopMarker
                   sx ={{position: 'aboslute' ,transform: 'translate(-50%,-50%)'}}
                   
@@ -234,12 +236,13 @@ export default function MapComponent({center, zoom}) {
           }
           {ccwStops
             .map((key) => {
+  
               const stop = Object.keys(key)[0]
               return (
                 <Box
                   lat={key[stop].lat}
                   lng={key[stop].lon}
-                  onClick={() => { handleDrawerOpen(); displayStop(stop); setDirection(false) }}
+                  onClick={() => { handleDrawerOpen(); setName(key[stop].name);setMetroId(key[stop].metro);displayStop(stop); setDirection(false) }}
                 >
                   <BusStopMarker
                     sx={{ position: 'aboslute', transform: 'translate(-50%,-50%)' }}
@@ -265,7 +268,7 @@ export default function MapComponent({center, zoom}) {
           justifyContent: 'center',
         }}
       >
-        <Page busStop={stop} isClockwise={isClockwise} soon={soon} />
+        <Page busStop={stop} isClockwise={isClockwise} soon={soon} id={metroId} name={name}/>
       </Modal>
       <AnimatePresence mode="wait">
         {wizardOpen && (
