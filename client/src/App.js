@@ -17,6 +17,11 @@ import MyTimeline from './Components/TimeLine/TimeLine'
 import Wrapper from './Components/UIWrapper/Wrapper'
 import {AnimatePresence, motion} from 'framer-motion'
 
+import AppContext from './appContext'
+import AppProvider from './appProvider'
+import {ThemeProvider} from '@mui/material/styles'
+import {themeOptions} from './Components/Theme/theme'
+
 const AnimatedOutlet = () => {
   const o = useOutlet()
   const [outlet] = useState(o)
@@ -90,9 +95,17 @@ function App() {
   ])
   // I dont know why there needs to be two RouteProviders, but it doesnt work without two
   return (
-    <RouteProvider>
-      <RouterProvider router={router} />
-    </RouteProvider>
+    <AppProvider>
+      <AppContext.Consumer>
+        {({darkMode}) => (
+          <ThemeProvider theme={themeOptions(darkMode)}>
+            <RouteProvider>
+              <RouterProvider router={router} />
+            </RouteProvider>
+          </ThemeProvider>
+        )}
+      </AppContext.Consumer>
+    </AppProvider>
   )
 }
 

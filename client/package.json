@@ -27,7 +27,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && npm run build-sw",
-    "test": "react-scripts test --coverage --verbose",
+    "test": "react-scripts test --coverage --verbose --watchAll",
     "eject": "react-scripts eject",
     "build-sw": "workbox generateSW workbox-config.js"
   },
