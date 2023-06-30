@@ -76,7 +76,7 @@ router.get('/buses', function (req, res) {
 })
 
 /* Ping the server from base stations. */
-router.post('/ping', function (req, res) {
+router.post('/ping', async function (req, res) {
   let data = JSON.parse(req.body.data)
   data = data[0]
 
@@ -106,69 +106,64 @@ router.post('/ping', function (req, res) {
   // Get the database reference to the bus with the given ID
   let busRef = bussesRef.doc(data.id)
 
-  if (data.sid === undefined) {
-    data.sid = 'No SID'
-  }
-
   let lastLong = 0
   let lastLat = 0
   let previousLocationArray = []
 
   // Get the last ping location of the bus
-  busRef.get().then((doc) => {
-    if (doc.exists) {
-      // If the bus exists, we will get the last ping location
-      lastLong = doc.data().lastLongitude
-      lastLat = doc.data().lastLatitude
-      // Fetching the previousLocationArray from the database, if it exists
-      previousLocationArray = doc.data().previousLocationArray || []
-    }
+  let doc = await busRef.get()
+  if (doc.exists) {
+    // If the bus exists, we will get the last ping location
+    lastLong = doc.data().lastLongitude
+    lastLat = doc.data().lastLatitude
+    // Fetching the previousLocationArray from the database, if it exists
+    previousLocationArray = doc.data().previousLocationArray || []
+  }
 
-    // Calculate heading
-    const currLocation = {lat1: data.lat, lon1: data.lon}
-    const prevLocation = {lat2: lastLat, lon2: lastLong}
-    const heading = headingBetweenPoints(currLocation, prevLocation)
+  // Calculate heading
+  const currLocation = {lat1: data.lat, lon1: data.lon}
+  const prevLocation = {lat2: lastLat, lon2: lastLong}
+  const heading = headingBetweenPoints(currLocation, prevLocation)
 
-    // Calculate the distance between the current and the last locations
-    const distance = getDistanceFromLatLonInMeters(
-      lastLat,
-      lastLong,
-      data.lat,
-      data.lon,
-    )
-    if (distance > 30.48) {
-      // Check if the distance is greater than 100ft (~30.48m)
-      // Append the current location to the previousLocationArray
-      previousLocationArray.push({lat: data.lat, lon: data.lon})
-      previousLocationArray = previousLocationArray.slice(-5)
-    }
+  // Calculate the distance between the current and the last locations
+  const distance = getDistanceFromLatLonInMeters(
+    lastLat,
+    lastLong,
+    data.lat,
+    data.lon,
+  )
+  if (distance > 30.48) {
+    // Check if the distance is greater than 100ft (~30.48m)
+    // Append the current location to the previousLocationArray
+    previousLocationArray.push({lat: data.lat, lon: data.lon})
+    previousLocationArray = previousLocationArray.slice(-5)
+  }
 
-    //We will update the bus's last ping location and time
-    busRef.set({
-      lastPing: new Date().toISOString(),
-      lastLongitude: data.lon,
-      lastLatitude: data.lat,
-      previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
-      previousLatitude: lastLat,
-      previousLocationArray: previousLocationArray,
-      heading: heading.toString(),
-      route: data.route,
-      id: data.id,
-      sid: data.sid,
-    })
+  //We will update the bus's last ping location and time
+  await busRef.set({
+    lastPing: new Date().toISOString(),
+    lastLongitude: data.lon,
+    lastLatitude: data.lat,
+    previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
+    previousLatitude: lastLat,
+    previousLocationArray: previousLocationArray,
+    heading: heading.toString(),
+    route: data.route,
+    id: data.id,
+    sid: data.sid,
   })
 
   // Debugging purposes
   let countRef = defaultDatabase.collection('count').doc('count')
-  countRef.get().then((doc) => {
-    // We update the sid count
-    let sidCount = doc.data()[data.sid]
-    if (sidCount === undefined) {
-      sidCount = 0
-    }
-    sidCount++
-    countRef.set({[data.sid]: sidCount}, {merge: true})
-  })
+  doc = await countRef.get()
+
+  // We update the sid count
+  let sidCount = doc.data()[data.sid]
+  if (sidCount === undefined) {
+    sidCount = 0
+  }
+  sidCount++
+  await countRef.set({[data.sid]: sidCount}, {merge: true})
 
   // Send a response to the base station
   res.status(200).send('OK')
