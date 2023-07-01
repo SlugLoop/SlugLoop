@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react'
+import React, { useState, useContext } from "react";
 
 import {
   Button,
@@ -9,26 +9,26 @@ import {
   Box,
   Typography,
   TextField,
-} from '@mui/material'
+} from "@mui/material";
 
-import {useNavigate} from 'react-router-dom'
-import {motion} from 'framer-motion'
-import AppContext from '../appContext'
-import {useViewportWidth} from '../App'
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import AppContext from "../appContext";
+import { useViewportWidth } from "../App";
 
 export default function Contact() {
-  const viewportWidth = useViewportWidth()
-  const {darkMode} = useContext(AppContext)
-  const navigate = useNavigate()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
-  const [openSuccess, setOpenSuccess] = useState(false)
-  const [openError, setOpenError] = useState(false)
+  const viewportWidth = useViewportWidth();
+  const { darkMode } = useContext(AppContext);
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
-  const theme = useTheme()
+  const theme = useTheme();
   const containerVariant = {
-    hidden: {opacity: 0},
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
@@ -36,25 +36,25 @@ export default function Contact() {
         staggerChildren: 0.05,
       },
     },
-  }
+  };
 
   const itemVariant = {
-    hidden: {opacity: 0, y: -20},
-    visible: {opacity: 1, y: 0},
-  }
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   const handleSubmit = () => {
     // Check if all fields are filled
-    if (name === '' || email === '' || message === '') {
-      setOpenError(true)
-      return
+    if (name === "" || email === "" || message === "") {
+      setOpenError(true);
+      return;
     }
 
     // Send a post request to the backend
-    fetch('https://slugloop.azurewebsites.net/contact', {
-      method: 'POST',
+    fetch("https://slugloop.azurewebsites.net/contact", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         name: name,
@@ -63,16 +63,16 @@ export default function Contact() {
       }),
     }).then((response) => {
       if (response.status === 200) {
-        setOpenSuccess(true)
-        setEmail('')
-        setName('')
-        setMessage('')
+        setOpenSuccess(true);
+        setEmail("");
+        setName("");
+        setMessage("");
       } else {
-        setOpenError(true)
-        alert('Message failed to send')
+        setOpenError(true);
+        alert("Message failed to send");
       }
-    })
-  }
+    });
+  };
 
   return (
     <motion.div
@@ -80,39 +80,39 @@ export default function Contact() {
       animate="visible"
       variants={containerVariant}
       sx={{
-        overflow: 'hidden',
-        width: '100%',
-        height: '100%',
+        overflow: "hidden",
+        width: "100%",
+        height: "100%",
       }}
     >
       <Box
         width="100%"
         height="100%"
         sx={{
-          position: 'fixed',
+          position: "fixed",
           top: 0,
           left: 0,
 
           backgroundImage:
             viewportWidth < 600
-              ? 'url(/background/staircase.png)'
-              : 'url(/background/contact.png)',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+              ? "url(/background/staircase.png)"
+              : "url(/background/contact.png)",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
 
-          overflow: 'hidden',
+          overflow: "hidden",
 
           zIndex: -1,
-          filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
-          '::after': {
+          filter: darkMode ? "brightness(0.5)" : "brightness(1)",
+          "::after": {
             content: '""',
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
+            background: darkMode ? "none" : "rgba(255, 255, 255, 0.4)",
           },
         }}
       />
@@ -120,10 +120,10 @@ export default function Contact() {
         display="flex"
         component="form"
         sx={{
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          flexDirection: 'column',
-          overflow: 'auto',
+          alignItems: "center",
+          justifyContent: "flex-start",
+          flexDirection: "column",
+          overflow: "auto",
         }}
         noValidate
         autoComplete="off"
@@ -132,16 +132,16 @@ export default function Contact() {
           open={openSuccess}
           autoHideDuration={5000}
           onClose={() => {
-            setOpenSuccess(false)
+            setOpenSuccess(false);
           }}
-          anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert
             onClose={() => {
-              setOpenSuccess(false)
+              setOpenSuccess(false);
             }}
             severity="success"
-            sx={{width: '100%'}}
+            sx={{ width: "100%" }}
           >
             Message sent successfully
           </Alert>
@@ -151,16 +151,16 @@ export default function Contact() {
           open={openError}
           autoHideDuration={5000}
           onClose={() => {
-            setOpenError(false)
+            setOpenError(false);
           }}
-          anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert
             onClose={() => {
-              setOpenError(false)
+              setOpenError(false);
             }}
             severity="warning"
-            sx={{width: '100%'}}
+            sx={{ width: "100%" }}
           >
             Please fill out all fields
           </Alert>
@@ -169,9 +169,9 @@ export default function Contact() {
         <motion.div
           variants={itemVariant}
           style={{
-            maxWidth: '80%',
-            marginTop: '5vh',
-            marginBottom: '2vh',
+            maxWidth: "80%",
+            marginTop: "5vh",
+            marginBottom: "2vh",
           }}
         >
           <Typography
@@ -186,8 +186,8 @@ export default function Contact() {
         <motion.div
           variants={itemVariant}
           style={{
-            maxWidth: '80%',
-            marginBottom: '2vh',
+            maxWidth: "80%",
+            marginBottom: "2vh",
           }}
         >
           <Typography component="div" color="text.primary" align="center">
@@ -196,16 +196,16 @@ export default function Contact() {
           </Typography>
         </motion.div>
         <Stack
-          width={viewportWidth < 600 ? '70%' : '50%'}
+          width={viewportWidth < 600 ? "70%" : "50%"}
           direction="column"
           spacing={1.3}
           alignItems="center"
-          bgcolor={darkMode ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.9)'}
+          bgcolor={darkMode ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.9)"}
           borderRadius={2}
           paddingX={2}
           paddingY={4}
         >
-          <motion.div variants={itemVariant} style={{width: '100%'}}>
+          <motion.div variants={itemVariant} style={{ width: "100%" }}>
             <TextField
               required
               id="Name"
@@ -215,26 +215,26 @@ export default function Contact() {
               onChange={(e) => setName(e.target.value)}
               fullWidth
               sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
                     borderColor: theme.palette.primary.main,
                   },
 
-                  '&:hover fieldset': {
+                  "&:hover fieldset": {
                     borderColor: theme.palette.primary.main,
                   },
 
-                  '&.Mui-focused fieldset': {
+                  "&.Mui-focused fieldset": {
                     borderColor: theme.palette.secondary.main,
                   },
                 },
-                '& .MuiFormLabel-root.Mui-focused': {
+                "& .MuiFormLabel-root.Mui-focused": {
                   color: theme.palette.secondary.main,
                 },
               }}
             />
           </motion.div>
-          <motion.div variants={itemVariant} style={{width: '100%'}}>
+          <motion.div variants={itemVariant} style={{ width: "100%" }}>
             <TextField
               required
               id="Email"
@@ -244,26 +244,26 @@ export default function Contact() {
               onChange={(e) => setEmail(e.target.value)}
               fullWidth
               sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
                     borderColor: theme.palette.primary.main,
                   },
 
-                  '&:hover fieldset': {
+                  "&:hover fieldset": {
                     borderColor: theme.palette.primary.main,
                   },
 
-                  '&.Mui-focused fieldset': {
+                  "&.Mui-focused fieldset": {
                     borderColor: theme.palette.secondary.main,
                   },
                 },
-                '& .MuiFormLabel-root.Mui-focused': {
+                "& .MuiFormLabel-root.Mui-focused": {
                   color: theme.palette.secondary.main,
                 },
               }}
             />
           </motion.div>
-          <motion.div variants={itemVariant} style={{width: '100%'}}>
+          <motion.div variants={itemVariant} style={{ width: "100%" }}>
             <TextField
               required
               id="Message"
@@ -274,20 +274,20 @@ export default function Contact() {
               multiline
               fullWidth
               sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
                     borderColor: theme.palette.primary.main,
                   },
 
-                  '&:hover fieldset': {
+                  "&:hover fieldset": {
                     borderColor: theme.palette.primary.main,
                   },
 
-                  '&.Mui-focused fieldset': {
+                  "&.Mui-focused fieldset": {
                     borderColor: theme.palette.secondary.main,
                   },
                 },
-                '& .MuiFormLabel-root.Mui-focused': {
+                "& .MuiFormLabel-root.Mui-focused": {
                   color: theme.palette.secondary.main,
                 },
               }}
@@ -296,26 +296,27 @@ export default function Contact() {
 
           <motion.div variants={itemVariant}>
             <Button
+              id="submit-button"
               variant="contained"
               onClick={() => {
-                handleSubmit()
+                handleSubmit();
               }}
             >
-              Submit
+              SUBMIT
             </Button>
           </motion.div>
           <motion.div variants={itemVariant}>
             <Button
               onClick={() => {
-                navigate('/')
+                navigate("/");
               }}
               color="primary"
             >
-              Back
+              BACK
             </Button>
           </motion.div>
         </Stack>
       </Box>
     </motion.div>
-  )
+  );
 }

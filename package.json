@@ -19,5 +19,12 @@
   "homepage": "https://github.com/IdkwhatImD0ing/SlugLoop#readme",
   "devDependencies": {
     "@playwright/test": "^1.32.2"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.0.1",
+    "framer-motion": "^10.12.17",
+    "react-use-wizard": "^2.2.1",
+    "react-vertical-timeline-component": "^3.6.0",
+    "vercel": "^31.0.1"
   }
 }
