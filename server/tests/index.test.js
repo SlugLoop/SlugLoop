@@ -198,3 +198,9 @@ describe('POST /contact', () => {
     request(app).post('/contact').send(data).expect(500, done)
   })
 })
+
+describe('POST /updateSoon test', () => {
+  it('should return 200 OK', (done) => {
+    request(app).post('/updateSoon').expect(200, done)
+  })
+})

@@ -51,6 +51,43 @@ const apiDoc = {
         },
       },
     },
+    '/metroEta': {
+      // Gets ETAs of a metro stop and returns a json array
+      get: {
+        description: 'Gets all ETAs for a metro stop',
+        parameters: [
+          {
+            name: 'stopId',
+            in: 'query',
+            description: 'The ID of the metro stop to retrieve ETAs for',
+            required: true,
+            schema: {
+              type: 'integer',
+            },
+          },
+        ],
+
+        responses: {
+          200: {
+            description: 'Gets all ETAs for a metro stop',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                },
+              },
+            },
+          },
+          400: {
+            description: 'Invalid stop ID',
+          },
+          500: {
+            description: 'Error getting ETAs',
+          },
+        },
+      },
+    },
+
     '/metroBuses': {
       // Gets all buses on routes 10, 15, 18, 19, and 20 and returns a json array
       get: {
@@ -102,6 +139,20 @@ const apiDoc = {
       // Update the metro buses
       put: {
         description: 'Update the metro buses',
+        responses: {
+          200: {
+            description: 'OK',
+          },
+          500: {
+            description: 'Error updating buses',
+          },
+        },
+      },
+    },
+    '/updateSoon': {
+      // Update the soon buses
+      post: {
+        description: 'Update the soon buses',
         responses: {
           200: {
             description: 'OK',

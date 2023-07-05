@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const metro = require('./metro')
 require('dotenv').config()
+const calcCWorCCW = require('./direction.js')
+const nextBusStops = require('./soonBusStop.js')
 
 // Helper functions
 const {
@@ -74,22 +76,20 @@ router.get('/buses', function (req, res) {
     })
 })
 
+router.post('/updateSoon', async function (req, res) {
+  // Update database for which bus stops have incoming busses
+  await nextBusStops()
+  // Send a response to the base station
+  res.status(200).send('OK')
+})
+
 /* Ping the server from base stations. */
 router.post('/ping', async function (req, res) {
   let data = JSON.parse(req.body.data)
   data = data[0]
 
   // Check if the data is valid and check data length is 4
-  if (
-    !data ||
-    !data.id ||
-    !data.lon ||
-    !data.lat ||
-    !data.route ||
-    !data.key ||
-    !data.sid ||
-    Object.keys(data).length !== 6
-  ) {
+  if (dataValidate(data)) {
     res.status(400).send('Invalid data')
     return
   }
@@ -105,18 +105,24 @@ router.post('/ping', async function (req, res) {
   // Get the database reference to the bus with the given ID
   let busRef = bussesRef.doc(data.id)
 
-  let lastLong = 0
-  let lastLat = 0
+  let lastLong = 0 // Current longitude
+  let lastLat = 0 // Current latitude
+  let fleetId = 999 // Default fleet ID
   let previousLocationArray = []
+  let previousLongitude = 0
+  let previousLatitude = 0
 
   // Get the last ping location of the bus
   let doc = await busRef.get()
   if (doc.exists) {
     // If the bus exists, we will get the last ping location
-    lastLong = doc.data().lastLongitude
-    lastLat = doc.data().lastLatitude
+    lastLong = doc.data().lastLongitude || 0
+    lastLat = doc.data().lastLatitude || 0
+    fleetId = doc.data().fleetId || 999
     // Fetching the previousLocationArray from the database, if it exists
     previousLocationArray = doc.data().previousLocationArray || []
+    previousLongitude = doc.data().previousLongitude
+    previousLatitude = doc.data().previousLatitude
   }
 
   // Calculate heading
@@ -136,17 +142,24 @@ router.post('/ping', async function (req, res) {
     // Append the current location to the previousLocationArray
     previousLocationArray.push({lat: data.lat, lon: data.lon})
     previousLocationArray = previousLocationArray.slice(-5)
+    previousLongitude = lastLong
+    previousLatitude = lastLat
   }
+
+  // Calculate direction
+  const direction = calcCWorCCW(currLocation, previousLocationArray)
 
   //We will update the bus's last ping location and time
   await busRef.set({
-    lastPing: new Date(),
-    lastLongitude: data.lon,
-    lastLatitude: data.lat,
-    previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
-    previousLatitude: lastLat,
+    lastPing: new Date().toISOString(),
+    lastLongitude: data.lon, // Current Longitutde Ping
+    lastLatitude: data.lat, // Current Latitude Ping
+    previousLongitude: previousLongitude, // Previous Longitude Ping
+    previousLatitude: previousLatitude, // Previous Latitude Ping
     previousLocationArray: previousLocationArray,
+    direction: direction,
     heading: heading.toString(),
+    fleetId: fleetId,
     route: data.route,
     id: data.id,
     sid: data.sid,
@@ -188,5 +201,23 @@ router.post('/contact', function (req, res) {
       res.status(500).send('Error adding document')
     })
 })
+
+// Validates and confirms data
+function dataValidate(data) {
+  if (
+    !data ||
+    !data.id ||
+    !data.lon ||
+    !data.lat ||
+    !data.route ||
+    !data.key ||
+    !data.sid ||
+    Object.keys(data).length != 6
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
 
 module.exports = router

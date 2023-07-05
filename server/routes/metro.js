@@ -4,6 +4,7 @@ const axios = require('axios')
 const rateLimit = require('express-rate-limit')
 require('dotenv').config()
 const defaultDatabase = require('./firebase.js')
+const nextBusStops = require('./soonBusStop.js')
 
 // const lockName = 'myLock'
 // let myLock = false
@@ -196,9 +197,30 @@ const limiter = rateLimit({
 router.put('/updateMetroBuses', limiter, async (req, res) => {
   try {
     const status = await updateMetroBuses()
+    await nextBusStops()
     res.status(status).send('Updated metro buses')
   } catch (error) {
     res.status(500).send('Error updating metro buses')
+  }
+})
+
+async function metroETA(stop_id) {
+  const baseUrl = 'http://rt.scmetro.org/bustime/api/v3/getpredictions'
+  const apiKey = process.env.METRO_KEY
+  return (response = await axios.get(
+    `${baseUrl}?key=${apiKey}&stpid=${stop_id}&format=json`,
+  ))
+}
+router.get('/metroEta', async function (req, res) {
+  const stopId = req.query.stopId
+
+  try {
+    const etas = await metroETA(stopId)
+    // If there's an error in the response, forward it
+    res.status(200).send(etas.data['bustime-response'].prd)
+  } catch (err) {
+    console.log('Error getting ETAs', err)
+    res.status(500).send('Error getting ETAs')
   }
 })
 
