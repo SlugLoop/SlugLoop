@@ -70,7 +70,6 @@ router.get('/buses', function (req, res) {
       res.status(200).send(busses)
     })
     .catch((err) => {
-      console.log('Error getting documents', err)
       res.status(500).send('Error getting documents')
     })
 })
@@ -141,7 +140,7 @@ router.post('/ping', async function (req, res) {
 
   //We will update the bus's last ping location and time
   await busRef.set({
-    lastPing: new Date().toISOString(),
+    lastPing: new Date(),
     lastLongitude: data.lon,
     lastLatitude: data.lat,
     previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
@@ -175,19 +174,19 @@ router.post('/contact', function (req, res) {
   // Get a database reference to the collection of responses
   let responsesRef = defaultDatabase.collection('responses')
 
-  try {
-    // Add a new document in collection "responses"
-    responsesRef.add({
+  // Add a new document in collection "responses"
+  responsesRef
+    .add({
       name: data.name,
       email: data.email,
       message: data.message,
     })
-
-    // Send a response to the client
-    res.send('OK')
-  } catch (err) {
-    res.status(500).send('Error sending message')
-  }
+    .then(() => {
+      res.send('OK')
+    })
+    .catch((err) => {
+      res.status(500).send('Error adding document')
+    })
 })
 
 module.exports = router
