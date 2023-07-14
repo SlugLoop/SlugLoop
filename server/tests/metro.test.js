@@ -1,8 +1,9 @@
+const nock = require('nock')
 const request = require('supertest')
 const express = require('express')
 const path = require('path')
 const router = require('../routes')
-const nock = require('nock')
+require('dotenv').config()
 
 const app = express()
 
@@ -17,6 +18,19 @@ app.use((err, req, res, next) => {
   console.error(err.stack)
   res.status(500).send('Internal Server Error')
 })
+
+// beforeAll(() => {
+//   nock.recorder.rec({
+//     logging: function (content) {
+//       console.log(content)
+//     },
+//     output_objects: true,
+//   })
+// })
+
+// afterAll(() => {
+//   nock.restore()
+// })
 
 describe('Metro Buses Tests', () => {
   test('should return a list of metro buses', async () => {
@@ -36,8 +50,8 @@ describe('Metro Buses Tests', () => {
       },
     }
 
-    nock(`${process.env.METRO_URL}`)
-      .get('/getvehicles')
+    const scope = nock('https://rt.scmetro.org')
+      .get('/bustime/api/v3/getvehicles')
       .query(true) // match any query params
       .reply(200, mockResponse)
 
@@ -45,6 +59,7 @@ describe('Metro Buses Tests', () => {
 
     expect(response.statusCode).toBe(200)
     expect(Array.isArray(response.body)).toBe(true)
+    expect(scope.isDone()).toBe(true)
   })
 
   test('should return an empty list when there is an error', async () => {
@@ -54,8 +69,8 @@ describe('Metro Buses Tests', () => {
       },
     }
 
-    nock(`${process.env.METRO_URL}`)
-      .get('/getvehicles')
+    const scope = nock('https://rt.scmetro.org')
+      .get('/bustime/api/v3/getvehicles')
       .query(true) // match any query params
       .reply(200, mockResponse2)
 
@@ -63,6 +78,7 @@ describe('Metro Buses Tests', () => {
 
     expect(response2.statusCode).toBe(200)
     expect(Array.isArray(response2.body)).toBe(true)
+    expect(scope.isDone()).toBe(true)
   })
 
   test('should return a status of 200 when updating metro buses', async () => {
@@ -82,61 +98,82 @@ describe('Metro Buses Tests', () => {
       },
     }
 
-    nock(`${process.env.METRO_URL}`)
-      .get('/getvehicles')
+    const scope = nock('https://rt.scmetro.org:443')
+      .get('/bustime/api/v3/getvehicles')
       .query(true) // match any query params
       .reply(200, mockResponse)
 
     const response = await request(app).put('/updateMetroBuses')
 
     expect(response.statusCode).toBe(200)
+    expect(scope.isDone()).toBe(true)
   })
 
   test('should return a status of 429 when rate limit is reached', async () => {
-    const mockResponse2 = {
-      'bustime-response': {
-        error: [],
-      },
-    }
-
-    nock(`${process.env.METRO_URL}`)
-      .get('/getvehicles')
-      .query(true) // match any query params
-      .reply(200, mockResponse2)
-
     const response2 = await request(app).put('/updateMetroBuses')
-
     expect(response2.statusCode).toBe(429)
   })
 
   test('should return a status of 200 when updating metro buses after waiting', async () => {
-    const mockResponse3 = {}
+    await new Promise((resolve) => setTimeout(resolve, 15000))
+    const mockResponse3 = {
+      'bustime-response': {
+        vehicle: [
+          {
+            vid: 'bus1',
+            rt: '10',
+            lat: '40.712776',
+            lon: '-74.005974',
+            tmstmp: '20200308 10:28',
+            hdg: 'north',
+            psgld: '50',
+          },
+        ],
+      },
+    }
 
-    nock(`${process.env.METRO_URL}`)
-      .get('/getvehicles')
+    const scope = nock('https://rt.scmetro.org:443')
+      .get('/bustime/api/v3/getvehicles')
       .query(true) // match any query params
       .reply(200, mockResponse3)
-
-    await new Promise((resolve) => setTimeout(resolve, 10000))
 
     const response3 = await request(app).put('/updateMetroBuses')
 
     expect(response3.statusCode).toBe(200)
+    expect(scope.isDone()).toBe(true)
+  })
+
+  test('should return a status of 200 when no buses after waiting', async () => {
+    await new Promise((resolve) => setTimeout(resolve, 15000))
+    const mockResponse4 = {
+      'bustime-response': {},
+    }
+
+    const scope = nock('https://rt.scmetro.org:443')
+      .get('/bustime/api/v3/getvehicles')
+      .query(true) // match any query params
+      .reply(200, mockResponse4)
+
+    const response3 = await request(app).put('/updateMetroBuses')
+
+    expect(response3.statusCode).toBe(200)
+    expect(scope.isDone()).toBe(true)
   })
 
   test('should return a status of 500 when there is an error updating buses', async () => {
-    const mockResponse4 = {}
+    const mockResponse5 = {}
 
-    nock(`${process.env.METRO_URL}`)
-      .get('/getvehicles')
+    const scope = nock('https://rt.scmetro.org')
+      .get('/bustime/api/v3/getvehicles')
       .query(true) // match any query params
-      .reply(500, mockResponse4)
+      .reply(500, mockResponse5)
 
     await new Promise((resolve) => setTimeout(resolve, 10000))
 
     const response4 = await request(app).put('/updateMetroBuses')
 
     expect(response4.statusCode).toBe(500)
+    expect(scope.isDone()).toBe(true)
   })
 })
 
@@ -173,14 +210,15 @@ describe('Metro Eta Tests', () => {
       },
     }
 
-    nock(`${process.env.METRO_URL}`)
-      .get('/getpredictions')
+    const scope = nock('https://rt.scmetro.org')
+      .get('/bustime/api/v3/getpredictions')
       .query(true) // match any query params
       .reply(200, mockResponse)
 
     const response = await request(app).get('/metroEta?stopId=1234')
 
     expect(response.statusCode).toBe(200)
+    expect(scope.isDone()).toBe(true)
   })
 
   test('Error response: 500', async () => {
@@ -188,13 +226,14 @@ describe('Metro Eta Tests', () => {
       error: 'error',
     }
 
-    nock(`${process.env.METRO_URL}`)
-      .get('/getpredictions')
+    const scope = nock('https://rt.scmetro.org')
+      .get('/bustime/api/v3/getpredictions')
       .query(true) // match any query params
       .reply(500, mockResponse)
 
     const response = await request(app).get('/metroEta?stopId=1234')
 
     expect(response.statusCode).toBe(500)
+    expect(scope.isDone()).toBe(true)
   })
 })

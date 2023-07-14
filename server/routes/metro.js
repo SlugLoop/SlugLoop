@@ -150,7 +150,6 @@ async function updateMetroBuses() {
   const baseUrl = `${process.env.METRO_URL}/getvehicles`
   const routes = [10, 15, 18, 19, 20]
   const apiKey = process.env.METRO_KEY
-
   const response = await axios.get(
     `${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`,
   )
@@ -205,7 +204,7 @@ router.put('/updateMetroBuses', limiter, async (req, res) => {
 })
 
 async function metroETA(stop_id) {
-  const baseUrl = 'http://rt.scmetro.org/bustime/api/v3/getpredictions'
+  const baseUrl = 'https://rt.scmetro.org/bustime/api/v3/getpredictions'
   const apiKey = process.env.METRO_KEY
   return (response = await axios.get(
     `${baseUrl}?key=${apiKey}&stpid=${stop_id}&format=json`,
@@ -219,7 +218,6 @@ router.get('/metroEta', async function (req, res) {
     // If there's an error in the response, forward it
     res.status(200).send(etas.data['bustime-response'].prd)
   } catch (err) {
-    console.log('Error getting ETAs', err)
     res.status(500).send('Error getting ETAs')
   }
 })
