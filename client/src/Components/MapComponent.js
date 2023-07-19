@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react'
-import {getAllBuses, getAllMetroBuses} from './firebase'
+import {getAllBuses, getUpdatedBuses, getAllMetroBuses, getUpdatedMetroBuses} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
@@ -38,21 +38,32 @@ export default function MapComponent({center, zoom}) {
   useEffect(() => {
     let interval, interval2
 
-    const fetchData = () => {
-      getAllBuses().then((busses) => {
-        setBuses(busses)
+    const fetchAllData = () => {
+      getAllBuses().then((buses) => {
+        setBuses(buses)
       })
     }
-    const fetchMetroData = () => {
+    const fetchAllMetroData = () => {
       getAllMetroBuses().then((buses) => {
+        setMetroBuses(buses)
+      })
+    }
+
+    const fetchUpdatedData = () => {
+      getUpdatedBuses().then((buses) => {
+        setBuses(buses)
+      })
+    }
+    const fetchUpdatedMetroData = () => {
+      getUpdatedMetroBuses().then((buses) => {
         setMetroBuses(buses)
       })
     }
 
     const setupIntervals = () => {
       // Update positions of markers every 5 seconds
-      interval = setInterval(fetchData, 5000)
-      interval2 = setInterval(fetchMetroData, 12000)
+      interval = setInterval(fetchUpdatedData, 5000)
+      interval2 = setInterval(fetchUpdatedMetroData, 12000)
     }
 
     const clearIntervals = () => {
@@ -62,8 +73,8 @@ export default function MapComponent({center, zoom}) {
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        fetchData()
-        fetchMetroData()
+        fetchUpdatedData()
+        fetchUpdatedMetroData()
         clearIntervals() // Clear existing intervals
         setupIntervals() // Set up new intervals
       } else {
@@ -71,9 +82,9 @@ export default function MapComponent({center, zoom}) {
       }
     }
 
-    // Initial load of markers
-    fetchData()
-    fetchMetroData()
+    // Initial load of markers, including ones update more than 30 minutes ago
+    fetchAllData()
+    fetchAllMetroData()
 
     setupIntervals()
 
