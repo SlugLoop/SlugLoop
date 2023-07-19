@@ -1,3 +1,5 @@
+import { Timestamp } from "../../client/node_modules/firebase/firestore"
+
 const express = require('express')
 const router = express.Router()
 const axios = require('axios')
@@ -54,7 +56,7 @@ const defaultDatabase = require('./firebase.js')
 //               route: bus.rt,
 //               lastLatitude: bus.lat,
 //               lastLongitude: bus.lon,
-//               lastPing: convertDateFormat(bus.tmstmp),
+//               lastPing: convertDateTimestamp(bus.tmstmp),
 //               heading: bus.hdg,
 //               capacity: bus.psgld,
 //             })
@@ -107,7 +109,7 @@ router.get('/metroBuses', function (req, res) {
             route: bus.rt,
             lastLatitude: bus.lat,
             lastLongitude: bus.lon,
-            lastPing: convertDateFormat(bus.tmstmp),
+            lastPing: convertDateTimestamp(bus.tmstmp),
             heading: bus.hdg,
             capacity: bus.psgld,
           })
@@ -119,7 +121,7 @@ router.get('/metroBuses', function (req, res) {
   }
 })
 
-function convertDateFormat(input) {
+function convertDateTimestamp(input) {
   const year = input.slice(0, 4)
   const month = input.slice(4, 6)
   const day = input.slice(6, 8)
@@ -140,8 +142,8 @@ function convertDateFormat(input) {
       parseInt(minutes),
     ),
   )
-
-  return utcDate.toISOString()
+  const timestamp = new Timestamp(utcDate)
+  return timestamp
 }
 
 async function updateMetroBuses() {
@@ -169,7 +171,7 @@ async function updateMetroBuses() {
       route: bus.rt,
       lastLatitude: bus.lat,
       lastLongitude: bus.lon,
-      lastPing: convertDateFormat(bus.tmstmp),
+      lastPing: convertDateTimestamp(bus.tmstmp),
       heading: bus.hdg,
       capacity: bus.psgld,
     })
