@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore"
+
 export function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
   const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
 
@@ -16,11 +18,11 @@ export function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
   return (bearing * 180) / Math.PI + 180
 }
 
-const THIRTY_MINUTES = 30 * 60 * 1000
+
 export const isBusUpdatedWithinPast30Minutes = (lastPing) => {
-  const currentTime = new Date()
-  const lastPingTime = new Date(lastPing)
-  const timeDifference = currentTime - lastPingTime
+  const currentTimestamp = Timestamp.now()
+  const THIRTY_MINUTES = new Timestamp(30 * 60, 0)
+  const timeDifference = currentTimestamp - lastPing
   return timeDifference < THIRTY_MINUTES
 }
 
