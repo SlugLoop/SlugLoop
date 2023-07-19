@@ -147,7 +147,7 @@ const apiDoc = {
               type: 'string',
             },
             lastPing: {
-              type: 'timestamp',
+              type: 'object',
             },
             lastLongitude: {
               type: 'number',
@@ -176,7 +176,7 @@ const apiDoc = {
               type: 'string',
             },
             lastPing: {
-              type: 'string',
+              type: 'object',
             },
             lastLongitude: {
               type: 'number',
