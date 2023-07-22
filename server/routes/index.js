@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const metro = require('./metro')
+const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
 
 // Helper functions
@@ -64,7 +65,9 @@ router.get('/buses', function (req, res) {
             busses.push(doc.data())
           }
         } else {
-          busses.push(doc.data())
+          const temp = doc.data()
+          temp.lastPing = temp.lastPing.toDate().toISOString()
+          busses.push(temp)
         }
       })
       res.status(200).send(busses)
@@ -145,7 +148,7 @@ router.post('/ping', function (req, res) {
 
     //We will update the bus's last ping location and time
     busRef.set({
-      lastPing: new Date().toISOString(),
+      lastPing: Timestamp.now(),
       lastLongitude: data.lon,
       lastLatitude: data.lat,
       previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
