@@ -59,6 +59,8 @@ module.exports = function calcCWorCCW({lat1, lon1}, previousLocationArray) {
   return 'n/a'
 }
 
+
+
 // Determine if bus is going up or down
 function latitudeDecreasing(previousLocationArray) {
   let total = 0

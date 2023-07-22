@@ -8,21 +8,9 @@ var oldUpdateCCW = []
 
 // updates next 3 bus stops for every bus
 module.exports = async function nextBusStops() {
-  const busCollection = []
   let stops_arr_CW = []
   let stops_arr_CCW = []
-
-  // Wait for the database query to complete
-  const querySnapshot = await defaultDatabase.collection('busses').get()
-
-  // Store the busses into busCollection as an array of objects
-  querySnapshot.forEach((doc) => {
-    busCollection.push({
-      latitude: doc.data().lastLatitude,
-      longitude: doc.data().lastLongitude,
-      previousLocationArray: doc.data().previousLocationArray,
-    })
-  })
+  let busCollection = await getData()
 
   // Initialize CW array with false values
   const cwObj = busStops.bstop.CW
@@ -61,6 +49,23 @@ module.exports = async function nextBusStops() {
   }
 
   return
+}
+
+async function getData() {
+  const busCollection = []
+  // Wait for the database query to complete
+  const querySnapshot = await defaultDatabase.collection('busses').get()
+
+  // Store the busses into busCollection as an array of objects
+  querySnapshot.forEach((doc) => {
+    busCollection.push({
+      latitude: doc.data().lastLatitude,
+      longitude: doc.data().lastLongitude,
+      previousLocationArray: doc.data().previousLocationArray,
+    })
+  })
+
+  return busCollection
 }
 
 function areListsEqual(list1, list2) {
