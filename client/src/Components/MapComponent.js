@@ -1,5 +1,10 @@
 import React, {useState, useEffect, useContext} from 'react'
-import {getAllBuses, getUpdatedBuses, getAllMetroBuses, getUpdatedMetroBuses} from './firebase'
+import {
+  getAllBuses,
+  getUpdatedBuses,
+  getAllMetroBuses,
+  getUpdatedMetroBuses,
+} from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
@@ -50,13 +55,24 @@ export default function MapComponent({center, zoom}) {
     }
 
     const fetchUpdatedData = () => {
-      getUpdatedBuses().then((buses) => {
-        setBuses(buses)
+      getUpdatedBuses().then((newBuses) => {
+        setBuses((oldBuses) => {
+          return oldBuses.map((oldBus) => {
+            const newBus = newBuses.find((bus) => bus.id === oldBus.id)
+            return newBus || oldBus
+          })
+        })
       })
     }
+
     const fetchUpdatedMetroData = () => {
-      getUpdatedMetroBuses().then((buses) => {
-        setMetroBuses(buses)
+      getUpdatedMetroBuses().then((newBuses) => {
+        setMetroBuses((oldBuses) => {
+          return oldBuses.map((oldBus) => {
+            const newBus = newBuses.find((bus) => bus.id === oldBus.id)
+            return newBus || oldBus
+          })
+        })
       })
     }
 
