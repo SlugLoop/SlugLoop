@@ -10,7 +10,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.4",
     "@vercel/analytics": "^1.0.1",
-    "dotenv": "^16.1.4",
+    "dotenv": "^16.3.1",
     "firebase": "^9.22.1",
     "framer-motion": "^10.12.16",
     "google-map-react": "^2.2.0",
