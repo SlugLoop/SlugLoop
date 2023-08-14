@@ -13,6 +13,7 @@
     "supertest": "*"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^6.7.0",
     "axios": "^1.4.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
@@ -20,11 +21,11 @@
     "dotenv": "^16.0.3",
     "ejs": "~3.1.9",
     "express": "~4.18.2",
-    "express-openapi-validator": "^5.0.1",
+    "express-openapi-validator": "^5.0.4",
     "express-rate-limit": "^6.7.0",
     "firebase-admin": "^11.8.0",
     "google-maps-react": "^2.0.6",
-    "http-errors": "~1.6.3",
+    "http-errors": "~2.0.0",
     "https": "^1.0.0",
     "morgan": "~1.10.0",
     "openssl": "^2.0.0",

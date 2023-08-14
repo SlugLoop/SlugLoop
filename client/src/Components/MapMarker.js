@@ -1,6 +1,7 @@
 import {Box, Typography, Tooltip} from '@mui/material'
 import React, {useState} from 'react'
 import busColors from './bus.json'
+import { Timestamp } from "firebase/firestore"
 
 export default function MapMarker(props) {
   const [isImageLoaded, setIsImageLoaded] = useState(false)
@@ -11,10 +12,9 @@ export default function MapMarker(props) {
   Props: bus, heading
   Bus object contains id, lat, lon, route, timestamp
   */
-  function convertDateToHumanReadableTime(date) {
-    const currentDateTime = new Date()
-    const myDate = new Date(date)
-    const diffInMilliseconds = currentDateTime.getTime() - myDate.getTime()
+  function convertDateToHumanReadableTime(timestamp) {
+    const currentTimestamp = Timestamp.now()
+    const diffInMilliseconds = currentTimestamp.toMillis() - timestamp.toMillis()
 
     const seconds = Math.floor(diffInMilliseconds / 1000)
     const minutes = Math.floor(seconds / 60)

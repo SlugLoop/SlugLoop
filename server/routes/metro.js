@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const axios = require('axios')
 const rateLimit = require('express-rate-limit')
+const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
 const defaultDatabase = require('./firebase.js')
 const nextBusStops = require('./soonBusStop.js')
@@ -55,7 +56,7 @@ const nextBusStops = require('./soonBusStop.js')
 //               route: bus.rt,
 //               lastLatitude: bus.lat,
 //               lastLongitude: bus.lon,
-//               lastPing: convertDateFormat(bus.tmstmp),
+//               lastPing: convertDateTimestamp(bus.tmstmp),
 //               heading: bus.hdg,
 //               capacity: bus.psgld,
 //             })
@@ -112,7 +113,7 @@ router.get('/metroBuses', function (req, res) {
           route: bus.rt,
           lastLatitude: bus.lat,
           lastLongitude: bus.lon,
-          lastPing: convertDateFormat(bus.tmstmp),
+          lastPing: convertDateString(bus.tmstmp),
           heading: bus.hdg,
           capacity: bus.psgld,
         })
@@ -125,7 +126,32 @@ router.get('/metroBuses', function (req, res) {
     })
 })
 
-function convertDateFormat(input) {
+function convertDateTimestamp(input) {
+  const year = input.slice(0, 4)
+  const month = input.slice(4, 6)
+  const day = input.slice(6, 8)
+  const time = input.slice(9)
+  const hours = time.slice(0, 2)
+  const minutes = time.slice(3, 5)
+
+  // Calculate the offset for PDT
+  const pdtOffsetHours = 7 // 7 hours
+
+  // Create a UTC date directly using Date.UTC() method
+  const utcDate = new Date(
+    Date.UTC(
+      parseInt(year),
+      parseInt(month) - 1, // Months are zero-based in JavaScript Date
+      parseInt(day),
+      parseInt(hours) + pdtOffsetHours,
+      parseInt(minutes),
+    ),
+  )
+  const timestamp = Timestamp.fromDate(utcDate)
+  return timestamp
+}
+
+function convertDateString(input) {
   const year = input.slice(0, 4)
   const month = input.slice(4, 6)
   const day = input.slice(6, 8)
@@ -175,7 +201,7 @@ async function updateMetroBuses() {
       route: bus.rt,
       lastLatitude: bus.lat,
       lastLongitude: bus.lon,
-      lastPing: convertDateFormat(bus.tmstmp),
+      lastPing: convertDateTimestamp(bus.tmstmp),
       heading: bus.hdg,
       capacity: bus.psgld,
     })

@@ -112,9 +112,9 @@ function App() {
     <SettingsContext.Provider value={providerState}>
       <SettingsContext.Consumer>
         {({settings}) => (
-            <ThemeProvider theme={themeOptions(settings.darkMode)}>
-              <RouterProvider router={router} />
-            </ThemeProvider>
+          <ThemeProvider theme={themeOptions(settings.darkMode)}>
+            <RouterProvider router={router} />
+          </ThemeProvider>
         )}
       </SettingsContext.Consumer>
     </SettingsContext.Provider>
