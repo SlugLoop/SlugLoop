@@ -109,6 +109,80 @@
         },
       },
     },
+    '/metroRoutes': {
+      // Gets all metro routes and returns a json array
+      get: {
+        description: 'Gets all metro routes',
+        responses: {
+          200: {
+            description: 'Gets all metro routes',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/metroRoutesArray',
+                },
+              },
+            },
+          },
+          500: {
+            description: 'Error fetching routes',
+          },
+        },
+      },
+    },
+    '/metroRouteDirections': {
+      // Gets metro route directions and returns a json array
+      get: {
+        description: 'Gets metro route directions',
+        responses: {
+          200: {
+            description: 'Gets metro route directions',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/routeDirectionsArray',
+                },
+              },
+            },
+          },
+          500: {
+            description: 'Error fetching directions',
+          },
+        },
+      },
+    },
+    '/metroRoutePredictions': {
+      // Gets route predictions and returns a json array
+      get: {
+        description: 'Gets route predictions',
+        parameters: [
+          {
+            name: 'stpid',
+            in: 'query',
+            description: 'Stop Id of the stop you want predictions for',
+            required: true,
+            schema: {
+              type: 'integer',
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Gets route predictions',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/routePredictionsArray',
+                },
+              },
+            },
+          },
+          500: {
+            description: 'Error fetching predictions',
+          },
+        },
+      },
+    },
     '/ping': {
       // Ping the server from base stations
       post: {
@@ -242,6 +316,60 @@
               type: 'string',
             },
             capacity: {
+              type: 'string',
+            },
+          },
+        },
+      },
+      metroRoutesArray: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            routeID: {
+              type: 'string',
+            },
+            routeName: {
+              type: 'string',
+            },
+            routeColor: {
+              type: 'string',
+            },
+          },
+        },
+      },
+      routeDirectionsArray: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            routeID: {
+              type: 'integer',
+            },
+            directionID: {
+              type: 'string',
+            },
+            directionName: {
+              type: 'string',
+            },
+          },
+        },
+      },
+      routePredictionsArray: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            timestamp: {
+              type: 'string',
+            },
+            type: {
+              type: 'string',
+            },
+            routeID: {
+              type: 'integer',
+            },
+            predictionTime: {
               type: 'string',
             },
           },

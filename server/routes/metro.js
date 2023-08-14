@@ -125,6 +125,82 @@ router.get('/metroBuses', function (req, res) {
       res.status(500).send('Error fetching buses')
     })
 })
+//Get metro routes
+router.get('/metroRoutes', async function (req, res) {
+  const baseUrl = `${process.env.METRO_URL}/getroutes`
+  const apiKey = process.env.METRO_KEY
+  try {
+    let routesArray = []
+    const response = await axios.get(`${baseUrl}?key=${apiKey}&format=json`)
+    response.data['bustime-response'].routes.forEach((route) => {
+      routesArray.push({
+        routeID: route.rt,
+        routeName: route.rtnm,
+        routeColor: route.rtclr,
+      })
+    })
+    res.status(200).send(routesArray)
+  } catch {
+    res.status(500).send('Error fetching routes')
+  }
+})
+
+router.get('/metroRouteDirections', async function (req, res) {
+  const baseUrl = `${process.env.METRO_URL}/getdirections`
+  const routes = [10, 15, 18, 19, 20]
+  const apiKey = process.env.METRO_KEY
+  const routePromises = routes.map((route) => {
+    return axios
+      .get(`${baseUrl}?key=${apiKey}&rt=${route}&format=json`)
+      .then((response) => {
+        const routeDirections = response.data['bustime-response'].directions
+        return routeDirections.map((direction) => {
+          return {
+            routeID: route,
+            directionID: direction.id,
+            directionName: direction.name,
+          }
+        })
+      })
+  })
+
+  try {
+    const allRouteDirections = await Promise.all(routePromises)
+    // Flatten the array of arrays into a single array
+    const routeDirectionsArray = [].concat(...allRouteDirections)
+    res.status(200).send(routeDirectionsArray)
+  } catch (error) {
+    console.error(error) // Log the error for debugging
+    res.status(500).send('Error fetching directions')
+  }
+})
+
+//Get route predictions
+router.get('/metroRoutePredictions', async function (req, res) {
+  const baseUrl = `${process.env.METRO_URL}/getpredictions`
+  const stpid = req.query.stpid
+  const apiKey = process.env.METRO_KEY
+  try {
+    let predictionArray = []
+    let response = await axios.get(
+      `${baseUrl}?key=${apiKey}&stpid=${stpid}&format=json`,
+    )
+    console.log(response.data['bustime-response'].error)
+    const predictions = response.data['bustime-response'].prd
+
+    predictions.forEach((prediction) => {
+      predictionArray.push({
+        timestamp: prediction.tmstmp,
+        type: prediction.typ,
+        routeID: prediction.rt,
+        predictionTime: prediction.prdtm,
+      })
+    })
+    res.status(200).send(predictionArray)
+  } catch {
+    res.status(200).send('No data found')
+  }
+})
 
 function convertDateTimestamp(input) {
   const year = input.slice(0, 4)
