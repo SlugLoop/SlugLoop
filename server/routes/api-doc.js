@@ -1,4 +1,4 @@
-const apiDoc = {
+  const apiDoc = {
   openapi: '3.0.3',
   info: {
     title: 'Slug Loop',
