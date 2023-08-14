@@ -125,78 +125,79 @@ router.get('/metroRoutes', function (req, res) {
   const apiKey = process.env.METRO_KEY
   try {
     let routesArray = []
-    axios
-      .get(`${baseUrl}?key=${apiKey}&format=json`)
-      .then((response) => {
-        const routes = response.data['bustime-response'].route
-        routes.forEach((route) => {
-          routesArray.push({
-            routeID: route.rt,
-            routeName: route.rtnm,
-            routeColor: route.rtclr,
-
-          })
+    axios.get(`${baseUrl}?key=${apiKey}&format=json`).then((response) => {
+      const routes = response.data['bustime-response'].route
+      routes.forEach((route) => {
+        routesArray.push({
+          routeID: route.rt,
+          routeName: route.rtnm,
+          routeColor: route.rtclr,
         })
-        res.status(200).send(routesArray)
       })
+      res.status(200).send(routesArray)
+    })
   } catch {
     res.status(500).send('Error fetching routes')
   }
 })
 
-//Get metro route directions
-router.get('/metroRouteDirections', function (req, res) {
+router.get('/metroRouteDirections', async function (req, res) {
   const baseUrl = `${process.env.METRO_URL}/getdirections`
   const routes = [10, 15, 18, 19, 20]
   const apiKey = process.env.METRO_KEY
-  routes.forEach((route) => {
-    try {
-      let routeDirectionsArray = []
-      axios
-        .get(`${baseUrl}?key=${apiKey}&rt=${route}&format=json`)
-        .then((response) => {
-          const routeDirections = response.data['bustime-response'].directions
-          routeDirections.forEach((direction) => {
-            routeDirectionsArray.push({
-              routeID:route,
-              directionID: direction.id,
-              directionName: direction.name,
-            })
-          })
-          res.status(200).send(routeDirectionsArray)
+  const routePromises = routes.map((route) => {
+    return axios
+      .get(`${baseUrl}?key=${apiKey}&rt=${route}&format=json`)
+      .then((response) => {
+        const routeDirections = response.data['bustime-response'].directions
+        return routeDirections.map((direction) => {
+          return {
+            routeID: route,
+            directionID: direction.id,
+            directionName: direction.name,
+          }
         })
-    } catch {
-      res.status(500).send('Error fetching directions')
-    }
+      })
   })
 
+  try {
+    const allRouteDirections = await Promise.all(routePromises)
+    // Flatten the array of arrays into a single array
+    const routeDirectionsArray = [].concat(...allRouteDirections)
+    res.status(200).send(routeDirectionsArray)
+  } catch (error) {
+    console.error(error) // Log the error for debugging
+    res.status(500).send('Error fetching directions')
+  }
 })
 
 //Get route predictions
-router.get('/metroRoutePredictions', function (req, res) {
+router.get('/metroRoutePredictions', async function (req, res) {
   const baseUrl = `${process.env.METRO_URL}/getpredictions`
-  const routes = [10, 15, 18, 19, 20]
+  const stpid = req.query.stpid
   const apiKey = process.env.METRO_KEY
   try {
     let predictionArray = []
-    axios
-      .get(`${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`)
-      .then((response) => {
-        const predictions = response.data['bustime-response'].prd
-        predictions.forEach((prediction) => {
-          predictionArray.push({
-            timestamp: prediction.tmstmp,
-            type: prediction.typ,
-            routeID: prediction.rt,
-            predictionTime: prediction.prdtm
-          })
-        })
+    let response = await axios.get(
+      `${baseUrl}?key=${apiKey}&stpid=${stpid}&format=json`,
+    )
+    console.log(response.data['bustime-response'].error)
+    const predictions = response.data['bustime-response'].prd
+
+    predictions.forEach((prediction) => {
+      predictionArray.push({
+        timestamp: prediction.tmstmp,
+        type: prediction.typ,
+        routeID: prediction.rt,
+        predictionTime: prediction.prdtm,
       })
-      res.status(200).send(predictionArray)
+    })
+    res.status(200).send(predictionArray)
   } catch {
-    res.status(500).send('Error fetching predictions')
+    res.status(200).send('No data found')
   }
 })
+
 function convertDateFormat(input) {
   const year = input.slice(0, 4)
   const month = input.slice(4, 6)

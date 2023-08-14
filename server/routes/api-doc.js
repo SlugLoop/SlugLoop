@@ -118,6 +118,17 @@ const apiDoc = {
       // Gets route predictions and returns a json array
       get: {
         description: 'Gets route predictions',
+        parameters: [
+          {
+            name: 'stpid',
+            in: 'query',
+            description: 'Stop Id of the stop you want predictions for',
+            required: true,
+            schema: {
+              type: 'integer',
+            },
+          },
+        ],
         responses: {
           200: {
             description: 'Gets route predictions',
