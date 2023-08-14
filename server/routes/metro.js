@@ -96,28 +96,33 @@ router.get('/metroBuses', function (req, res) {
   const baseUrl = `${process.env.METRO_URL}/getvehicles`
   const routes = [10, 15, 18, 19, 20]
   const apiKey = process.env.METRO_KEY
-  try {
-    let busesArray = []
-    axios
-      .get(`${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`)
-      .then((response) => {
-        const buses = response.data['bustime-response'].vehicle
-        buses.forEach((bus) => {
-          busesArray.push({
-            id: bus.vid,
-            route: bus.rt,
-            lastLatitude: bus.lat,
-            lastLongitude: bus.lon,
-            lastPing: convertDateFormat(bus.tmstmp),
-            heading: bus.hdg,
-            capacity: bus.psgld,
-          })
+
+  let busesArray = []
+  axios
+    .get(`${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`)
+    .then((response) => {
+      const buses = response.data['bustime-response'].vehicle
+      if (buses === undefined) {
+        res.status(200).send([])
+        return
+      }
+      buses.forEach((bus) => {
+        busesArray.push({
+          id: bus.vid,
+          route: bus.rt,
+          lastLatitude: bus.lat,
+          lastLongitude: bus.lon,
+          lastPing: convertDateFormat(bus.tmstmp),
+          heading: bus.hdg,
+          capacity: bus.psgld,
         })
-        res.status(200).send(busesArray)
       })
-  } catch {
-    res.status(500).send('Error fetching buses')
-  }
+      res.status(200).send(busesArray)
+    })
+    .catch((error) => {
+      console.log(error)
+      res.status(500).send('Error fetching buses')
+    })
 })
 
 function convertDateFormat(input) {
@@ -201,6 +206,38 @@ router.put('/updateMetroBuses', limiter, async (req, res) => {
   } catch (error) {
     console.error(`Failed to update buses: ${error}`)
     res.status(500).send('Error updating metro buses')
+  }
+})
+
+async function metroETA(stop_id) {
+  const baseUrl = 'http://rt.scmetro.org/bustime/api/v3/getpredictions'
+  const apiKey = process.env.METRO_KEY
+
+  return (response = await axios.get(
+    `${baseUrl}?key=${apiKey}&stpid=${stop_id}&format=json`,
+  ))
+}
+
+router.get('/metroEta', async function (req, res) {
+  const stopId = req.query.stopId
+
+  if (!stopId) {
+    res.status(400).send('Invalid stop ID')
+    return
+  }
+
+  try {
+    const etas = await metroETA(stopId)
+
+    // If there's an error in the response, forward it
+    if (etas.error) {
+      res.status(500).send(etas.error)
+    } else {
+      res.status(200).send(etas.data['bustime-response'].prd)
+    }
+  } catch (err) {
+    console.log('Error getting ETAs', err)
+    res.status(500).send('Error getting ETAs')
   }
 })
 
