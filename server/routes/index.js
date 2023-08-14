@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const metro = require('./metro')
+const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
 var calcCWorCCW = require('./direction.js')
 var nextBusStops = require('./soonBusStop.js')
@@ -66,7 +67,9 @@ router.get('/buses', function (req, res) {
             busses.push(doc.data())
           }
         } else {
-          busses.push(doc.data())
+          const temp = doc.data()
+          temp.lastPing = temp.lastPing.toDate().toISOString()
+          busses.push(temp)
         }
       })
       res.status(200).send(busses)
@@ -137,28 +140,23 @@ router.post('/ping', function (req, res) {
       const prevLocation = {lat2: lastLat, lon2: lastLong}
       const heading = headingBetweenPoints(currLocation, prevLocation)
 
-      // Calculate the distance between the current and the last locations
-      const distance = getDistanceFromLatLonInMeters(
-        lastLat,
-        lastLong,
-        data.lat,
-        data.lon,
-      )
-      if (distance > 30.48) {
-        // Check if the distance is greater than 100ft (~30.48m)
-        // Append the current location to the previousLocationArray
-        previousLocationArray.push({lat: data.lat, lon: data.lon})
-        previousLocationArray = previousLocationArray.slice(-5)
-        previousLongitude = lastLong
-        previousLatitude = lastLat
-      }
-
-      // Calculate direction
-      const direction = calcCWorCCW(currLocation, previousLocationArray)
+    // Calculate the distance between the current and the last locations
+    const distance = getDistanceFromLatLonInMeters(
+      lastLat,
+      lastLong,
+      data.lat,
+      data.lon,
+    )
+    if (distance > 30.48) {
+      // Check if the distance is greater than 100ft (~30.48m)
+      // Append the current location to the previousLocationArray
+      previousLocationArray.push({lat: data.lat, lon: data.lon})
+      previousLocationArray = previousLocationArray.slice(-5)
+    }
 
       //We will update the bus's last ping location and time
       busRef.set({
-        lastPing: new Date().toISOString(),
+        lastPing: Timestamp.now(),
         lastLongitude: data.lon, // Current Longitutde Ping
         lastLatitude: data.lat, // Current Latitude Ping
         previousLongitude: previousLongitude, // Previous Longitude Ping

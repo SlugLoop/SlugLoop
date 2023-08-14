@@ -7,4 +7,5 @@ export default function Map() {
   const zoom = 15
 
   return <MapComponent center={center} zoom={zoom} />
+
 }

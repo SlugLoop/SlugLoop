@@ -2,11 +2,13 @@ import {Dialog, DialogTitle, IconButton} from '@mui/material'
 import React, {useContext, useState} from 'react'
 import SettingsIcon from '@mui/icons-material/Settings'
 import Button from '@mui/material/Button'
+import SettingsContext from '../SettingsContext'
 //import makeStyles from "@mui/styles/makeStyles";
 
 //import ListItemButton from "@mui/material";
 
 export default function SettingsButton(props) {
+  const {settings, dispatch} = useContext(SettingsContext)
   const [open, setOpen] = useState(false)
 
   const handleClickOpen = () => {
@@ -34,27 +36,30 @@ export default function SettingsButton(props) {
         <DialogTitle position="center">Settings</DialogTitle>
         <Button
           onClick={() => {
-            props.toggleDisplayTime()
+            //props.toggleDisplayTime()
+            dispatch({type: "SET_DISPLAY_TIME"})
             setOpen(false)
           }}
         >
-          {props.displayTime ? 'Hide Time' : 'Show Time'}
+          {settings.displayTime ? 'Hide Time' : 'Show Time'}
         </Button>
         <Button
           onClick={() => {
-            props.handleDarkToggle()
+            //props.handleDarkToggle()
+            dispatch({type: 'SET_DARK_MODE'})
             setOpen(false)
           }}
         >
-          {props.darkMode ? 'Light Mode' : 'Dark Mode'}
+          {settings.darkMode ? 'Light Mode' : 'Dark Mode'}
         </Button>
         <Button
           onClick={() => {
-            props.handleFilterToggle()
+            //props.handleFilterToggle()
+            dispatch({type: 'SET_FILTER'})
             setOpen(false)
           }}
         >
-          {props.filter ? 'Show All Buses' : 'Show Only Recent Buses'}
+          {settings.filter ? 'Show All Buses' : 'Show Only Recent Buses'}
         </Button>
       </Dialog>
       <IconButton
@@ -69,7 +74,7 @@ export default function SettingsButton(props) {
           sx={{
             width: '60px',
             height: '60px',
-            color: props.darkMode ? 'white' : 'black',
+            color: settings.darkMode ? 'white' : 'black',
           }}
         />
       </IconButton>
