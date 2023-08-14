@@ -120,22 +120,20 @@ router.get('/metroBuses', function (req, res) {
   }
 })
 //Get metro routes
-router.get('/metroRoutes', function (req, res) {
+router.get('/metroRoutes', async function (req, res) {
   const baseUrl = `${process.env.METRO_URL}/getroutes`
   const apiKey = process.env.METRO_KEY
   try {
     let routesArray = []
-    axios.get(`${baseUrl}?key=${apiKey}&format=json`).then((response) => {
-      const routes = response.data['bustime-response'].route
-      routes.forEach((route) => {
-        routesArray.push({
-          routeID: route.rt,
-          routeName: route.rtnm,
-          routeColor: route.rtclr,
-        })
+    const response = await axios.get(`${baseUrl}?key=${apiKey}&format=json`)
+    response.data['bustime-response'].routes.forEach((route) => {
+      routesArray.push({
+        routeID: route.rt,
+        routeName: route.rtnm,
+        routeColor: route.rtclr,
       })
-      res.status(200).send(routesArray)
     })
+    res.status(200).send(routesArray)
   } catch {
     res.status(500).send('Error fetching routes')
   }
