@@ -13,12 +13,12 @@ import {
 
 import {useNavigate} from 'react-router-dom'
 import {motion} from 'framer-motion'
-import AppContext from '../appContext'
+import SettingsContext from '../SettingsContext'
 import {useViewportWidth} from '../App'
 
 export default function Contact() {
   const viewportWidth = useViewportWidth()
-  const {darkMode} = useContext(AppContext)
+  const {settings} = useContext(SettingsContext)
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -104,7 +104,7 @@ export default function Contact() {
           overflow: 'hidden',
 
           zIndex: -1,
-          filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+          filter: settings.darkMode ? 'brightness(0.5)' : 'brightness(1)',
           '::after': {
             content: '""',
             position: 'absolute',
@@ -112,7 +112,7 @@ export default function Contact() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
+            background: settings.darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
           },
         }}
       />
@@ -200,7 +200,7 @@ export default function Contact() {
           direction="column"
           spacing={1.3}
           alignItems="center"
-          bgcolor={darkMode ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.9)'}
+          bgcolor={settings.darkMode ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.9)'}
           borderRadius={2}
           paddingX={2}
           paddingY={4}

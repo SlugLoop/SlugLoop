@@ -3,10 +3,10 @@ import {Box, Stack, Typography, ListItemIcon} from '@mui/material'
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus'
 import TrainIcon from '@mui/icons-material/Train'
 import GetAppIcon from '@mui/icons-material/GetApp'
-import AppContext from '../../appContext'
+import SettingsContext from '../../SettingsContext'
 
 export default function Features() {
-  const {darkMode} = useContext(AppContext)
+  const {settings} = useContext(SettingsContext)
   return (
     <Box
       component="section"
@@ -32,7 +32,7 @@ export default function Features() {
           position: 'absolute',
           zIndex: -1,
 
-          filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
+          filter: settings.darkMode ? 'brightness(0.5)' : 'brightness(1)',
           '::after': {
             content: '""',
             position: 'absolute',
@@ -40,7 +40,7 @@ export default function Features() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
+            background: settings.darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
           },
         }}
       />
@@ -66,7 +66,7 @@ export default function Features() {
       >
         <Box
           sx={{
-            backgroundColor: darkMode ? '' : 'rgba(255, 255, 255, 0.8)',
+            backgroundColor: settings.darkMode ? '' : 'rgba(255, 255, 255, 0.8)',
             borderRadius: '10px',
             p: 2,
             width: '100%',
@@ -85,7 +85,7 @@ export default function Features() {
         </Box>
         <Box
           sx={{
-            backgroundColor: darkMode ? '' : 'rgba(255, 255, 255, 0.8)',
+            backgroundColor: settings.darkMode ? '' : 'rgba(255, 255, 255, 0.8)',
             borderRadius: '10px',
             p: 2,
             width: '100%',
@@ -104,7 +104,7 @@ export default function Features() {
         </Box>
         <Box
           sx={{
-            backgroundColor: darkMode ? '' : 'rgba(255, 255, 255, 0.8)',
+            backgroundColor: settings.darkMode ? '' : 'rgba(255, 255, 255, 0.8)',
             borderRadius: '10px',
             p: 2,
             width: '100%',

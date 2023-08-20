@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit')
 const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
 const defaultDatabase = require('./firebase.js')
+const nextBusStops = require('./soonBusStop.js')
 
 // const lockName = 'myLock'
 // let myLock = false
@@ -96,27 +97,108 @@ router.get('/metroBuses', function (req, res) {
   const baseUrl = `${process.env.METRO_URL}/getvehicles`
   const routes = [10, 15, 18, 19, 20]
   const apiKey = process.env.METRO_KEY
-  try {
-    let busesArray = []
-    axios
-      .get(`${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`)
-      .then((response) => {
-        const buses = response.data['bustime-response'].vehicle
-        buses.forEach((bus) => {
-          busesArray.push({
-            id: bus.vid,
-            route: bus.rt,
-            lastLatitude: bus.lat,
-            lastLongitude: bus.lon,
-            lastPing: convertDateString(bus.tmstmp),
-            heading: bus.hdg,
-            capacity: bus.psgld,
-          })
+
+  let busesArray = []
+  axios
+    .get(`${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`)
+    .then((response) => {
+      const buses = response.data['bustime-response'].vehicle
+      if (buses === undefined) {
+        res.status(200).send([])
+        return
+      }
+      buses.forEach((bus) => {
+        busesArray.push({
+          id: bus.vid,
+          route: bus.rt,
+          lastLatitude: bus.lat,
+          lastLongitude: bus.lon,
+          lastPing: convertDateString(bus.tmstmp),
+          heading: bus.hdg,
+          capacity: bus.psgld,
         })
-        res.status(200).send(busesArray)
       })
+      res.status(200).send(busesArray)
+    })
+    .catch((error) => {
+      console.log(error)
+      res.status(500).send('Error fetching buses')
+    })
+})
+//Get metro routes
+router.get('/metroRoutes', async function (req, res) {
+  const baseUrl = `${process.env.METRO_URL}/getroutes`
+  const apiKey = process.env.METRO_KEY
+  try {
+    let routesArray = []
+    const response = await axios.get(`${baseUrl}?key=${apiKey}&format=json`)
+    response.data['bustime-response'].routes.forEach((route) => {
+      routesArray.push({
+        routeID: route.rt,
+        routeName: route.rtnm,
+        routeColor: route.rtclr,
+      })
+    })
+    res.status(200).send(routesArray)
   } catch {
-    res.status(500).send('Error fetching buses')
+    res.status(500).send('Error fetching routes')
+  }
+})
+
+router.get('/metroRouteDirections', async function (req, res) {
+  const baseUrl = `${process.env.METRO_URL}/getdirections`
+  const routes = [10, 15, 18, 19, 20]
+  const apiKey = process.env.METRO_KEY
+  const routePromises = routes.map((route) => {
+    return axios
+      .get(`${baseUrl}?key=${apiKey}&rt=${route}&format=json`)
+      .then((response) => {
+        const routeDirections = response.data['bustime-response'].directions
+        return routeDirections.map((direction) => {
+          return {
+            routeID: route,
+            directionID: direction.id,
+            directionName: direction.name,
+          }
+        })
+      })
+  })
+
+  try {
+    const allRouteDirections = await Promise.all(routePromises)
+    // Flatten the array of arrays into a single array
+    const routeDirectionsArray = [].concat(...allRouteDirections)
+    res.status(200).send(routeDirectionsArray)
+  } catch (error) {
+    console.error(error) // Log the error for debugging
+    res.status(500).send('Error fetching directions')
+  }
+})
+
+//Get route predictions
+router.get('/metroRoutePredictions', async function (req, res) {
+  const baseUrl = `${process.env.METRO_URL}/getpredictions`
+  const stpid = req.query.stpid
+  const apiKey = process.env.METRO_KEY
+  try {
+    let predictionArray = []
+    let response = await axios.get(
+      `${baseUrl}?key=${apiKey}&stpid=${stpid}&format=json`,
+    )
+    console.log(response.data['bustime-response'].error)
+    const predictions = response.data['bustime-response'].prd
+
+    predictions.forEach((prediction) => {
+      predictionArray.push({
+        timestamp: prediction.tmstmp,
+        type: prediction.typ,
+        routeID: prediction.rt,
+        predictionTime: prediction.prdtm,
+      })
+    })
+    res.status(200).send(predictionArray)
+  } catch {
+    res.status(200).send('No data found')
   }
 })
 
@@ -221,10 +303,43 @@ const limiter = rateLimit({
 router.put('/updateMetroBuses', limiter, async (req, res) => {
   try {
     const status = await updateMetroBuses()
+    await nextBusStops()
     res.status(status).send('Updated metro buses')
   } catch (error) {
     console.error(`Failed to update buses: ${error}`)
     res.status(500).send('Error updating metro buses')
+  }
+})
+
+async function metroETA(stop_id) {
+  const baseUrl = 'http://rt.scmetro.org/bustime/api/v3/getpredictions'
+  const apiKey = process.env.METRO_KEY
+
+  return (response = await axios.get(
+    `${baseUrl}?key=${apiKey}&stpid=${stop_id}&format=json`,
+  ))
+}
+
+router.get('/metroEta', async function (req, res) {
+  const stopId = req.query.stopId
+
+  if (!stopId) {
+    res.status(400).send('Invalid stop ID')
+    return
+  }
+
+  try {
+    const etas = await metroETA(stopId)
+
+    // If there's an error in the response, forward it
+    if (etas.error) {
+      res.status(500).send(etas.error)
+    } else {
+      res.status(200).send(etas.data['bustime-response'].prd)
+    }
+  } catch (err) {
+    console.log('Error getting ETAs', err)
+    res.status(500).send('Error getting ETAs')
   }
 })
 

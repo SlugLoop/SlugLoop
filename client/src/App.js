@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useReducer, useState} from 'react'
 import {signIn} from './Components/Auth'
 import Map from './Components/Map'
 import {
@@ -10,15 +10,15 @@ import {
 import About from './Components/About/AboutUs'
 import AboutDesktop from './Components/About/AboutUsDesktop'
 import Contact from './Components/Contact'
+import SettingsContext from './SettingsContext'
+import {SettingsReducer, INITIAL_STATE} from './SettingsReducer'
 import {RouteProvider} from './Route'
 import MainMobile from './Components/Landing/MainMobile'
 import MainDesktop from './Components/Landing/MainDesktop'
 import MyTimeline from './Components/TimeLine/TimeLine'
 import Wrapper from './Components/UIWrapper/Wrapper'
+import List from './Components/List'
 import {AnimatePresence, motion} from 'framer-motion'
-
-import AppContext from './appContext'
-import AppProvider from './appProvider'
 import {ThemeProvider} from '@mui/material/styles'
 import {themeOptions} from './Components/Theme/theme'
 
@@ -46,6 +46,12 @@ const RootContainer = () => {
 }
 
 function App() {
+  const [settings, dispatch] = useReducer(SettingsReducer, INITIAL_STATE)
+  const providerState = {
+    settings,
+    dispatch,
+  }
+  console.log(settings)
   const viewportWidth = useViewportWidth()
   useEffect(() => {
     signIn()
@@ -90,22 +96,28 @@ function App() {
             </Wrapper>
           ),
         },
+        {
+          path: 'list',
+          element: (
+            <Wrapper>
+              <List />
+            </Wrapper>
+          ),
+        },
       ],
     },
   ])
   // I dont know why there needs to be two RouteProviders, but it doesnt work without two
   return (
-    <AppProvider>
-      <AppContext.Consumer>
-        {({darkMode}) => (
-          <ThemeProvider theme={themeOptions(darkMode)}>
-            <RouteProvider>
-              <RouterProvider router={router} />
-            </RouteProvider>
+    <SettingsContext.Provider value={providerState}>
+      <SettingsContext.Consumer>
+        {({settings}) => (
+          <ThemeProvider theme={themeOptions(settings.darkMode)}>
+            <RouterProvider router={router} />
           </ThemeProvider>
         )}
-      </AppContext.Consumer>
-    </AppProvider>
+      </SettingsContext.Consumer>
+    </SettingsContext.Provider>
   )
 }
 

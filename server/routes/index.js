@@ -3,6 +3,8 @@ const router = express.Router()
 const metro = require('./metro')
 const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
+var calcCWorCCW = require('./direction.js')
+var nextBusStops = require('./soonBusStop.js')
 
 // Helper functions
 const {
@@ -78,22 +80,21 @@ router.get('/buses', function (req, res) {
     })
 })
 
+router.post('/updateSoon', async function (req, res) {
+  // Update database for which bus stops have incoming busses
+  await nextBusStops()
+
+  // Send a response to the base station
+  res.status(200).send('OK')
+})
+
 /* Ping the server from base stations. */
 router.post('/ping', function (req, res) {
   let data = JSON.parse(req.body.data)
   data = data[0]
 
   // Check if the data is valid and check data length is 4
-  if (
-    !data ||
-    !data.id ||
-    !data.lon ||
-    !data.lat ||
-    !data.route ||
-    !data.key ||
-    !data.sid ||
-    Object.keys(data).length !== 6
-  ) {
+  if (dataValidate(data)) {
     res.status(400).send('Invalid data')
     return
   }
@@ -113,24 +114,31 @@ router.post('/ping', function (req, res) {
     data.sid = 'No SID'
   }
 
-  let lastLong = 0
-  let lastLat = 0
+  let lastLong = 0 // Current longitude
+  let lastLat = 0 // Current latitude
+  let fleetId = 999 // Default fleet ID
   let previousLocationArray = []
+  let previousLongitude = 0
+  let previousLatitude = 0
 
   // Get the last ping location of the bus
-  busRef.get().then((doc) => {
-    if (doc.exists) {
-      // If the bus exists, we will get the last ping location
-      lastLong = doc.data().lastLongitude
-      lastLat = doc.data().lastLatitude
-      // Fetching the previousLocationArray from the database, if it exists
-      previousLocationArray = doc.data().previousLocationArray || []
-    }
+  try {
+    busRef.get().then((doc) => {
+      if (doc.exists) {
+        // If the bus exists, we will get the last ping location
+        lastLong = doc.data().lastLongitude || 0
+        lastLat = doc.data().lastLatitude || 0
+        fleetId = doc.data().fleetId || 999
+        // Fetching the previousLocationArray from the database, if it exists
+        previousLocationArray = doc.data().previousLocationArray || []
+        previousLongitude = doc.data().previousLongitude
+        previousLatitude = doc.data().previousLatitude
+      }
 
-    // Calculate heading
-    const currLocation = {lat1: data.lat, lon1: data.lon}
-    const prevLocation = {lat2: lastLat, lon2: lastLong}
-    const heading = headingBetweenPoints(currLocation, prevLocation)
+      // Calculate heading
+      const currLocation = {lat1: data.lat, lon1: data.lon}
+      const prevLocation = {lat2: lastLat, lon2: lastLong}
+      const heading = headingBetweenPoints(currLocation, prevLocation)
 
     // Calculate the distance between the current and the last locations
     const distance = getDistanceFromLatLonInMeters(
@@ -146,35 +154,45 @@ router.post('/ping', function (req, res) {
       previousLocationArray = previousLocationArray.slice(-5)
     }
 
-    //We will update the bus's last ping location and time
-    busRef.set({
-      lastPing: Timestamp.now(),
-      lastLongitude: data.lon,
-      lastLatitude: data.lat,
-      previousLongitude: lastLong, // Unintuitive naming, but that is what frontend uses
-      previousLatitude: lastLat,
-      previousLocationArray: previousLocationArray,
-      heading: heading.toString(),
-      route: data.route,
-      id: data.id,
-      sid: data.sid,
+      //We will update the bus's last ping location and time
+      busRef.set({
+        lastPing: Timestamp.now(),
+        lastLongitude: data.lon, // Current Longitutde Ping
+        lastLatitude: data.lat, // Current Latitude Ping
+        previousLongitude: previousLongitude, // Previous Longitude Ping
+        previousLatitude: previousLatitude, // Previous Latitude Ping
+        previousLocationArray: previousLocationArray,
+        direction: direction,
+        heading: heading.toString(),
+        fleetId: fleetId,
+        route: data.route,
+        id: data.id,
+        sid: data.sid,
+      })
     })
-  })
+    // Debugging purposes
+    let countRef = defaultDatabase.collection('count').doc('count')
+    countRef.get().then((doc) => {
+      // We update the sid count
+      let sidCount = doc.data()[data.sid]
+      if (sidCount === undefined) {
+        sidCount = 0
+      }
+      sidCount++
+      countRef.set(
+        {
+          [data.sid]: sidCount,
+          [data.sid + 'timestamp']: new Date().toISOString(),
+        },
+        {merge: true},
+      )
+    })
 
-  // Debugging purposes
-  let countRef = defaultDatabase.collection('count').doc('count')
-  countRef.get().then((doc) => {
-    // We update the sid count
-    let sidCount = doc.data()[data.sid]
-    if (sidCount === undefined) {
-      sidCount = 0
-    }
-    sidCount++
-    countRef.set({[data.sid]: sidCount}, {merge: true})
-  })
-
-  // Send a response to the base station
-  res.status(200).send('OK')
+    // Send a response to the base station
+    res.status(200).send('OK')
+  } catch (err) {
+    console.log(err)
+  }
 })
 
 // For the contact us form
@@ -197,5 +215,23 @@ router.post('/contact', function (req, res) {
     res.status(500).send('Error sending message')
   }
 })
+
+// Validates and confirms data
+function dataValidate(data) {
+  if (
+    !data ||
+    !data.id ||
+    !data.lon ||
+    !data.lat ||
+    !data.route ||
+    !data.key ||
+    !data.sid ||
+    Object.keys(data).length != 6
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
 
 module.exports = router

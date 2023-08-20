@@ -10,7 +10,7 @@ import {
 import {useNavigate} from 'react-router-dom'
 import {AnimatePresence, motion} from 'framer-motion'
 import './topbar.css'
-import AppContext from '../../appContext'
+import SettingsContext from '../../SettingsContext'
 
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
@@ -22,7 +22,7 @@ export default function MobileTopBar() {
   const [isOpen, setIsOpen] = React.useState(false)
   const navigate = useNavigate()
   const theme = useTheme()
-  const {darkMode, setDarkMode} = useContext(AppContext)
+  const {settings, dispatch} = useContext(SettingsContext)
 
   const handleMenuToggle = () => {
     setIsOpen(!isOpen)
@@ -33,9 +33,7 @@ export default function MobileTopBar() {
     navigate(path)
   }
 
-  const handleDarkModeToggle = () => {
-    setDarkMode(!darkMode)
-  }
+ 
 
   return (
     <>
@@ -54,13 +52,15 @@ export default function MobileTopBar() {
           </Typography>
 
           <IconButton
-            onClick={handleDarkModeToggle}
+            onClick={() => {
+              dispatch({type:"SET_DARK_MODE"})
+            }}
             color="inherit"
             sx={{
               marginRight: 7,
             }}
           >
-            {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+            {settings.darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
 
           <div
@@ -179,6 +179,22 @@ export default function MobileTopBar() {
                 onClick={() => handlePageChange('/contact')}
               >
                 Contact
+              </MotionTypography>
+              <MotionTypography
+                initial={{x: -100, opacity: 0}}
+                animate={{x: 0, opacity: 1}}
+                exit={{x: -100, opacity: 0}}
+                transition={{
+                  delay: 0.7,
+                  duration: 0.3,
+                  type: 'spring',
+                  stiffness: 80,
+                }}
+                variant="h6"
+                color="text.primary"
+                onClick={() => handlePageChange('/list')}
+              >
+                Stops
               </MotionTypography>
             </Box>
           </MotionBox>
