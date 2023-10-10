@@ -7,16 +7,20 @@ import {
   CardContent,
   Avatar,
   Paper,
+  Stack,
+  IconButton,
 } from '@mui/material'
 import AppContext from '../../appContext'
+import LinkedInIcon from '@mui/icons-material/LinkedIn'
 
 const team = [
   {
     name: 'Bill Zhang',
-    email: 'jzhang71@usc.edu',
+    email: 'jzhan411@ucsc.edu',
     major: 'CS',
     role: 'Product Manager/Full Stack',
     img: '/about/bill.jpg',
+    linkedin: 'https://www.linkedin.com/in/bill-zhang1/',
   },
   {
     name: 'Alex Liu',
@@ -24,6 +28,7 @@ const team = [
     major: 'CS',
     role: 'Frontend',
     img: '/about/alex.jfif',
+    linkedin: 'https://www.linkedin.com/in/alex-liu-8689a1171/',
   },
   {
     name: 'Nick Szwed',
@@ -31,6 +36,7 @@ const team = [
     major: 'CS',
     role: 'Backend/Hardware',
     img: '/about/nick.jfif',
+    linkedin: 'https://www.linkedin.com/in/nicholas-szwed/',
   },
   {
     name: 'Annie Liu',
@@ -38,6 +44,7 @@ const team = [
     major: 'CS',
     role: 'Frontend',
     img: '/about/annie.png',
+    linkedin: 'https://www.linkedin.com/in/annie-liu-33679624b/',
   },
 ]
 
@@ -136,9 +143,25 @@ export default function AboutDesktop() {
                   bgcolor: 'transparent',
                 }}
               >
-                <Typography variant="h6" color="text.primary">
-                  {member.name}
-                </Typography>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typography variant="h6" color="text.primary">
+                    {member.name}
+                  </Typography>
+                  <IconButton
+                    href={member.linkedin}
+                    color="primary"
+                    target="_blank"
+                    rel="noopener"
+                    size="small"
+                    disableRipple
+                  >
+                    <LinkedInIcon />
+                  </IconButton>
+                </Stack>
                 <Typography variant="body2" color="text.secondary">
                   {member.email}
                 </Typography>
