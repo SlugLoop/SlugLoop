@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const axios = require('axios')
 const rateLimit = require('express-rate-limit')
+const moment = require('moment-timezone')
 const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
 const defaultDatabase = require('./firebase.js')
@@ -121,26 +122,29 @@ router.get('/metroBuses', function (req, res) {
 })
 
 function convertDateTimestamp(input) {
-  const year = input.slice(0, 4)
-  const month = input.slice(4, 6)
-  const day = input.slice(6, 8)
-  const time = input.slice(9)
-  const hours = time.slice(0, 2)
-  const minutes = time.slice(3, 5)
+  // const year = input.slice(0, 4)
+  // const month = input.slice(4, 6)
+  // const day = input.slice(6, 8)
+  // const time = input.slice(9)
+  // const hours = time.slice(0, 2)
+  // const minutes = time.slice(3, 5)
 
-  // Calculate the offset for PDT
-  const pdtOffsetHours = 7 // 7 hours
+  // // Calculate the offset for PDT
+  // const pdtOffsetHours = 7 // 7 hours
 
-  // Create a UTC date directly using Date.UTC() method
-  const utcDate = new Date(
-    Date.UTC(
-      parseInt(year),
-      parseInt(month) - 1, // Months are zero-based in JavaScript Date
-      parseInt(day),
-      parseInt(hours) + pdtOffsetHours,
-      parseInt(minutes),
-    ),
-  )
+  // // Create a UTC date directly using Date.UTC() method
+  // const utcDate = new Date(
+  //   Date.UTC(
+  //     parseInt(year),
+  //     parseInt(month) - 1, // Months are zero-based in JavaScript Date
+  //     parseInt(day),
+  //     parseInt(hours) + pdtOffsetHours,
+  //     parseInt(minutes),
+  //   ),
+  // )
+  const momentDate = moment(input, 'YYYYMMDD HH:mm')
+  // Convert to UTC
+  const utcDate = momentDate.tz('America/Los_Angeles').utc().toDate()
   const timestamp = Timestamp.fromDate(utcDate)
   return timestamp
 }

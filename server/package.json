@@ -27,6 +27,7 @@
     "google-maps-react": "^2.0.6",
     "http-errors": "~2.0.0",
     "https": "^1.0.0",
+    "moment-timezone": "^0.5.43",
     "morgan": "~1.10.0",
     "openssl": "^2.0.0",
     "swagger-ui-express": "^4.6.3"
