@@ -2,6 +2,7 @@
 
 [![Demo Link](https://img.shields.io/badge/-Demo%20Link-blue)](https://slugloop.tech/)
 [![Demo Video](https://img.shields.io/badge/-Demo%20Video-red)](https://www.youtube.com/watch?v=DlAGp-IjtJM)
+[![News Article](https://img.shields.io/badge/-News%20Article-green)](https://news.ucsc.edu/2023/07/slugloop-google-solution-challenge.html)
 
 ## Overview
 

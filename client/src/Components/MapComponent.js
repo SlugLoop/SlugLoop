@@ -88,6 +88,7 @@ export default function MapComponent({center, zoom}) {
 
     const fetchUpdatedMetroData = () => {
       getUpdatedMetroBuses().then((newBuses) => {
+        console.log(newBuses)
         setMetroBuses((oldBuses) => {
           return oldBuses.map((oldBus) => {
             const newBus = newBuses.find((bus) => bus.id === oldBus.id)
