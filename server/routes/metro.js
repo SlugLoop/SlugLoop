@@ -142,7 +142,7 @@ function convertDateTimestamp(input) {
   //     parseInt(minutes),
   //   ),
   // )
-  const momentDate = moment(input, 'YYYYMMDD HH:mm')
+  const momentDate = moment.tz(input, 'YYYYMMDD HH:mm', 'America/Los_Angeles')
   // Convert to UTC
   const utcDate = momentDate.tz('America/Los_Angeles').utc().toDate()
   const timestamp = Timestamp.fromDate(utcDate)
