@@ -1,4 +1,4 @@
-const apiDoc = {
+  const apiDoc = {
   openapi: '3.0.3',
   info: {
     title: 'Slug Loop',
@@ -51,6 +51,43 @@ const apiDoc = {
         },
       },
     },
+    '/metroEta': {
+      // Gets ETAs of a metro stop and returns a json array
+      get: {
+        description: 'Gets all ETAs for a metro stop',
+        parameters: [
+          {
+            name: 'stopId',
+            in: 'query',
+            description: 'The ID of the metro stop to retrieve ETAs for',
+            required: true,
+            schema: {
+              type: 'integer',
+            },
+          },
+        ],
+
+        responses: {
+          200: {
+            description: 'Gets all ETAs for a metro stop',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                },
+              },
+            },
+          },
+          400: {
+            description: 'Invalid stop ID',
+          },
+          500: {
+            description: 'Error getting ETAs',
+          },
+        },
+      },
+    },
+
     '/metroBuses': {
       // Gets all buses on routes 10, 15, 18, 19, and 20 and returns a json array
       get: {
@@ -68,6 +105,80 @@ const apiDoc = {
           },
           500: {
             description: 'Error fetching buses',
+          },
+        },
+      },
+    },
+    '/metroRoutes': {
+      // Gets all metro routes and returns a json array
+      get: {
+        description: 'Gets all metro routes',
+        responses: {
+          200: {
+            description: 'Gets all metro routes',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/metroRoutesArray',
+                },
+              },
+            },
+          },
+          500: {
+            description: 'Error fetching routes',
+          },
+        },
+      },
+    },
+    '/metroRouteDirections': {
+      // Gets metro route directions and returns a json array
+      get: {
+        description: 'Gets metro route directions',
+        responses: {
+          200: {
+            description: 'Gets metro route directions',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/routeDirectionsArray',
+                },
+              },
+            },
+          },
+          500: {
+            description: 'Error fetching directions',
+          },
+        },
+      },
+    },
+    '/metroRoutePredictions': {
+      // Gets route predictions and returns a json array
+      get: {
+        description: 'Gets route predictions',
+        parameters: [
+          {
+            name: 'stpid',
+            in: 'query',
+            description: 'Stop Id of the stop you want predictions for',
+            required: true,
+            schema: {
+              type: 'integer',
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Gets route predictions',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/routePredictionsArray',
+                },
+              },
+            },
+          },
+          500: {
+            description: 'Error fetching predictions',
           },
         },
       },
@@ -102,6 +213,20 @@ const apiDoc = {
       // Update the metro buses
       put: {
         description: 'Update the metro buses',
+        responses: {
+          200: {
+            description: 'OK',
+          },
+          500: {
+            description: 'Error updating buses',
+          },
+        },
+      },
+    },
+    '/updateSoon': {
+      // Update the soon buses
+      post: {
+        description: 'Update the soon buses',
         responses: {
           200: {
             description: 'OK',
@@ -191,6 +316,60 @@ const apiDoc = {
               type: 'string',
             },
             capacity: {
+              type: 'string',
+            },
+          },
+        },
+      },
+      metroRoutesArray: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            routeID: {
+              type: 'string',
+            },
+            routeName: {
+              type: 'string',
+            },
+            routeColor: {
+              type: 'string',
+            },
+          },
+        },
+      },
+      routeDirectionsArray: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            routeID: {
+              type: 'integer',
+            },
+            directionID: {
+              type: 'string',
+            },
+            directionName: {
+              type: 'string',
+            },
+          },
+        },
+      },
+      routePredictionsArray: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            timestamp: {
+              type: 'string',
+            },
+            type: {
+              type: 'string',
+            },
+            routeID: {
+              type: 'integer',
+            },
+            predictionTime: {
               type: 'string',
             },
           },
