@@ -1,9 +1,18 @@
+/*
+This script updates the 'lastPing' field in all documents within the 'metro' collection 
+of Firestore. It converts the 'lastPing' field value from an ISO string to a Firestore 
+Timestamp to ensure data consistency and compatibility with Firestore's native data types.
+*/
+
+// Import the required modules
 const admin = require('firebase-admin')
 require('dotenv').config()
 
+// Initialize Firebase using configuration
 const defaultDatabase = require('./firebase.js')
 const busRef = defaultDatabase.collection('metro')
 
+// Retrieve documents from the 'metro' collection
 busRef
   .get()
   .then((snapshot) => {

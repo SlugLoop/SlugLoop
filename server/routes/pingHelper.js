@@ -1,3 +1,6 @@
+/*
+This utility script provides functions to calculate the heading (bearing) between two geographical points and the distance between them, given their latitude and longitude coordinates.
+*/
 function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {
   const toRad = (deg) => (deg * Math.PI) / 180 // convert degrees to radians
 
