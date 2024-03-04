@@ -1,3 +1,10 @@
+/*
+This module calculates the direction of a bus based on its current location 
+(latitude and longitude) and previous locations. It determines whether the 
+bus is moving clockwise (CW) or counterclockwise (CCW) along its route.
+*/
+
+
 // Calculate direction of bus
 module.exports = function calcCWorCCW({lat1, lon1}, previousLocationArray) {
   // Lower Half

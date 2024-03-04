@@ -1,3 +1,7 @@
+/*
+This script initializes a connection to a Firestore database using the Firebase Admin SDK, simplifying data management tasks in Node.js applications.
+*/
+
 const admin = require('firebase-admin')
 
 let defaultApp = admin.initializeApp({

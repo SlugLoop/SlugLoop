@@ -1,4 +1,10 @@
-  const apiDoc = {
+/*
+  This OpenAPI documentation outlines the endpoints available in the "Slug Loop" backend service. 
+  It provides developers with information on how to interact with the API, including descriptions 
+  of each endpoint, parameters required, and possible responses returned. 
+*/
+  
+const apiDoc = {
   openapi: '3.0.3',
   info: {
     title: 'Slug Loop',
