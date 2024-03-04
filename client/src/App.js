@@ -1,4 +1,5 @@
-import {useEffect, useState} from 'react'
+//App.js file manages routing, handles viewport width changes, and provides global context and theme management
+import {useEffect, useState} from 'react' //managing side effects and state within functional components.
 import {signIn} from './Components/Auth'
 import Map from './Components/Map'
 import {
@@ -6,7 +7,7 @@ import {
   RouterProvider,
   useOutlet,
   useLocation,
-} from 'react-router-dom'
+} from 'react-router-dom' //implements routing for SlugLoop.
 import About from './Components/About/AboutUs'
 import AboutDesktop from './Components/About/AboutUsDesktop'
 import Contact from './Components/Contact'
@@ -15,13 +16,18 @@ import MainMobile from './Components/Landing/MainMobile'
 import MainDesktop from './Components/Landing/MainDesktop'
 import MyTimeline from './Components/TimeLine/TimeLine'
 import Wrapper from './Components/UIWrapper/Wrapper'
-import {AnimatePresence, motion} from 'framer-motion'
+import {AnimatePresence, motion} from 'framer-motion'  //create animations in the SlugLoop
 
 import AppContext from './appContext'
 import AppProvider from './appProvider'
 import {ThemeProvider} from '@mui/material/styles'
 import {themeOptions} from './Components/Theme/theme'
 
+//The animatedOutlet component wraps the content rendered by the router. 
+//It uses the useOutlet hook to dynamically render content based on the 
+//current route. 
+//This component serves as a dynamic loader to be able to get the exit 
+//animations to work. 
 const AnimatedOutlet = () => {
   const o = useOutlet()
   const [outlet] = useState(o)
@@ -29,6 +35,10 @@ const AnimatedOutlet = () => {
   return <>{outlet}</>
 }
 
+
+//The RootContainer component is used to manage route transitions with 
+//animations using AnimatePresence and motion.div.
+// It ensures smooth and visually appealing animation when route changes are happening. 
 const RootContainer = () => {
   const location = useLocation()
   return (
@@ -45,12 +55,14 @@ const RootContainer = () => {
   )
 }
 
+
+//this defines overall function of the app
 function App() {
-  const viewportWidth = useViewportWidth()
+  const viewportWidth = useViewportWidth() //manages viewport width, handles resizing
   useEffect(() => {
     signIn()
   }, [])
-  const router = createBrowserRouter([
+  const router = createBrowserRouter([ //sets up routing
     {
       element: <RootContainer />,
       children: [
@@ -123,3 +135,4 @@ export const useViewportWidth = () => {
 }
 
 export default App
+//export App for easy access from other files
