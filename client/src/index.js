@@ -1,3 +1,6 @@
+//indexing this app so it is easily found in search engines (google, safari).
+//
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
