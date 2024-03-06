@@ -2,17 +2,12 @@
 var calcCWorCCW = require('./direction.js')
 const busStops = require('../data/bus-stops.json')
 const defaultDatabase = require('../initialization/firebase.js');
-const e = require('express');
+// const e = require('express');
+const {getDistanceFromLatLonInMeters} = require("./pingHelper.js")
 
-const radius = 0.001
-var oldUpdateCW = []
-var oldUpdateCCW = []
-
-// updates next 3 bus stops for every bus
-module.exports = async function nextBusStops() {
+// Updates the next bus stops for every bus
+async function nextBusStops() {
   const busCollection = [];
-  let stops_arr_CW = [];
-  let stops_arr_CCW = [];
 
   // Wait for the database query to complete
   const querySnapshot = await defaultDatabase.collection('busses').get();
@@ -26,42 +21,33 @@ module.exports = async function nextBusStops() {
     });
   });
 
-  // Initialize CW array with false values
-  const cwObj = busStops.bstop.CW;
-  for (let i = 0; i < cwObj.length; i++) {
-    let locationName = Object.keys(cwObj[i])[0];
-    stops_arr_CW.push({
-      id: locationName,
-      value: false
-    })
-  }
-
-  // Initialize CCW array with false values
-  const ccwObj = busStops.bstop.CCW;
-  for (let i = 0; i < ccwObj.length; i++) {
-    let locationName = Object.keys(ccwObj[i])[0];
-    stops_arr_CCW.push({
-      id: locationName,
-      value: false
-    })
-  }
+  // Create a batch for updating ETA
+  const batch = defaultDatabase.batch()
 
   // Pass the collection and object arrays for data validation
   for (let i = 0; i < busCollection.length; i++) {
-    soonBusStop(busCollection, stops_arr_CW, stops_arr_CCW, i);
+    let [distance, closestStop] = closestBusStop(busCollection[i])
+    let secondsTillDest = (distance / 9)
+
+    // Get Bus direction (Defaults to CCW to prevent errors)
+    let direction = (busCollection[i].previousLocationArray === undefined) ? "ccw" : calcCWorCCW({busLat, busLon}, busCollection[1].previousLocationArray);
+    let stopData = (direction == "cw") ? busStops.bstop.CW : busStops.bstop.CCW;
+    
+    let startIndex = stopData.findIndex(obj => closestStop in obj)
+    let remainingStops = stopData.slice(startIndex)
+
+    remainingStops.forEach((stop) => {
+      // Get a database reference to the collection of stops given a direction
+      let stopRef = defaultDatabase.collection('busStop').doc(direction)
+      // Store ETA in seconds into collection busStop (per stop)
+      batch.set(stopRef, {ETA: secondsTillDest}, {merge: true})
+      // We assume it takes 105 seconds for each bus to go to the next bus stop (105 seconds = 1.75 minutes)
+      secondsTillDest += 105;
+    })
   }
 
-  // Update the database for each bus stops in the object array if different to old update
-  if (!areListsEqual(stops_arr_CW, oldUpdateCW)) {
-    dbUpdate(stops_arr_CW, "CW");
-    oldUpdateCW = stops_arr_CW;
-  }
-  
-  if (!areListsEqual(stops_arr_CCW, oldUpdateCCW)) {
-    dbUpdate(stops_arr_CW, "CCW");
-    oldUpdateCCW = stops_arr_CCW;
-  }
-
+  // Commit the batch
+  await batch.commit()
   return;
 }
 
@@ -82,80 +68,44 @@ function areListsEqual(list1, list2) {
   return true;
 }
 
-  
-function soonBusStop(ref, stops_arr_CW, stops_arr_CCW, index) {
-  let direction;
-  let lat1 = ref[index].latitude;
-  let lon1 = ref[index].longitude;
-  let previousLocationArray = ref[index].previousLocationArray;
-  if(previousLocationArray === undefined) {
-    direction = "n/a";
-  }
-  else {
-    direction = calcCWorCCW({lat1, lon1}, previousLocationArray);
-  }
-  
-  // If heading of bus is Clock-wise
-  if (direction == "cw") {
-    const cwData = busStops.bstop.CW;
-    // Iterates through all CW bus stops, ends once it find closest stop
-    let cwLength = cwData.length;
-    for (let i = 0; i < cwLength; i++) {
-      let location = cwData[i];
-      let locationName = Object.keys(location)[0];
-      let lat2 = location[locationName].lat;
-      let lon2 = location[locationName].lon;
-      // Find the bus stop closest to the bus, and set next 3 stops in array to true
-      if((lat2 - radius) <= lat1 && (lat2 + radius) >= lat1 
-      && (lon2 - radius) <= lon1 && (lon2 + radius) >= lon1) {
-        for (let j = 1; j <= 3; j++) {
-          let stop_id = Object.keys(cwData[(i + j) % cwLength])[0];
-          let objIndex = stops_arr_CW.findIndex((e => e.id === stop_id));
-          // If bus stop is in object array, set value to true
-          if (objIndex != -1) {stops_arr_CW[objIndex].value = true;}
-        }
-        return;
-      }
+// Gets the closest bus stop given busData
+function closestBusStop(busData) {
+  let busLat = busData.latitude;
+  let busLon = busData.longitude;
+  // Finds the direction a bus is going in or returns "n/a" if previousLocationData is undefined
+  let direction = (busData.previousLocationArray === undefined) ? "n/a" : calcCWorCCW({busLat, busLon}, busData.previousLocationArray);
+  // Determines whether to use clockwise or counterclockwise bus stop data if undefined, we assume it is ccw
+  let stopData = (direction == "cw") ? busStops.bstop.CW : busStops.bstop.CCW;
+  let minDistance = Infinity;
+  let closestStop = "";
+  // Iterates through all bus stops and find closest stop
+  for (let i = 0; i < stopData.length; i++) {
+    // Note: Our data looks like this
+    // {"key1" : {"lat": 1, "lon":-1, "metro":2}}
+    // This loops over the object and extracts lat and lon (because there is only one key)
+    let stopLat;
+    let stopLon;
+    for (let key in stopData[i]) {
+      stopLat = stopData[i][key].lat
+      stopLon = stopData[i][key].lon
     }
-  } 
-
-  // If heading of bus is Counter Clock-wise
-  else if(direction == "ccw") {
-    const ccwData = busStops.bstop.CCW;
-    // Iterates through all CCW bus stops, ends once it find closest stop
-    let ccwLength = ccwData.length;
-    for (let i = 0; i < ccwLength; i++) {
-      let location = ccwData[i];
-      let locationName = Object.keys(location)[0];
-      let lat2 = location[locationName].lat;
-      let lon2 = location[locationName].lon;
-      // Find the bus stop closest to the bus, and set next 3 stops in array to true
-      if((lat2 - radius) <= lat1 && (lat2 + radius) >= lat1 
-      && (lon2 - radius) <= lon1 && (lon2 + radius) >= lon1) {
-        for (let j = 1; j <= 3; j++) {
-          let stop_id = Object.keys(ccwData[(i + j) % ccwLength])[0];
-          let objIndex = stops_arr_CCW.findIndex((e => e.id === stop_id));
-          // If bus stop is in object array, set value to true
-          if (objIndex != -1) {stops_arr_CCW[objIndex].value = true;}
-        }
-        return;
-      }
+    // Find closest Bus Stop
+    let distBusToStop = getDistanceFromLatLonInMeters(busLat, busLon, stopLat, stopLon)
+    if (minDistance > distBusToStop) {
+      minDistance = distBusToStop;
+      closestStop = stopData[i].keys()[0]
     }
+  }
+  // Just an error check (no closest bus found)
+  if (closestStop == "" || minDistance == Infinity) {
+    return undefined;
+  } else {
+    return [minDistance, closestStop];
   }
 }
 
-// Set bus stops "Soon" to true in the firestore DB if in array
-function dbUpdate(soonBusStops, direction) {
-    // Get a database reference to the collection of stops given a direction
-    let stopRef = defaultDatabase.collection('busStop').doc(direction);
-
-    // Variable for setting id = true
-    let updates = {};
-    soonBusStops.forEach((soonBusStops) => {
-      updates[soonBusStops.id] = soonBusStops.value;
-    });
-
-    // Updates the firebase in one call
-    stopRef.update(updates);
+module.exports = {
+  areListsEqual,
+  nextBusStops,
+  closestBusStop,
 }
-  
