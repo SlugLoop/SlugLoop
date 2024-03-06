@@ -1,6 +1,7 @@
+// Imports
 var calcCWorCCW = require('./direction.js')
-const busStops = require('./bus-stops.json')
-const defaultDatabase = require('./firebase.js');
+const busStops = require('../data/bus-stops.json')
+const defaultDatabase = require('../initialization/firebase.js');
 const e = require('express');
 
 const radius = 0.001

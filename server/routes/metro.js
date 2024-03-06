@@ -5,8 +5,8 @@ const rateLimit = require('express-rate-limit')
 const moment = require('moment-timezone')
 const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
-const defaultDatabase = require('./firebase.js')
-const nextBusStops = require('./soonBusStop.js')
+const defaultDatabase = require('../initialization/firebase.js')
+const nextBusStops = require('../functions/soonBusStop.js')
 
 // const lockName = 'myLock'
 // let myLock = false

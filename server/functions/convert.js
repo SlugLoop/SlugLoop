@@ -9,7 +9,7 @@ const admin = require('firebase-admin')
 require('dotenv').config()
 
 // Initialize Firebase using configuration
-const defaultDatabase = require('./firebase.js')
+const defaultDatabase = require('../initialization/firebase.js')
 const busRef = defaultDatabase.collection('metro')
 
 // Retrieve documents from the 'metro' collection
