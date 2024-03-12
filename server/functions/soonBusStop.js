@@ -23,6 +23,7 @@ async function nextBusStops() {
 
   // Create a batch for updating ETA
   const batch = defaultDatabase.batch()
+  let updates = {}
 
   // Pass the collection and object arrays for data validation
   for (let i = 0; i < busCollection.length; i++) {
@@ -30,22 +31,28 @@ async function nextBusStops() {
     let secondsTillDest = (distance / 9)
 
     // Get Bus direction (Defaults to CCW to prevent errors)
-    let direction = (busCollection[i].previousLocationArray === undefined) ? "ccw" : calcCWorCCW({busLat, busLon}, busCollection[1].previousLocationArray);
+    let direction = (busCollection[i].previousLocationArray === undefined) ? "ccw" : calcCWorCCW({ lat: busCollection[i].latitude, lon: busCollection[i].longitude}, busCollection[i].previousLocationArray);
     let stopData = (direction == "cw") ? busStops.bstop.CW : busStops.bstop.CCW;
-    
+    let stopRef = defaultDatabase.collection('busStop').doc(direction)
     let startIndex = stopData.findIndex(obj => closestStop in obj)
-    let remainingStops = stopData.slice(startIndex)
+    // let remainingStops = stopData.slice(startIndex)
 
-    remainingStops.forEach((stop) => {
-      // Get a database reference to the collection of stops given a direction
-      let stopRef = defaultDatabase.collection('busStop').doc(direction)
-      // Store ETA in seconds into collection busStop (per stop)
-      batch.set(stopRef, {ETA: secondsTillDest}, {merge: true})
-      // We assume it takes 105 seconds for each bus to go to the next bus stop (105 seconds = 1.75 minutes)
-      secondsTillDest += 105;
+    stopData.forEach((stop, idx) => {
+      // Stop -> "crown", "merill", etc.
+      if (idx >= startIndex) {
+        // Store ETA in seconds into collection busStop (per stop)
+        updates[stop] = secondsTillDest
+        // We assume it takes 105 seconds for each bus to go to the next bus stop (105 seconds = 1.75 minutes)
+        secondsTillDest += 105;
+      } else {
+        // If the bus is not incoming, then set the time to null
+        updates[stop] = null
+        // batch.set(stopRef.collection("busStop").doc(stop), {ETA: null}, {merge: true})
+      }
     })
   }
 
+  batch.update(stopRef, updates);
   // Commit the batch
   await batch.commit()
   return;
@@ -93,7 +100,7 @@ function closestBusStop(busData) {
     let distBusToStop = getDistanceFromLatLonInMeters(busLat, busLon, stopLat, stopLon)
     if (minDistance > distBusToStop) {
       minDistance = distBusToStop;
-      closestStop = stopData[i].keys()[0]
+      closestStop = Object.keys(stopData[i])[0];
     }
   }
   // Just an error check (no closest bus found)
@@ -109,3 +116,4 @@ module.exports = {
   nextBusStops,
   closestBusStop,
 }
+
