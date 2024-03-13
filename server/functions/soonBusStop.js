@@ -42,7 +42,7 @@ async function nextBusStops() {
       if (idx >= startIndex) {
         // Basically checks that the time always goes down not up
         if (stop in updates && updates[stop] !== null && updates[stop] < secondsTillDest) {
-          return;
+          return
         }
         // Store ETA in seconds into collection busStop (per stop)
         updates[stop] = secondsTillDest
