@@ -40,6 +40,10 @@ async function nextBusStops() {
     stopData.forEach((stop, idx) => {
       // Stop -> "crown", "merill", etc.
       if (idx >= startIndex) {
+        // Basically checks that the time always goes down not up
+        if (stop in updates && updates[stop] !== null && updates[stop] < secondsTillDest) {
+          return;
+        }
         // Store ETA in seconds into collection busStop (per stop)
         updates[stop] = secondsTillDest
         // We assume it takes 105 seconds for each bus to go to the next bus stop (105 seconds = 1.75 minutes)
@@ -47,7 +51,6 @@ async function nextBusStops() {
       } else {
         // If the bus is not incoming, then set the time to null
         updates[stop] = null
-        // batch.set(stopRef.collection("busStop").doc(stop), {ETA: null}, {merge: true})
       }
     })
   }
