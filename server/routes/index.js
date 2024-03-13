@@ -3,20 +3,20 @@ const router = express.Router()
 const metro = require('./metro')
 const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
-var calcCWorCCW = require('./direction.js')
-var nextBusStops = require('./soonBusStop.js')
+var calcCWorCCW = require('../functions/direction.js')
+var nextBusStops = require('../functions/soonBusStop.js')
 
 // Helper functions
 const {
   headingBetweenPoints,
   getDistanceFromLatLonInMeters,
-} = require('./pingHelper')
+} = require('../functions/pingHelper')
 
 // Documentation
 const OpenApiValidator = require('express-openapi-validator')
 const swaggerUi = require('swagger-ui-express')
-const apiDoc = require('./api-doc')
-const defaultDatabase = require('./firebase.js')
+const apiDoc = require('../documentation/api-doc.js')
+const defaultDatabase = require('../initialization/firebase.js')
 
 // Middleware
 // Add cors
