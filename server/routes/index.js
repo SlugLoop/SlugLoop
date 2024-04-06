@@ -81,11 +81,7 @@ router.get('/buses', function (req, res) {
 })
 
 router.get('/updateSoon', async function (req, res) {
-  try {
-    nextBusStops()
-  } catch (error) {
-    res.status(500).send(error)
-  }
+  nextBusStops()
   // Send a response to the base station
   res.status(200).send('OK')
 })
