@@ -231,7 +231,7 @@ const apiDoc = {
     },
     '/updateSoon': {
       // Update the soon buses
-      post: {
+      get: {
         description: 'Update the soon buses',
         responses: {
           200: {

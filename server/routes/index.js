@@ -4,7 +4,9 @@ const metro = require('./metro')
 const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
 var calcCWorCCW = require('../functions/direction.js')
-var nextBusStops = require('../functions/soonBusStop.js')
+var {nextBusStops} = require('../functions/soonBusStop.js')
+var {closestBusStop} = require('../functions/soonBusStop.js')
+const busStops = require('../data/bus-stops.json')
 
 // Helper functions
 const {
@@ -80,10 +82,12 @@ router.get('/buses', function (req, res) {
     })
 })
 
-router.post('/updateSoon', async function (req, res) {
-  // Update database for which bus stops have incoming busses
-  await nextBusStops()
-
+router.get('/updateSoon', async function (req, res) {
+  try {
+    nextBusStops()
+  } catch (error) {
+    res.status(500).send(error)
+  }
   // Send a response to the base station
   res.status(200).send('OK')
 })

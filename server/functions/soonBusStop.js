@@ -7,6 +7,7 @@ const {getDistanceFromLatLonInMeters} = require("./pingHelper.js")
 
 // Updates the next bus stops for every bus
 async function nextBusStops() {
+  // Update database for which bus stops have incoming busses
   const busCollection = [];
 
   // Wait for the database query to complete
@@ -23,25 +24,26 @@ async function nextBusStops() {
 
   // Create a batch for updating ETA
   const batch = defaultDatabase.batch()
-  let updates = {}
-
+  
   // Pass the collection and object arrays for data validation
   for (let i = 0; i < busCollection.length; i++) {
     let [distance, closestStop] = closestBusStop(busCollection[i])
-    let secondsTillDest = (distance / 9)
+    let updates = {}
+    let secondsTillDest = Math.floor(distance / 9)
 
     // Get Bus direction (Defaults to CCW to prevent errors)
-    let direction = (busCollection[i].previousLocationArray === undefined) ? "ccw" : calcCWorCCW({ lat: busCollection[i].latitude, lon: busCollection[i].longitude}, busCollection[i].previousLocationArray);
+    let direction = (busCollection[i].previousLocationArray === undefined) ? "ccw" : calcCWorCCW({ lat1: busCollection[i].latitude, lon1: busCollection[i].longitude}, busCollection[i].previousLocationArray);
     let stopData = (direction == "cw") ? busStops.bstop.CW : busStops.bstop.CCW;
-    let stopRef = defaultDatabase.collection('busStop').doc(direction)
-    let startIndex = stopData.findIndex(obj => closestStop in obj)
-    // let remainingStops = stopData.slice(startIndex)
+    let stopRef = defaultDatabase.collection('busStop').doc(direction.toUpperCase())
+    let collectionData = (await stopRef.get()).data()
+    let startIdx = stopData.findIndex(obj => closestStop in obj)
 
-    stopData.forEach((stop, idx) => {
+    stopData.forEach((stopObj, idx) => {
+      stop = Object.keys(stopObj)[0]
       // Stop -> "crown", "merill", etc.
-      if (idx >= startIndex) {
+      if (idx >= startIdx) {
         // Basically checks that the time always goes down not up
-        if (stop in updates && updates[stop] !== null && updates[stop] < secondsTillDest) {
+        if (stop in collectionData && collectionData[stop] !== null && collectionData[stop] < secondsTillDest) {
           return
         }
         // Store ETA in seconds into collection busStop (per stop)
@@ -53,9 +55,8 @@ async function nextBusStops() {
         updates[stop] = null
       }
     })
+    batch.update(stopRef, updates);
   }
-
-  batch.update(stopRef, updates);
   // Commit the batch
   await batch.commit()
   return;
