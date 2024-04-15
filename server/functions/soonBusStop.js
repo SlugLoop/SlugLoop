@@ -6,6 +6,7 @@ const defaultDatabase = require('../initialization/firebase.js');
 const {getDistanceFromLatLonInMeters} = require("./pingHelper.js")
 
 // Updates the next bus stops for every bus
+// Note: Rewrote the function to work if copy-pasted into the index routes file.
 async function nextBusStops() {
   // Update database for which bus stops have incoming busses
   const busCollection = [];
@@ -28,7 +29,6 @@ async function nextBusStops() {
   // Pass the collection and object arrays for data validation
   for (let i = 0; i < busCollection.length; i++) {
     let [distance, closestStop] = closestBusStop(busCollection[i])
-    let updates = {}
     let secondsTillDest = Math.floor(distance / 9)
 
     // Get Bus direction (Defaults to CCW to prevent errors)
@@ -38,13 +38,22 @@ async function nextBusStops() {
     let collectionData = (await stopRef.get()).data()
     let startIdx = stopData.findIndex(obj => closestStop in obj)
 
+    // Set first update - (To prevent errors)
+    let updates = {closestStop: (collectionData[closestBusStop] !== null && collectionData[closestBusStop] > secondsTillDest) ? secondsTillDest : null}
+
     stopData.forEach((stopObj, idx) => {
-      stop = Object.keys(stopObj)[0]
+      let stop = Object.keys(stopObj)[0]
       // Stop -> "crown", "merill", etc.
       if (idx >= startIdx) {
         // Basically checks that the time always goes down not up
-        if (stop in collectionData && collectionData[stop] !== null && collectionData[stop] < secondsTillDest) {
-          return
+        if (stop in collectionData && collectionData[stop] !== null && collectionData[stop] > secondsTillDest) {
+          // This is to override the old team's data
+          if (typeof(collectionData[stop]) == "number") {
+            return
+          } else {
+            collectionData[stop] = null
+            return
+          }
         }
         // Store ETA in seconds into collection busStop (per stop)
         updates[stop] = secondsTillDest
