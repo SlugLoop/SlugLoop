@@ -96,12 +96,15 @@ const nextBusStops = require('./soonBusStop.js')
 
 router.get('/metroBuses', function (req, res) {
   const baseUrl = `${process.env.METRO_URL}/getvehicles`
-  const routes = [10, 15, 18, 19, 20]
+  const routes = ['3A', '3B', 18, 19, 20] // Updated routes 10, 15 replaced with 3A, 3B
   const apiKey = process.env.METRO_KEY
-
+  
   let busesArray = []
+  console.log(`${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`)
   axios
     .get(`${baseUrl}?key=${apiKey}&rt=${routes.join(',')}&format=json`)
+
+
     .then((response) => {
       const buses = response.data['bustime-response'].vehicle
       if (buses === undefined) {
@@ -148,7 +151,7 @@ router.get('/metroRoutes', async function (req, res) {
 
 router.get('/metroRouteDirections', async function (req, res) {
   const baseUrl = `${process.env.METRO_URL}/getdirections`
-  const routes = [10, 15, 18, 19, 20]
+  const routes = ['3A', '3B', 18, 19, 20]
   const apiKey = process.env.METRO_KEY
   const routePromises = routes.map((route) => {
     return axios
@@ -258,7 +261,7 @@ function convertDateString(input) {
 
 async function updateMetroBuses() {
   const baseUrl = `${process.env.METRO_URL}/getvehicles`
-  const routes = [10, 15, 18, 19, 20]
+  const routes = ['3A', '3B', 18, 19, 20] // Updated routes 10, 15 switched with 3A and 3B
   const apiKey = process.env.METRO_KEY
 
   const response = await axios.get(
