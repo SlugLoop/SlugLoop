@@ -243,6 +243,20 @@ const apiDoc = {
         },
       },
     },
+    '/busEta': {
+      // Get the bus etas (Run updateSoon first)
+      get: {
+        description: 'Get the bus etas',
+        responses: {
+          200: {
+            description: 'Get the bus etas',
+          },
+          500: {
+            description: 'Error getting bus etas',
+          },
+        },
+      },
+    },
     '/contact': {
       // For the contact us form
       post: {

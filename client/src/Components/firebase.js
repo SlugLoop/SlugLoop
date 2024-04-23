@@ -61,3 +61,16 @@ export async function getUpdatedMetroBuses() {
   })
   return buses
 }
+
+export async function getBusEtas() {
+  // Note: This function is a near replica of the function in index.js (GET "\busEta") just using different functions
+  // Initialization of returned params
+  let cw = {}
+  let ccw = {}
+  // Get Docs and assign them to the proper dicts
+  const snapshot = await getDocs(collection(database, 'busStop'))
+  snapshot.forEach(doc => {
+    doc.id === "CW" ? cw = doc.data() : ccw = doc.data()
+  })
+  return {cw, ccw}
+}

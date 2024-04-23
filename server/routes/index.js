@@ -86,6 +86,14 @@ router.get('/updateSoon', async function (req, res) {
   res.status(200).send('OK')
 })
 
+router.get("/busEta", async function (req, res) {
+  // Wait for the database query to complete
+  const cwQuerySnapshot = await defaultDatabase.collection('busStop').doc("CW").get();
+  const ccwQuerySnapshot = await defaultDatabase.collection('busStop').doc("CCW").get();
+  // Extract the data and send it as a response
+  res.status(200).json({cw: cwQuerySnapshot.data(), ccw: ccwQuerySnapshot.data()})
+})
+
 /* Ping the server from base stations. */
 router.post('/ping', function (req, res) {
   let data = JSON.parse(req.body.data)
