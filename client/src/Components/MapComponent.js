@@ -172,9 +172,6 @@ export default function MapComponent({center, zoom}) {
             {/* Bus Stops Markers */}
             {busStops.bstop["CW"].map((currStop) => {
               const stopName = Object.keys(currStop)[0]
-              console.log(stopsEta)
-              const eta = (stopName in stopsEta.cw) ? stopsEta.cw[stopName] : null
-              console.log(eta, stopName, stopsEta, stopName in stopsEta.cw)
               return (
                 <StopMarker
                   key={currStop[stopName].metro}
