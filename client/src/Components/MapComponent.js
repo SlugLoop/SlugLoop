@@ -174,7 +174,7 @@ export default function MapComponent({center, zoom}) {
               const stopName = Object.keys(currStop)[0]
               return (
                 <StopMarker
-                  key={currStop[stopName].metro}
+                  key={"CW" + stopName}
                   lat={parseFloat(currStop[stopName].lat)}
                   lng={parseFloat(currStop[stopName].lon)}
                   name={(stopName[0].toUpperCase() + stopName.slice(1))}
@@ -188,7 +188,7 @@ export default function MapComponent({center, zoom}) {
               const stopName = Object.keys(currStop)[0]
               return (
                 <StopMarker
-                  key={currStop[stopName].metro}
+                  key={"CCW" + stopName}
                   lat={parseFloat(currStop[stopName].lat)}
                   lng={parseFloat(currStop[stopName].lon)}
                   name={(stopName[0].toUpperCase() + stopName.slice(1))}
