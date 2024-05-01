@@ -20,7 +20,7 @@ import {
 import {RouteContext} from '../Route'
 import routeColors from './bus.json'
 
-const metroRoutes = ['10', '15', '18', '19', '20']
+const metroRoutes = ['3A', '3B', '18', '19', '20']
 const loopRoutes = [
   'LOOP',
   'UPPER CAMPUS',

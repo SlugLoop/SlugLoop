@@ -150,10 +150,10 @@ const Step5 = () => {
     >
       <Typography variant="h6">Metro Buses</Typography>
       <Typography>
-        Odd Buses such as the 15 and 19 run counter clockwise around campus.
+        Odd Buses such as the 3A, 3B and 19 run counter clockwise around campus.
       </Typography>
       <Typography>
-        Even Buses such as the 10, 18, and 20 run clockwise around campus.
+        Even Buses such as the 18 and 20 run clockwise around campus.
       </Typography>
     </MotionStack>
   )
