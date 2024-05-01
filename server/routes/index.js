@@ -3,20 +3,20 @@ const router = express.Router()
 const metro = require('./metro')
 const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
-var calcCWorCCW = require('./direction.js')
-var nextBusStops = require('./soonBusStop.js')
+var calcCWorCCW = require('../functions/direction.js')
+var {nextBusStops} = require('../functions/soonBusStop.js')
 
 // Helper functions
 const {
   headingBetweenPoints,
   getDistanceFromLatLonInMeters,
-} = require('./pingHelper')
+} = require('../functions/pingHelper')
 
 // Documentation
 const OpenApiValidator = require('express-openapi-validator')
 const swaggerUi = require('swagger-ui-express')
-const apiDoc = require('./api-doc')
-const defaultDatabase = require('./firebase.js')
+const apiDoc = require('../documentation/api-doc.js')
+const defaultDatabase = require('../initialization/firebase.js')
 
 // Middleware
 // Add cors
@@ -80,12 +80,18 @@ router.get('/buses', function (req, res) {
     })
 })
 
-router.post('/updateSoon', async function (req, res) {
-  // Update database for which bus stops have incoming busses
-  await nextBusStops()
-
+router.get('/updateSoon', async function (req, res) {
+  nextBusStops()
   // Send a response to the base station
   res.status(200).send('OK')
+})
+
+router.get("/busEta", async function (req, res) {
+  // Wait for the database query to complete
+  const cwQuerySnapshot = await defaultDatabase.collection('busStop').doc("CW").get();
+  const ccwQuerySnapshot = await defaultDatabase.collection('busStop').doc("CCW").get();
+  // Extract the data and send it as a response
+  res.status(200).json({cw: cwQuerySnapshot.data(), ccw: ccwQuerySnapshot.data()})
 })
 
 /* Ping the server from base stations. */

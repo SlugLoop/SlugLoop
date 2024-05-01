@@ -4,6 +4,7 @@ import {
   getUpdatedBuses,
   getAllMetroBuses,
   getUpdatedMetroBuses,
+  getBusEtas,
 } from './firebase'
 import GoogleMap from 'google-maps-react-markers'
 import {Box} from '@mui/material'
@@ -16,6 +17,8 @@ import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
 import AppContext from '../appContext'
 import {AnimatePresence} from 'framer-motion'
+import StopMarker from './StopMarkers'
+const busStops = require('../data/client-bus-stops.json')
 
 export default function MapComponent({center, zoom}) {
   const [displayTime, setDisplayTime] = useState(true)
@@ -32,6 +35,8 @@ export default function MapComponent({center, zoom}) {
   const [metroBuses, setMetroBuses] = useState([])
   const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute] = useContext(RouteContext)
+  const [stopsEta, setStopsEta] = useState({cw: {}, ccw: {}})
+
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
   }
@@ -77,6 +82,10 @@ export default function MapComponent({center, zoom}) {
       })
     }
 
+    const updateStopEtas = async () => {
+      setStopsEta(await getBusEtas())
+    }
+
     const setupIntervals = () => {
       // Update positions of markers every 5 seconds
       interval = setInterval(fetchUpdatedData, 5000)
@@ -92,6 +101,7 @@ export default function MapComponent({center, zoom}) {
       if (document.visibilityState === 'visible') {
         fetchUpdatedData()
         fetchUpdatedMetroData()
+        updateStopEtas()
         clearIntervals() // Clear existing intervals
         setupIntervals() // Set up new intervals
       } else {
@@ -102,7 +112,7 @@ export default function MapComponent({center, zoom}) {
     // Initial load of markers, including ones update more than 30 minutes ago
     fetchAllData()
     fetchAllMetroData()
-
+    updateStopEtas()
     setupIntervals()
 
     // Add event listeners to handle app focus and blur events
@@ -134,9 +144,9 @@ export default function MapComponent({center, zoom}) {
           {Object.keys(combinedBuses)
             .filter(
               // Filter out buses that haven't updated in the last 30 minutes
-              (key) =>
-                !filter ||
-                isBusUpdatedWithinPast30Minutes(combinedBuses[key].lastPing),
+              (key) => {
+                return !filter || isBusUpdatedWithinPast30Minutes(combinedBuses[key].lastPing)
+              }
             )
             .filter(
               // Filter out buses that don't match the selected routes
@@ -154,6 +164,35 @@ export default function MapComponent({center, zoom}) {
                   direction={bus.direction}
                   route={bus.route}
                   heading={bus.heading}
+                  displayTime={displayTime}
+                  darkMode={darkMode}
+                />
+              )
+            })}
+            {/* Bus Stops Markers */}
+            {busStops.bstop["CW"].map((currStop) => {
+              const stopName = Object.keys(currStop)[0]
+              return (
+                <StopMarker
+                  key={currStop[stopName].metro}
+                  lat={parseFloat(currStop[stopName].lat)}
+                  lng={parseFloat(currStop[stopName].lon)}
+                  name={(stopName[0].toUpperCase() + stopName.slice(1))}
+                  eta={stopName in stopsEta.cw ? stopsEta.cw[stopName] : null}
+                  displayTime={displayTime}
+                  darkMode={darkMode}
+                />
+              )
+            })}
+            {busStops.bstop["CCW"].map((currStop) => {
+              const stopName = Object.keys(currStop)[0]
+              return (
+                <StopMarker
+                  key={currStop[stopName].metro}
+                  lat={parseFloat(currStop[stopName].lat)}
+                  lng={parseFloat(currStop[stopName].lon)}
+                  name={(stopName[0].toUpperCase() + stopName.slice(1))}
+                  eta={stopName in stopsEta.ccw ? stopsEta.ccw[stopName] : null}
                   displayTime={displayTime}
                   darkMode={darkMode}
                 />
