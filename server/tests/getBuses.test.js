@@ -12,6 +12,12 @@ app.set('view engine', 'ejs') // Use EJS as the view engine (or any other view e
 app.use(router)
 
 test('Should get the buses from firebase', async () => {
+  // Checks empty response
+  const emptyResponse = await request(app).get('/buses').query({lastUpdated: 0})
+  expect(emptyResponse.statusCode).toBe(200)
+  expect(emptyResponse.text).toMatch("[]")
+
+  // Check normal reponse
   const response = await request(app).get('/buses')
 
   if (response.statusCode !== 200) {
@@ -24,6 +30,5 @@ test('Should get the buses from firebase', async () => {
   expect(response.statusCode).toBe(200)
   expect(response.headers['content-type']).toMatch("application/json")
 
-  const response2 = await request(app).get('/buses')
-
+  // const response2 = await request(app).get('/buses')
 })

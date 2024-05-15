@@ -6,7 +6,7 @@ const moment = require('moment-timezone')
 const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
 const defaultDatabase = require('../initialization/firebase.js')
-const nextBusStops = require('../functions/soonBusStop.js')
+const {nextBusStops} = require('../functions/soonBusStop.js')
 
 // const lockName = 'myLock'
 // let myLock = false

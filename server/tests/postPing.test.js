@@ -2,6 +2,7 @@ const request = require('supertest')
 const express = require('express')
 const path = require('path')
 const router = require('../routes')
+const qs = require('querystring');
 
 const app = express()
 
@@ -12,7 +13,30 @@ app.set('view engine', 'ejs') // Use EJS as the view engine (or any other view e
 app.use(router)
 
 test('Should Get the latest ping location of Buses', async () => {
-  const response = await request(app).post('/ping')
+
+
+  const requestData = {
+    data: {
+      sid: 'EARTH',
+      id: '75',
+      lon: -122.06211,
+      lat: 37.000135,
+      route: 'UPPER CAMPUS',
+      key: 'test'
+    }
+  };
+
+  const a = {data: '[{"sid":"1","id":"1","lon":1,"lat":1,"route":"1","key":"testKey"}]'}
+
+  const response = await request(app)
+    .post('/ping')
+    .set('accept', '*/*')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .send(qs.stringify(a));
+  
+  // const response = await request(app).post('/ping').set('accept', '*/*')
+  //     .set('Content-Type', 'application/x-www-form-urlencoded')
+  //     .send({data: testData});
 
   // These are errors but handled correctly - Will still show up as failed tests as they aren't expected values
   if (response.statusCode === 400) {
