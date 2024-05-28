@@ -16,7 +16,7 @@ const {
 const OpenApiValidator = require('express-openapi-validator')
 const swaggerUi = require('swagger-ui-express')
 const apiDoc = require('../documentation/api-doc.js')
-const defaultDatabase = require('../initialization/firebase.js')
+let defaultDatabase = require('../initialization/firebase.js')
 
 // Middleware
 // Add cors
