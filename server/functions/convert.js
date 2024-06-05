@@ -8,7 +8,7 @@ Timestamp to ensure data consistency and compatibility with Firestore's native d
 const admin = require('firebase-admin')
 require('dotenv').config()
 
-  // Initialize Firebase using configuration
+// Initialize Firebase using configuration
 const defaultDatabase = require('../initialization/firebase.js')
 
 function convert() {

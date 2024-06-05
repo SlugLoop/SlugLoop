@@ -212,6 +212,9 @@ const apiDoc = {
           401: {
             description: 'Unauthorized',
           },
+          500: {
+            description: 'Error updating documents',
+          },
         },
       },
     },

@@ -6,7 +6,7 @@ bus is moving clockwise (CW) or counterclockwise (CCW) along its route.
 
 
 // Calculate direction of bus
-module.exports = function calcCWorCCW({lat1, lon1}, previousLocationArray) {
+function calcCWorCCW({lat1, lon1}, previousLocationArray) {
   // Lower Half
   if (36.977583 < lat1 && lat1 < 36.992444) {
     // Lower West Half
@@ -96,4 +96,8 @@ function longitudeDecreasing(previousLocationArray) {
     return false
   }
   return true
+}
+
+module.exports = {
+  calcCWorCCW
 }

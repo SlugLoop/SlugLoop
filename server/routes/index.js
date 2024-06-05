@@ -3,8 +3,8 @@ const router = express.Router()
 const metro = require('./metro')
 const {Timestamp} = require('@google-cloud/firestore')
 require('dotenv').config()
-var calcCWorCCW = require('../functions/direction.js')
-var {nextBusStops} = require('../functions/soonBusStop.js')
+let { calcCWorCCW } = require('../functions/direction.js')
+let { nextBusStops } = require('../functions/soonBusStop.js')
 
 // Helper functions
 const {
@@ -31,6 +31,7 @@ router.use(
 
 // Add body parser
 router.use(express.json())
+router.use(express.urlencoded({ extended: true })); // To handle URL-encoded bodies instead of just json (Specifically for ping)
 
 // Add documentation
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apiDoc))
@@ -81,17 +82,27 @@ router.get('/buses', function (req, res) {
 })
 
 router.get('/updateSoon', async function (req, res) {
-  nextBusStops()
-  // Send a response to the base station
-  res.status(200).send('OK')
+  try {
+    nextBusStops()
+    // Send a response to the base station
+    res.status(200).send('OK')
+  } catch (err) {
+    console.log('Error in Update Soon', err)
+    res.status(500).send('Error updating next stop etas')
+  }
 })
 
 router.get("/busEta", async function (req, res) {
-  // Wait for the database query to complete
-  const cwQuerySnapshot = await defaultDatabase.collection('busStop').doc("CW").get();
-  const ccwQuerySnapshot = await defaultDatabase.collection('busStop').doc("CCW").get();
-  // Extract the data and send it as a response
-  res.status(200).json({cw: cwQuerySnapshot.data(), ccw: ccwQuerySnapshot.data()})
+  try {
+    // Wait for the database query to complete
+    const cwQuerySnapshot = await defaultDatabase.collection('busStop').doc("CW").get()
+    const ccwQuerySnapshot = await defaultDatabase.collection('busStop').doc("CCW").get()
+    // Extract the data and send it as a response
+    res.status(200).json({cw: cwQuerySnapshot.data(), ccw: ccwQuerySnapshot.data()})
+  } catch (err) {
+    console.log('Error in Update Soon', err)
+    res.status(500).send('Error getting etas')
+  }
 })
 
 /* Ping the server from base stations. */
@@ -153,6 +164,7 @@ router.post('/ping', function (req, res) {
         data.lat,
         data.lon,
       )
+      console.log("Dist", distance)
       if (distance > 30.48) {
         // Check if the distance is greater than 100ft (~30.48m)
         // Append the current location to the previousLocationArray
@@ -201,6 +213,7 @@ router.post('/ping', function (req, res) {
     res.status(200).send('OK')
   } catch (err) {
     console.log(err)
+    res.status(500).send('Error updating documents')
   }
 })
 

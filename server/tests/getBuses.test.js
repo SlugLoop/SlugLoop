@@ -69,10 +69,6 @@ app.use(router)
 
 // Tests
 describe("GET /buses", () => {
-  beforeEach(() => {
-    
-  })
-
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -129,7 +125,42 @@ describe("GET /buses", () => {
   it("Normal Response if lastUpdated is defined", async () => {
     // Note, Only mockBus1 should be the return data as mockBus2 gets filtered out
     const get = defaultDatabase.collection("busses").get
-    const response = await request(app).get("/buses").query({lastUpdated: 2370000})
+    const admin = require('firebase-admin')
+    const testDate = new Date().toISOString()
+    get.mockImplementation(() => Promise.resolve([{data: jest.fn(() => ({
+      "previousLongitude": 0,
+      "route": "string1",
+      "previousLocationArray": [
+        { "lon": 1, "lat": 1 },
+        { "lon": 2, "lat": 2 },
+      ],
+      "lastLongitude": 1,
+      "previousLatitude": 1,
+      "heading": "string1",
+      "id": "string3",
+      "fleetId": 1,
+      "lastLatitude": 2,
+      "lastPing": testDate,
+      "direction": "cw",
+      "sid": "string4"
+    }))}, {data: jest.fn(() => ({
+      "previousLongitude": 2,
+      "route": "string1",
+      "previousLocationArray": [
+        { "lon": 1, "lat": 1 },
+        { "lon": 2, "lat": 2 },
+      ],
+      "lastLongitude": 1,
+      "previousLatitude": 1,
+      "heading": "string1",
+      "id": "string5",
+      "fleetId": 1,
+      "lastLatitude": 2,
+      "lastPing": new admin.firestore.Timestamp(1697687739, 440000000),
+      "direction": "cw",
+      "sid": "string4"
+    }))}]))
+    const response = await request(app).get("/buses").query({lastUpdated: Date.now()})
     expect(response.statusCode).toBe(200)
     expect(response.body).toEqual([{
       "previousLongitude": 0,
@@ -144,10 +175,20 @@ describe("GET /buses", () => {
       "id": "string3",
       "fleetId": 1,
       "lastLatitude": 2,
-      "lastPing": "2024-04-30T20:08:52.299Z",
+      "lastPing": testDate,
       "direction": "cw",
       "sid": "string4"
     }])
+    // One Get Request Sent
+    expect(get).toHaveBeenCalledTimes(1)
+  })
+
+  it("Error Response if failed at get", async () => {
+    const get = defaultDatabase.collection("busses").get
+    defaultDatabase.collection("busses").get.mockRejectedValueOnce(new Error("Error Catching"))
+    const response = await request(app).get("/buses")
+    expect(response.statusCode).toBe(500)
+    expect(response.text).toEqual("Error getting documents")
     // One Get Request Sent
     expect(get).toHaveBeenCalledTimes(1)
   })
