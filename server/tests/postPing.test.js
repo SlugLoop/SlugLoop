@@ -112,7 +112,7 @@ describe("POST /ping", () => {
     expect(response.text).toBe("Invalid data")
   })
 
-  it("Error Response - Unauthorizeed", async () => {
+  it("Error Response - Unauthorized", async () => {
     // Invalid Key
     const response = await request(app).post("/ping").set("Content-Type", "application/x-www-form-urlencoded")
     .send({data: '[{"sid":"1","id":"1","lon":1,"lat":1,"route":"1", "key":"testKey"}]'})

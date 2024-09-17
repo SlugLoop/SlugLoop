@@ -127,6 +127,7 @@ router.post('/ping', function (req, res) {
   // Get the database reference to the bus with the given ID
   let busRef = bussesRef.doc(data.id)
 
+  // Note: This code should never be called because we run the data through dataValidate()
   if (data.sid === undefined) {
     data.sid = 'No SID'
   }
@@ -164,7 +165,6 @@ router.post('/ping', function (req, res) {
         data.lat,
         data.lon,
       )
-      console.log("Dist", distance)
       if (distance > 30.48) {
         // Check if the distance is greater than 100ft (~30.48m)
         // Append the current location to the previousLocationArray
