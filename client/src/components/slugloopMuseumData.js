@@ -380,7 +380,7 @@ export const teamMembers = [
     role: 'Product, full-stack development, and project leadership',
     fieldNote:
       'kept the whole stack stitched together. the one who decided the project would actually ship.',
-    img: '/about/bill.jpg',
+    img: '/about/bill.png',
     linkedin: 'https://www.linkedin.com/in/bill-zhang1/',
   },
   {
@@ -404,7 +404,7 @@ export const teamMembers = [
     role: 'Backend, hardware, and embedded systems',
     fieldNote:
       'reprogrammed gps units already on the buses. wrangled basestations with libcurl and patience.',
-    img: '/about/nick.jfif',
+    img: '/about/nick.png',
     linkedin: 'https://www.linkedin.com/in/nicholas-szwed/',
   },
 ]

@@ -171,7 +171,7 @@ export const teamMembers = [
   {
     name: 'Bill Zhang',
     role: 'Product, full-stack development, and project leadership',
-    img: '/about/bill.jpg',
+    img: '/about/bill.png',
     linkedin: 'https://www.linkedin.com/in/bill-zhang1/',
   },
   {
@@ -189,7 +189,7 @@ export const teamMembers = [
   {
     name: 'Nicholas Szwed',
     role: 'Backend, hardware, and embedded systems',
-    img: '/about/nick.jfif',
+    img: '/about/nick.png',
     linkedin: 'https://www.linkedin.com/in/nicholas-szwed/',
   },
 ]
