@@ -1,10 +1,5 @@
-const CACHE_NAME = 'slugloop-next-v2'
+const CACHE_NAME = 'slugloop-next-v3'
 const APP_SHELL = [
-  '/',
-  '/map',
-  '/timeline',
-  '/about',
-  '/contact',
   '/manifest.webmanifest',
   '/icons/favicon.ico',
   '/icons/android-chrome-192x192.png',
@@ -12,7 +7,18 @@ const APP_SHELL = [
 ]
 
 const STATIC_ASSET_PATTERN =
-  /\.(?:css|js|mjs|png|jpg|jpeg|svg|webp|ico|woff2?)$/i
+  /\.(?:png|jpg|jpeg|svg|webp|ico|woff2?)$/i
+
+function fetchFresh(request) {
+  return fetch(new Request(request, {cache: 'reload'}))
+}
+
+function offlineResponse() {
+  return new Response('SlugLoop is offline. Reconnect and refresh to load the app.', {
+    status: 503,
+    headers: {'Content-Type': 'text/plain; charset=utf-8'},
+  })
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -27,6 +33,12 @@ self.addEventListener('install', (event) => {
       )
       .then(() => self.skipWaiting()),
   )
+})
+
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
 })
 
 self.addEventListener('activate', (event) => {
@@ -50,25 +62,12 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone()
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache)
-            })
-          }
+  if (requestUrl.pathname === '/sw.js' || requestUrl.pathname.startsWith('/_next/')) {
+    return
+  }
 
-          return networkResponse
-        })
-        .catch(() =>
-          caches
-            .match(event.request)
-            .then((cachedResponse) => cachedResponse || caches.match('/')),
-        ),
-    )
+  if (event.request.mode === 'navigate') {
+    event.respondWith(fetchFresh(event.request).catch(() => offlineResponse()))
     return
   }
 
@@ -80,12 +79,8 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse
-      }
-
-      return fetch(event.request).then((networkResponse) => {
+    fetchFresh(event.request)
+      .then((networkResponse) => {
         if (!networkResponse || networkResponse.status !== 200) {
           return networkResponse
         }
@@ -97,6 +92,8 @@ self.addEventListener('fetch', (event) => {
 
         return networkResponse
       })
-    }),
+      .catch(() =>
+        caches.match(event.request).then((cachedResponse) => cachedResponse || offlineResponse()),
+      ),
   )
 })
