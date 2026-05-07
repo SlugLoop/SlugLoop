@@ -12,82 +12,107 @@
 
 :root {
   color-scheme: light;
-  --color-primary: #087a70;
-  --color-primary-light: #2aa896;
-  --color-primary-dark: #045249;
-  --color-primary-contrast: #fff8e8;
-  --color-secondary: #a56f00;
-  --color-secondary-light: #d29416;
-  --color-secondary-dark: #714a00;
-  --color-secondary-contrast: #fff8e8;
+  --color-primary: #009f8f;
+  --color-primary-light: #02cdb4;
+  --color-primary-dark: #02645d;
+  --color-primary-contrast: #fafff8;
+  --color-secondary: #ffb81c;
+  --color-secondary-light: #ffd35f;
+  --color-secondary-dark: #a86d00;
+  --color-secondary-contrast: #121008;
   --color-warning: #ff8a5b;
-  --color-error: #ff5f6d;
-  --color-bg: #f7f0df;
-  --color-paper: #fff8e8;
-  --color-text-primary: #10202d;
-  --color-text-secondary: #526272;
+  --color-error: #ff4f74;
+  --color-bg: #eef5ef;
+  --color-paper: #fbfff7;
+  --color-text-primary: #08171d;
+  --color-text-secondary: #53656a;
 
-  --museum-page-background: radial-gradient(circle at top left, rgba(165,111,0,0.13), transparent 28%), radial-gradient(circle at 86% 10%, rgba(8,122,112,0.11), transparent 30%), linear-gradient(180deg, #fff8e8 0%, #f7f0df 48%, #e8dcc3 100%);
-  --museum-page-background-alt: radial-gradient(circle at 14% 14%, rgba(165,111,0,0.13), transparent 28%), linear-gradient(180deg, #fff8e8 0%, #f2e6cf 100%);
-  --museum-page-background-teal: radial-gradient(circle at 80% 12%, rgba(8,122,112,0.13), transparent 30%), linear-gradient(180deg, #fff8e8 0%, #f2e6cf 100%);
-  --museum-grid-line: rgba(16,32,45,0.08);
-  --museum-card-background: linear-gradient(145deg, rgba(255,255,255,0.82), rgba(255,248,232,0.56));
-  --museum-card-border: rgba(165,111,0,0.22);
-  --museum-teal-border: rgba(8,122,112,0.24);
-  --museum-card-shadow: 0 24px 70px rgba(76, 58, 24, 0.13);
-  --museum-card-sheen: linear-gradient(90deg, transparent, rgba(165,111,0,0.11), transparent);
-  --museum-route-diagram-background: radial-gradient(circle at 20% 20%, rgba(8,122,112,0.18), transparent 28%), radial-gradient(circle at 78% 30%, rgba(165,111,0,0.18), transparent 25%), linear-gradient(135deg, rgba(255,250,238,0.95), rgba(232,220,195,0.95));
-  --museum-route-diagram-border: rgba(16,32,45,0.12);
-  --museum-route-line: rgba(165,111,0,0.7);
-  --museum-timeline-line: rgba(165,111,0,0.42);
-  --museum-soft-divider: rgba(16,32,45,0.13);
-  --museum-dot-glow: 0 0 0 8px rgba(165,111,0,0.11);
-  --museum-map-panel-background: linear-gradient(145deg, rgba(255,248,232,0.94), rgba(247,240,223,0.88));
-  --museum-map-panel-text: #10202d;
-  --museum-map-panel-subtle: rgba(16,32,45,0.66);
-  --museum-map-alert-background: rgba(255,248,232,0.96);
-  --museum-map-alert-border: rgba(165,111,0,0.32);
-  --museum-app-bar-background: linear-gradient(90deg, rgba(255,248,232,0.93), rgba(247,240,223,0.88));
-  --museum-drawer-background: linear-gradient(180deg, #fff8e8, #f2e6cf);
+  --museum-page-background:
+    radial-gradient(circle at 8% 0%, rgba(255,184,28,0.18), transparent 28%),
+    radial-gradient(circle at 92% 12%, rgba(0,159,143,0.18), transparent 30%),
+    linear-gradient(135deg, #fbfff7 0%, #edf6ef 44%, #dbe9e4 100%);
+  --museum-page-background-alt:
+    radial-gradient(circle at 10% 10%, rgba(0,159,143,0.16), transparent 30%),
+    radial-gradient(circle at 86% 8%, rgba(255,184,28,0.14), transparent 28%),
+    linear-gradient(180deg, #fbfff7 0%, #e7f2eb 100%);
+  --museum-page-background-teal:
+    radial-gradient(circle at 84% 10%, rgba(0,159,143,0.2), transparent 30%),
+    radial-gradient(circle at 14% 18%, rgba(255,184,28,0.12), transparent 26%),
+    linear-gradient(180deg, #fafff8 0%, #e4f1ec 100%);
+  --museum-grid-line: rgba(8,23,29,0.08);
+  --museum-card-background: linear-gradient(145deg, rgba(255,255,255,0.78), rgba(234,248,241,0.48));
+  --museum-card-border: rgba(8,23,29,0.12);
+  --museum-teal-border: rgba(0,159,143,0.28);
+  --museum-card-shadow: 0 28px 90px rgba(28, 55, 55, 0.14);
+  --museum-card-sheen: linear-gradient(112deg, transparent, rgba(255,184,28,0.14), rgba(0,159,143,0.1), transparent);
+  --museum-route-diagram-background:
+    radial-gradient(circle at 22% 18%, rgba(0,159,143,0.18), transparent 28%),
+    radial-gradient(circle at 78% 26%, rgba(255,184,28,0.18), transparent 24%),
+    linear-gradient(135deg, rgba(247,255,248,0.96), rgba(220,238,233,0.94));
+  --museum-route-diagram-border: rgba(8,23,29,0.12);
+  --museum-route-line: rgba(255,184,28,0.78);
+  --museum-timeline-line: rgba(0,159,143,0.48);
+  --museum-soft-divider: rgba(8,23,29,0.12);
+  --museum-dot-glow: 0 0 0 8px rgba(255,184,28,0.12), 0 0 28px rgba(0,159,143,0.2);
+  --museum-map-panel-background: linear-gradient(145deg, rgba(250,255,248,0.94), rgba(226,243,237,0.88));
+  --museum-map-panel-text: #08171d;
+  --museum-map-panel-subtle: rgba(8,23,29,0.66);
+  --museum-map-alert-background: rgba(250,255,248,0.96);
+  --museum-map-alert-border: rgba(255,184,28,0.36);
+  --museum-app-bar-background: linear-gradient(90deg, rgba(250,255,248,0.84), rgba(231,244,237,0.74));
+  --museum-drawer-background: linear-gradient(180deg, #fbfff7, #e2f0e8);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --color-primary: #45d3b4;
-  --color-primary-light: #9af6df;
-  --color-primary-dark: #1b806e;
+  --color-primary: #39ffe0;
+  --color-primary-light: #86ffee;
+  --color-primary-dark: #0d907e;
   --color-primary-contrast: #06111d;
-  --color-secondary: #f4cb54;
-  --color-secondary-light: #ffe595;
-  --color-secondary-dark: #a97f10;
-  --color-secondary-contrast: #221702;
-  --color-bg: #06111d;
-  --color-paper: #111f2d;
-  --color-text-primary: #f7f0df;
-  --color-text-secondary: #b9c8c2;
+  --color-secondary: #ffd45a;
+  --color-secondary-light: #ffe694;
+  --color-secondary-dark: #af7811;
+  --color-secondary-contrast: #151104;
+  --color-bg: #050b12;
+  --color-paper: #0e1922;
+  --color-text-primary: #f3fff8;
+  --color-text-secondary: #adc5c2;
 
-  --museum-page-background: radial-gradient(circle at top left, rgba(244,203,84,0.12), transparent 30%), radial-gradient(circle at 85% 12%, rgba(69,211,180,0.12), transparent 28%), linear-gradient(180deg, #06111d 0%, #091522 42%, #100f0c 100%);
-  --museum-page-background-alt: radial-gradient(circle at 16% 12%, rgba(244,203,84,0.14), transparent 28%), linear-gradient(180deg, #06111d 0%, #0b1724 100%);
-  --museum-page-background-teal: radial-gradient(circle at 80% 12%, rgba(69,211,180,0.14), transparent 30%), linear-gradient(180deg, #06111d 0%, #0b1724 100%);
-  --museum-grid-line: rgba(255,255,255,0.08);
-  --museum-card-background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
-  --museum-card-border: rgba(244,203,84,0.22);
-  --museum-teal-border: rgba(69,211,180,0.22);
-  --museum-card-shadow: 0 30px 80px rgba(0, 0, 0, 0.24);
-  --museum-card-sheen: linear-gradient(90deg, transparent, rgba(244,203,84,0.1), transparent);
-  --museum-route-diagram-background: radial-gradient(circle at 20% 20%, rgba(69, 211, 180, 0.2), transparent 28%), radial-gradient(circle at 78% 30%, rgba(244, 203, 84, 0.2), transparent 25%), linear-gradient(135deg, rgba(9, 28, 45, 0.95), rgba(2, 9, 16, 0.95));
-  --museum-route-diagram-border: rgba(255,255,255,0.1);
-  --museum-route-line: rgba(244,203,84,0.65);
-  --museum-timeline-line: rgba(244,203,84,0.45);
+  --museum-page-background:
+    radial-gradient(circle at 13% 2%, rgba(57,255,224,0.18), transparent 28%),
+    radial-gradient(circle at 92% 8%, rgba(255,212,90,0.16), transparent 28%),
+    radial-gradient(circle at 48% 56%, rgba(28,80,98,0.22), transparent 34%),
+    linear-gradient(180deg, #050b12 0%, #07131d 44%, #0b0f12 100%);
+  --museum-page-background-alt:
+    radial-gradient(circle at 14% 12%, rgba(255,212,90,0.14), transparent 28%),
+    radial-gradient(circle at 88% 4%, rgba(57,255,224,0.14), transparent 30%),
+    linear-gradient(180deg, #050b12 0%, #091620 100%);
+  --museum-page-background-teal:
+    radial-gradient(circle at 80% 12%, rgba(57,255,224,0.18), transparent 30%),
+    radial-gradient(circle at 18% 20%, rgba(255,212,90,0.1), transparent 26%),
+    linear-gradient(180deg, #050b12 0%, #0a1721 100%);
+  --museum-grid-line: rgba(180,255,244,0.08);
+  --museum-card-background: linear-gradient(145deg, rgba(255,255,255,0.105), rgba(255,255,255,0.028));
+  --museum-card-border: rgba(134,255,238,0.18);
+  --museum-teal-border: rgba(57,255,224,0.25);
+  --museum-card-shadow: 0 30px 95px rgba(0, 0, 0, 0.32);
+  --museum-card-sheen: linear-gradient(112deg, transparent, rgba(57,255,224,0.13), rgba(255,212,90,0.1), transparent);
+  --museum-route-diagram-background:
+    radial-gradient(circle at 20% 20%, rgba(57,255,224,0.2), transparent 28%),
+    radial-gradient(circle at 78% 30%, rgba(255,212,90,0.2), transparent 25%),
+    linear-gradient(135deg, rgba(9, 28, 45, 0.95), rgba(2, 9, 16, 0.96));
+  --museum-route-diagram-border: rgba(180,255,244,0.12);
+  --museum-route-line: rgba(255,212,90,0.74);
+  --museum-timeline-line: rgba(57,255,224,0.46);
   --museum-soft-divider: rgba(255,255,255,0.12);
-  --museum-dot-glow: 0 0 0 8px rgba(244,203,84,0.12);
+  --museum-dot-glow: 0 0 0 8px rgba(57,255,224,0.1), 0 0 34px rgba(57,255,224,0.24);
   --museum-map-panel-background: linear-gradient(145deg, rgba(6,17,29,0.92), rgba(12,31,45,0.86));
-  --museum-map-panel-text: #f7f0df;
-  --museum-map-panel-subtle: rgba(247,240,223,0.72);
+  --museum-map-panel-text: #f3fff8;
+  --museum-map-panel-subtle: rgba(243,255,248,0.72);
   --museum-map-alert-background: rgba(255,248,232,0.94);
-  --museum-map-alert-border: rgba(244,203,84,0.42);
-  --museum-app-bar-background: linear-gradient(90deg, rgba(6,17,29,0.92), rgba(13,31,45,0.88));
-  --museum-drawer-background: linear-gradient(180deg, #0b1724, #06111d);
+  --museum-map-alert-border: rgba(255,212,90,0.42);
+  --museum-app-bar-background: linear-gradient(90deg, rgba(5,11,18,0.78), rgba(10,25,35,0.68));
+  --museum-drawer-background: linear-gradient(180deg, #081521, #050b12);
 }
 
 html {
@@ -109,6 +134,7 @@ body {
   font-family: var(--font-ibm-plex-sans), "IBM Plex Sans", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
 }
 
 code {
@@ -124,29 +150,29 @@ a {
 }
 
 .type-display-1 {
-  max-width: 940px;
+  max-width: 980px;
   text-wrap: balance;
   font-family: var(--font-display);
-  font-size: clamp(3.5rem, 11vw, 9.5rem);
+  font-size: clamp(3.1rem, 8.6vw, 8rem);
   font-weight: 800;
-  letter-spacing: -0.06em;
-  line-height: 0.92;
+  letter-spacing: -0.072em;
+  line-height: 0.9;
 }
 
 .type-display-2 {
   text-wrap: balance;
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 5.8rem);
+  font-size: clamp(2.45rem, 5.4vw, 5.35rem);
   font-weight: 800;
-  letter-spacing: -0.045em;
-  line-height: 0.98;
+  letter-spacing: -0.058em;
+  line-height: 0.95;
 }
 
 .type-heading-3 {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.85rem, 3.4vw, 2.85rem);
   font-weight: 760;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.048em;
   line-height: 1;
 }
 
@@ -168,7 +194,7 @@ a {
   color: var(--color-secondary);
   font-size: 0.75rem;
   font-weight: 800;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.26em;
   line-height: 1.4;
   text-transform: uppercase;
 }
@@ -186,28 +212,34 @@ a {
   min-height: 100vh;
   color: var(--color-text-primary);
   background: var(--museum-page-background);
+  isolation: isolate;
 }
 
 .museum-page-alt {
   min-height: 100vh;
   color: var(--color-text-primary);
   background: var(--museum-page-background-alt);
+  isolation: isolate;
 }
 
 .museum-page-teal {
   min-height: 100vh;
   color: var(--color-text-primary);
   background: var(--museum-page-background-teal);
+  isolation: isolate;
 }
 
 .museum-grid-overlay {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.3;
-  background-image: linear-gradient(var(--museum-grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--museum-grid-line) 1px, transparent 1px);
-  background-size: 54px 54px;
-  mask-image: linear-gradient(to bottom, black, transparent 88%);
+  opacity: 0.42;
+  background-image:
+    linear-gradient(var(--museum-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--museum-grid-line) 1px, transparent 1px),
+    linear-gradient(120deg, transparent 0 46%, color-mix(in srgb, var(--color-primary), transparent 84%) 46% 46.5%, transparent 46.5% 100%);
+  background-size: 56px 56px, 56px 56px, 340px 340px;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
 }
 
 [data-theme="dark"] .museum-grid-overlay {
@@ -218,12 +250,12 @@ a {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.16;
+  opacity: 0.13;
   mix-blend-mode: multiply;
   background-image:
     radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-secondary), transparent 72%) 0 1px, transparent 1px),
     radial-gradient(circle at 70% 60%, color-mix(in srgb, var(--color-primary), transparent 78%) 0 1px, transparent 1px);
-  background-size: 19px 23px, 31px 37px;
+  background-size: 17px 19px, 29px 31px;
 }
 
 [data-theme="dark"] .archive-grain {
@@ -234,28 +266,30 @@ a {
 .route-halo {
   position: absolute;
   pointer-events: none;
-  border: 1px solid var(--museum-soft-divider);
+  border: 1px solid color-mix(in srgb, var(--color-primary), transparent 78%);
   border-radius: 999px;
   background:
-    radial-gradient(circle, color-mix(in srgb, var(--color-secondary), transparent 84%), transparent 62%),
+    conic-gradient(from 120deg, transparent 0 24%, color-mix(in srgb, var(--color-primary), transparent 72%) 25% 29%, transparent 30% 68%, color-mix(in srgb, var(--color-secondary), transparent 74%) 69% 72%, transparent 73% 100%),
+    radial-gradient(circle, color-mix(in srgb, var(--color-secondary), transparent 86%), transparent 62%),
     radial-gradient(circle at 72% 30%, color-mix(in srgb, var(--color-primary), transparent 82%), transparent 52%);
-  filter: blur(0.2px);
+  filter: blur(0.1px);
 }
 
 .case-plate {
   border: 1px solid var(--museum-soft-divider);
-  background: color-mix(in srgb, var(--color-paper), transparent 42%);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, white, transparent 72%);
-  backdrop-filter: blur(16px);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--color-paper), transparent 40%), color-mix(in srgb, var(--color-bg), transparent 70%));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white, transparent 82%);
+  backdrop-filter: blur(18px) saturate(1.25);
 }
 
 .museum-card,
 .museum-static-card {
   border: 1px solid var(--museum-card-border);
-  border-radius: 1rem;
+  border-radius: 1.35rem;
   background: var(--museum-card-background);
   box-shadow: var(--museum-card-shadow);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(22px) saturate(1.2);
 }
 
 .museum-card {
@@ -276,6 +310,11 @@ a {
   transform: translateX(100%);
 }
 
+.museum-card:hover {
+  border-color: color-mix(in srgb, var(--color-primary), transparent 56%);
+  transform: translateY(-2px);
+}
+
 .museum-card-content {
   position: relative;
   z-index: 1;
@@ -284,8 +323,38 @@ a {
 .museum-dot {
   flex-shrink: 0;
   border-radius: 999px;
-  background: var(--color-secondary);
+  background: radial-gradient(circle, var(--color-secondary-light), var(--color-secondary) 58%, var(--color-primary) 100%);
   box-shadow: var(--museum-dot-glow);
+}
+
+.route-loop,
+.route-loop-secondary {
+  border: 2px solid var(--museum-route-line);
+  box-shadow:
+    0 0 30px color-mix(in srgb, var(--color-secondary), transparent 72%),
+    inset 0 0 30px color-mix(in srgb, var(--color-primary), transparent 82%);
+  transform: rotate(-12deg);
+}
+
+.route-loop-secondary {
+  border-color: color-mix(in srgb, var(--color-primary), transparent 42%);
+  border-style: dashed;
+  transform: rotate(17deg);
+}
+
+.scanline {
+  animation: scanline-drift 5.6s ease-in-out infinite;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-primary), transparent 78%), transparent);
+  opacity: 0.86;
+}
+
+@keyframes scanline-drift {
+  0%, 100% {
+    transform: translateY(-70%);
+  }
+  50% {
+    transform: translateY(280%);
+  }
 }
 
 .museum-map-panel {
@@ -304,9 +373,9 @@ a {
 .museum-appbar {
   color: var(--color-text-primary);
   background-image: var(--museum-app-bar-background);
-  border-bottom: 1px solid var(--museum-card-border);
-  box-shadow: none;
-  backdrop-filter: blur(20px);
+  border: 1px solid var(--museum-card-border);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(24px) saturate(1.4);
 }
 
 .museum-drawer {

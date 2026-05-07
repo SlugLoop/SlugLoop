@@ -2,10 +2,10 @@ import React from 'react'
 import {cx} from './cx'
 
 const variantClasses = {
-  solid: 'border-transparent bg-[var(--color-secondary)] text-[var(--color-secondary-contrast)] shadow-[0_14px_34px_rgba(165,111,0,0.22)] hover:-translate-y-0.5 hover:bg-[var(--color-secondary-light)]',
-  outline: 'border-[var(--museum-card-border)] bg-transparent text-[var(--color-text-primary)] hover:-translate-y-0.5 hover:bg-[color-mix(in_srgb,var(--color-secondary),transparent_88%)]',
-  ghost: 'border-transparent bg-transparent text-[var(--color-text-primary)] hover:bg-[color-mix(in_srgb,var(--color-secondary),transparent_88%)]',
-  map: 'border-[var(--museum-card-border)] bg-[var(--museum-map-panel-background)] text-[var(--museum-map-panel-text)] hover:bg-[color-mix(in_srgb,var(--color-secondary),transparent_86%)]',
+  solid: 'border-transparent bg-[linear-gradient(135deg,var(--color-secondary),var(--color-secondary-light))] text-[var(--color-secondary-contrast)] shadow-[0_16px_42px_color-mix(in_srgb,var(--color-secondary),transparent_72%)] hover:-translate-y-0.5 hover:shadow-[0_22px_54px_color-mix(in_srgb,var(--color-secondary),transparent_66%)]',
+  outline: 'border-[var(--museum-card-border)] bg-[color-mix(in_srgb,var(--color-paper),transparent_70%)] text-[var(--color-text-primary)] backdrop-blur hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--color-primary),transparent_48%)] hover:bg-[color-mix(in_srgb,var(--color-primary),transparent_88%)]',
+  ghost: 'border-transparent bg-transparent text-[var(--color-text-primary)] hover:bg-[color-mix(in_srgb,var(--color-primary),transparent_88%)]',
+  map: 'border-[var(--museum-card-border)] bg-[var(--museum-map-panel-background)] text-[var(--museum-map-panel-text)] hover:bg-[color-mix(in_srgb,var(--color-primary),transparent_86%)]',
 }
 
 const sizeClasses = {
@@ -27,7 +27,7 @@ export default function Button({
   ...props
 }) {
   const classes = cx(
-    'museum-focus inline-flex items-center justify-center gap-2 rounded-full border font-bold tracking-[0.01em] no-underline transition duration-200',
+    'museum-focus inline-flex items-center justify-center gap-2 rounded-full border font-bold tracking-[0.01em] no-underline transition duration-300',
     'disabled:pointer-events-none disabled:opacity-50',
     variantClasses[variant] ?? variantClasses.ghost,
     sizeClasses[size] ?? sizeClasses.md,

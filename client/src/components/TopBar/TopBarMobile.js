@@ -29,14 +29,14 @@ export default function MobileTopBar() {
 
   return (
     <>
-      <header className="museum-appbar sticky top-0 z-50">
-        <nav className="flex min-h-[68px] items-center px-4">
+      <header className="sticky top-0 z-50 px-3 pt-3">
+        <nav className="museum-appbar flex min-h-[62px] items-center rounded-full px-4">
           <div className="flex flex-1 items-center gap-2.5">
             <span className="museum-dot h-2.5 w-2.5" aria-hidden="true" />
             <button
               type="button"
               onClick={() => router.push('/')}
-              className="museum-focus font-display text-2xl font-extrabold tracking-[-0.03em]"
+              className="museum-focus font-display text-2xl font-extrabold tracking-[-0.05em]"
             >
               SlugLoop
             </button>
@@ -69,7 +69,9 @@ export default function MobileTopBar() {
             transition={{duration: 0.24}}
             className="fixed inset-0 z-40 bg-[var(--color-bg)] px-6 pt-28"
           >
-            <div className="flex flex-col gap-3">
+            <div className="archive-grain" />
+            <div className="museum-grid-overlay" />
+            <div className="relative z-[1] flex flex-col gap-3">
               {navItems.map((item) => (
                 <Button
                   key={item.path}

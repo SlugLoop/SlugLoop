@@ -19,19 +19,19 @@ export default function DesktopTopBar() {
   const {darkMode, toggleDarkMode} = useContext(AppContext)
 
   return (
-    <header className="museum-appbar sticky top-0 z-40">
-      <nav className="flex min-h-[72px] items-center px-8 lg:px-16">
+    <header className="sticky top-0 z-40 px-4 pt-3 md:px-6">
+      <nav className="museum-appbar mx-auto flex min-h-[64px] max-w-[1480px] items-center rounded-full px-5 lg:px-7">
         <div className="flex flex-1 items-center gap-3">
           <span className="museum-dot h-3 w-3" aria-hidden="true" />
           <button
             type="button"
             onClick={() => router.push('/')}
-            className="museum-focus font-display text-2xl font-extrabold tracking-[-0.03em]"
+            className="museum-focus font-display text-2xl font-extrabold tracking-[-0.05em]"
           >
             SlugLoop
           </button>
-          <span className="type-caption text-muted">
-            Archive
+          <span className="type-caption hidden rounded-full border border-[var(--museum-soft-divider)] px-2.5 py-1 uppercase tracking-[0.18em] text-muted lg:inline-flex">
+            Transit archive
           </span>
         </div>
 
