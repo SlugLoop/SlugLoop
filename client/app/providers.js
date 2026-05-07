@@ -4,7 +4,6 @@ import {useEffect} from 'react'
 import {RouteProvider} from '../src/Route'
 import PwaServiceWorker from '../src/components/PwaServiceWorker'
 import AppProvider from '../src/appProvider'
-import RouteTransition from './route-transition'
 
 function AuthBootstrap() {
   useEffect(() => {
@@ -23,7 +22,7 @@ function ClientRuntime({children}) {
     <RouteProvider>
       <AuthBootstrap />
       <PwaServiceWorker />
-      <RouteTransition>{children}</RouteTransition>
+      {children}
     </RouteProvider>
   )
 }

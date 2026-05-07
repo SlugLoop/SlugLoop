@@ -3,116 +3,166 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
-  --font-display: var(--font-bricolage-grotesque), "Bricolage Grotesque", "IBM Plex Sans", sans-serif;
+  --font-display: var(--font-fraunces), "Fraunces", "IBM Plex Serif", serif;
   --font-sans: var(--font-ibm-plex-sans), "IBM Plex Sans", "Segoe UI", sans-serif;
-  --radius-museum: 1.125rem;
+  --font-mono: var(--font-ibm-plex-mono), "IBM Plex Mono", Menlo, Monaco, Consolas, monospace;
+  --font-hand: var(--font-caveat), "Caveat", "Bradley Hand", cursive;
+  --radius-page: 1.25rem;
   --radius-pill: 999px;
-  --shadow-museum: var(--museum-card-shadow);
 }
 
 :root {
   color-scheme: light;
-  --color-primary: #009f8f;
-  --color-primary-light: #02cdb4;
-  --color-primary-dark: #02645d;
-  --color-primary-contrast: #fafff8;
-  --color-secondary: #ffb81c;
-  --color-secondary-light: #ffd35f;
-  --color-secondary-dark: #a86d00;
-  --color-secondary-contrast: #121008;
-  --color-warning: #ff8a5b;
-  --color-error: #ff4f74;
-  --color-bg: #eef5ef;
-  --color-paper: #fbfff7;
-  --color-text-primary: #08171d;
-  --color-text-secondary: #53656a;
 
-  --museum-page-background:
-    radial-gradient(circle at 8% 0%, rgba(255,184,28,0.18), transparent 28%),
-    radial-gradient(circle at 92% 12%, rgba(0,159,143,0.18), transparent 30%),
-    linear-gradient(135deg, #fbfff7 0%, #edf6ef 44%, #dbe9e4 100%);
-  --museum-page-background-alt:
-    radial-gradient(circle at 10% 10%, rgba(0,159,143,0.16), transparent 30%),
-    radial-gradient(circle at 86% 8%, rgba(255,184,28,0.14), transparent 28%),
-    linear-gradient(180deg, #fbfff7 0%, #e7f2eb 100%);
-  --museum-page-background-teal:
-    radial-gradient(circle at 84% 10%, rgba(0,159,143,0.2), transparent 30%),
-    radial-gradient(circle at 14% 18%, rgba(255,184,28,0.12), transparent 26%),
-    linear-gradient(180deg, #fafff8 0%, #e4f1ec 100%);
-  --museum-grid-line: rgba(8,23,29,0.08);
-  --museum-card-background: linear-gradient(145deg, rgba(255,255,255,0.78), rgba(234,248,241,0.48));
-  --museum-card-border: rgba(8,23,29,0.12);
-  --museum-teal-border: rgba(0,159,143,0.28);
-  --museum-card-shadow: 0 28px 90px rgba(28, 55, 55, 0.14);
-  --museum-card-sheen: linear-gradient(112deg, transparent, rgba(255,184,28,0.14), rgba(0,159,143,0.1), transparent);
+  /* === Notebook palette === */
+  --paper: #f6efd9;
+  --paper-edge: #ece2bd;
+  --paper-stained: #efe4c0;
+  --paper-card: #fbf7e6;
+  --ink: #0d1b2a;
+  --ink-soft: #324a5f;
+  --ink-mute: #6a7a89;
+  --highlighter: #ffd23f;
+  --highlighter-soft: rgba(255, 210, 63, 0.42);
+  --highlighter-deep: #f0b813;
+  --tape-yellow: rgba(255, 217, 102, 0.78);
+  --tape-yellow-edge: rgba(220, 175, 55, 0.32);
+  --tape-blue: rgba(120, 188, 212, 0.7);
+  --tape-blue-edge: rgba(70, 140, 168, 0.34);
+  --ocean: #1f7a8c;
+  --ocean-light: #3aa5b8;
+  --ocean-dark: #15545f;
+  --red-pen: #c1272d;
+  --red-pen-soft: rgba(193, 39, 45, 0.18);
+  --graph-line: rgba(120, 95, 35, 0.18);
+  --graph-line-strong: rgba(120, 95, 35, 0.32);
+  --ruled-blue: rgba(80, 120, 180, 0.4);
+  --margin-red: rgba(193, 39, 45, 0.45);
+
+  /* === Legacy bridge: keep old --color-* names alive, rebind to notebook palette === */
+  --color-bg: var(--paper);
+  --color-paper: var(--paper-card);
+  --color-text-primary: var(--ink);
+  --color-text-secondary: var(--ink-soft);
+  --color-primary: var(--ocean);
+  --color-primary-light: var(--ocean-light);
+  --color-primary-dark: var(--ocean-dark);
+  --color-primary-contrast: var(--paper);
+  --color-secondary: var(--highlighter);
+  --color-secondary-light: #ffe27a;
+  --color-secondary-dark: #b88b00;
+  --color-secondary-contrast: var(--ink);
+  --color-warning: #ff8a5b;
+  --color-error: var(--red-pen);
+
+  /* === Page atmospheres (cream + dotted graph + faint ruled-margin red line) === */
+  --paper-graph:
+    radial-gradient(circle, var(--graph-line) 1px, transparent 1.4px);
+  --paper-base:
+    radial-gradient(circle at 12% 8%, rgba(255, 217, 102, 0.18), transparent 28%),
+    radial-gradient(circle at 88% 14%, rgba(31, 122, 140, 0.12), transparent 32%),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-edge) 100%);
+  --museum-page-background: var(--paper-base);
+  --museum-page-background-alt: var(--paper-base);
+  --museum-page-background-teal: var(--paper-base);
+  --museum-grid-line: var(--graph-line);
+
+  --museum-card-background: linear-gradient(160deg, var(--paper-card) 0%, color-mix(in srgb, var(--paper-card), var(--paper-edge) 50%) 100%);
+  --museum-card-border: rgba(13, 27, 42, 0.18);
+  --museum-teal-border: rgba(31, 122, 140, 0.4);
+  --museum-card-shadow: 0 14px 28px -10px rgba(13, 27, 42, 0.18), 0 4px 10px -4px rgba(13, 27, 42, 0.1);
+  --museum-card-sheen: linear-gradient(112deg, transparent, rgba(255, 217, 102, 0.18), transparent);
   --museum-route-diagram-background:
-    radial-gradient(circle at 22% 18%, rgba(0,159,143,0.18), transparent 28%),
-    radial-gradient(circle at 78% 26%, rgba(255,184,28,0.18), transparent 24%),
-    linear-gradient(135deg, rgba(247,255,248,0.96), rgba(220,238,233,0.94));
-  --museum-route-diagram-border: rgba(8,23,29,0.12);
-  --museum-route-line: rgba(255,184,28,0.78);
-  --museum-timeline-line: rgba(0,159,143,0.48);
-  --museum-soft-divider: rgba(8,23,29,0.12);
-  --museum-dot-glow: 0 0 0 8px rgba(255,184,28,0.12), 0 0 28px rgba(0,159,143,0.2);
-  --museum-map-panel-background: linear-gradient(145deg, rgba(250,255,248,0.94), rgba(226,243,237,0.88));
-  --museum-map-panel-text: #08171d;
-  --museum-map-panel-subtle: rgba(8,23,29,0.66);
-  --museum-map-alert-background: rgba(250,255,248,0.96);
-  --museum-map-alert-border: rgba(255,184,28,0.36);
-  --museum-app-bar-background: linear-gradient(90deg, rgba(250,255,248,0.84), rgba(231,244,237,0.74));
-  --museum-drawer-background: linear-gradient(180deg, #fbfff7, #e2f0e8);
+    radial-gradient(circle at 22% 18%, rgba(31, 122, 140, 0.16), transparent 28%),
+    radial-gradient(circle at 78% 26%, rgba(255, 217, 102, 0.22), transparent 24%),
+    linear-gradient(135deg, var(--paper-card), var(--paper-edge));
+  --museum-route-diagram-border: rgba(13, 27, 42, 0.22);
+  --museum-route-line: var(--highlighter-deep);
+  --museum-timeline-line: rgba(13, 27, 42, 0.32);
+  --museum-soft-divider: rgba(13, 27, 42, 0.16);
+  --museum-dot-glow: 0 0 0 6px rgba(255, 210, 63, 0.22), 0 0 0 1px rgba(13, 27, 42, 0.5);
+  --museum-map-panel-background: linear-gradient(160deg, var(--paper-card), var(--paper-edge));
+  --museum-map-panel-text: var(--ink);
+  --museum-map-panel-subtle: var(--ink-soft);
+  --museum-map-alert-background: var(--paper-card);
+  --museum-map-alert-border: var(--margin-red);
+  --museum-app-bar-background: linear-gradient(180deg, color-mix(in srgb, var(--paper-card), white 8%), var(--paper-card));
+  --museum-drawer-background: linear-gradient(180deg, var(--paper-card), var(--paper-edge));
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --color-primary: #39ffe0;
-  --color-primary-light: #86ffee;
-  --color-primary-dark: #0d907e;
-  --color-primary-contrast: #06111d;
-  --color-secondary: #ffd45a;
-  --color-secondary-light: #ffe694;
-  --color-secondary-dark: #af7811;
-  --color-secondary-contrast: #151104;
-  --color-bg: #050b12;
-  --color-paper: #0e1922;
-  --color-text-primary: #f3fff8;
-  --color-text-secondary: #adc5c2;
 
-  --museum-page-background:
-    radial-gradient(circle at 13% 2%, rgba(57,255,224,0.18), transparent 28%),
-    radial-gradient(circle at 92% 8%, rgba(255,212,90,0.16), transparent 28%),
-    radial-gradient(circle at 48% 56%, rgba(28,80,98,0.22), transparent 34%),
-    linear-gradient(180deg, #050b12 0%, #07131d 44%, #0b0f12 100%);
-  --museum-page-background-alt:
-    radial-gradient(circle at 14% 12%, rgba(255,212,90,0.14), transparent 28%),
-    radial-gradient(circle at 88% 4%, rgba(57,255,224,0.14), transparent 30%),
-    linear-gradient(180deg, #050b12 0%, #091620 100%);
-  --museum-page-background-teal:
-    radial-gradient(circle at 80% 12%, rgba(57,255,224,0.18), transparent 30%),
-    radial-gradient(circle at 18% 20%, rgba(255,212,90,0.1), transparent 26%),
-    linear-gradient(180deg, #050b12 0%, #0a1721 100%);
-  --museum-grid-line: rgba(180,255,244,0.08);
-  --museum-card-background: linear-gradient(145deg, rgba(255,255,255,0.105), rgba(255,255,255,0.028));
-  --museum-card-border: rgba(134,255,238,0.18);
-  --museum-teal-border: rgba(57,255,224,0.25);
-  --museum-card-shadow: 0 30px 95px rgba(0, 0, 0, 0.32);
-  --museum-card-sheen: linear-gradient(112deg, transparent, rgba(57,255,224,0.13), rgba(255,212,90,0.1), transparent);
+  /* === Blueprint palette: notebook at night === */
+  --paper: #0a1628;
+  --paper-edge: #07101e;
+  --paper-stained: #0f1d33;
+  --paper-card: #0e1c30;
+  --ink: #e8f4ff;
+  --ink-soft: #b5c8de;
+  --ink-mute: #7a8da6;
+  --highlighter: #fff5b8;
+  --highlighter-soft: rgba(255, 245, 184, 0.22);
+  --highlighter-deep: #f5e07a;
+  --tape-yellow: rgba(255, 245, 184, 0.34);
+  --tape-yellow-edge: rgba(255, 245, 184, 0.5);
+  --tape-blue: rgba(150, 220, 255, 0.32);
+  --tape-blue-edge: rgba(150, 220, 255, 0.55);
+  --ocean: #6cd2e4;
+  --ocean-light: #a8e8f3;
+  --ocean-dark: #2d8da0;
+  --red-pen: #ff7a82;
+  --red-pen-soft: rgba(255, 122, 130, 0.22);
+  --graph-line: rgba(180, 220, 255, 0.16);
+  --graph-line-strong: rgba(180, 220, 255, 0.28);
+  --ruled-blue: rgba(150, 200, 240, 0.32);
+  --margin-red: rgba(255, 122, 130, 0.45);
+
+  --color-bg: var(--paper);
+  --color-paper: var(--paper-card);
+  --color-text-primary: var(--ink);
+  --color-text-secondary: var(--ink-soft);
+  --color-primary: var(--ocean);
+  --color-primary-light: var(--ocean-light);
+  --color-primary-dark: var(--ocean-dark);
+  --color-primary-contrast: var(--paper);
+  --color-secondary: var(--highlighter);
+  --color-secondary-light: #fff8d3;
+  --color-secondary-dark: #c8b34a;
+  --color-secondary-contrast: var(--paper);
+  --color-warning: #ffb38a;
+  --color-error: var(--red-pen);
+
+  --paper-base:
+    radial-gradient(circle at 14% 8%, rgba(108, 210, 228, 0.12), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(255, 245, 184, 0.08), transparent 32%),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-edge) 100%);
+  --museum-page-background: var(--paper-base);
+  --museum-page-background-alt: var(--paper-base);
+  --museum-page-background-teal: var(--paper-base);
+  --museum-grid-line: var(--graph-line);
+
+  --museum-card-background: linear-gradient(160deg, var(--paper-card), color-mix(in srgb, var(--paper-card), black 30%));
+  --museum-card-border: rgba(180, 220, 255, 0.18);
+  --museum-teal-border: rgba(108, 210, 228, 0.34);
+  --museum-card-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.5), 0 6px 14px -6px rgba(0, 0, 0, 0.32);
+  --museum-card-sheen: linear-gradient(112deg, transparent, rgba(255, 245, 184, 0.12), transparent);
   --museum-route-diagram-background:
-    radial-gradient(circle at 20% 20%, rgba(57,255,224,0.2), transparent 28%),
-    radial-gradient(circle at 78% 30%, rgba(255,212,90,0.2), transparent 25%),
-    linear-gradient(135deg, rgba(9, 28, 45, 0.95), rgba(2, 9, 16, 0.96));
-  --museum-route-diagram-border: rgba(180,255,244,0.12);
-  --museum-route-line: rgba(255,212,90,0.74);
-  --museum-timeline-line: rgba(57,255,224,0.46);
-  --museum-soft-divider: rgba(255,255,255,0.12);
-  --museum-dot-glow: 0 0 0 8px rgba(57,255,224,0.1), 0 0 34px rgba(57,255,224,0.24);
-  --museum-map-panel-background: linear-gradient(145deg, rgba(6,17,29,0.92), rgba(12,31,45,0.86));
-  --museum-map-panel-text: #f3fff8;
-  --museum-map-panel-subtle: rgba(243,255,248,0.72);
-  --museum-map-alert-background: rgba(255,248,232,0.94);
-  --museum-map-alert-border: rgba(255,212,90,0.42);
-  --museum-app-bar-background: linear-gradient(90deg, rgba(5,11,18,0.78), rgba(10,25,35,0.68));
-  --museum-drawer-background: linear-gradient(180deg, #081521, #050b12);
+    radial-gradient(circle at 22% 18%, rgba(108, 210, 228, 0.18), transparent 28%),
+    radial-gradient(circle at 78% 26%, rgba(255, 245, 184, 0.16), transparent 24%),
+    linear-gradient(135deg, var(--paper-card), var(--paper-edge));
+  --museum-route-diagram-border: rgba(180, 220, 255, 0.22);
+  --museum-route-line: var(--highlighter-deep);
+  --museum-timeline-line: rgba(180, 220, 255, 0.34);
+  --museum-soft-divider: rgba(180, 220, 255, 0.18);
+  --museum-dot-glow: 0 0 0 6px rgba(255, 245, 184, 0.18), 0 0 0 1px rgba(180, 220, 255, 0.5);
+  --museum-map-panel-background: linear-gradient(160deg, var(--paper-card), var(--paper-edge));
+  --museum-map-panel-text: var(--ink);
+  --museum-map-panel-subtle: var(--ink-soft);
+  --museum-map-alert-background: var(--paper-card);
+  --museum-map-alert-border: var(--margin-red);
+  --museum-app-bar-background: linear-gradient(180deg, color-mix(in srgb, var(--paper-card), white 4%), var(--paper-card));
+  --museum-drawer-background: linear-gradient(180deg, var(--paper-card), var(--paper-edge));
 }
 
 html {
@@ -129,16 +179,16 @@ body {
 body {
   margin: 0;
   min-height: 100vh;
-  color: var(--color-text-primary);
-  background: var(--color-bg);
-  font-family: var(--font-ibm-plex-sans), "IBM Plex Sans", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: geometricPrecision;
+  text-rendering: optimizeLegibility;
 }
 
-code {
-  font-family: "IBM Plex Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+code, pre {
+  font-family: var(--font-mono);
 }
 
 * {
@@ -149,152 +199,326 @@ a {
   color: inherit;
 }
 
+/* === Typography === */
+
 .type-display-1 {
-  max-width: 980px;
+  max-width: 1080px;
   text-wrap: balance;
   font-family: var(--font-display);
-  font-size: clamp(3.1rem, 8.6vw, 8rem);
-  font-weight: 800;
-  letter-spacing: -0.072em;
-  line-height: 0.9;
+  font-size: clamp(2.8rem, 7.5vw, 6.6rem);
+  font-weight: 600;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.038em;
+  line-height: 0.95;
 }
 
 .type-display-2 {
   text-wrap: balance;
   font-family: var(--font-display);
-  font-size: clamp(2.45rem, 5.4vw, 5.35rem);
-  font-weight: 800;
-  letter-spacing: -0.058em;
-  line-height: 0.95;
+  font-size: clamp(2.2rem, 5vw, 4.6rem);
+  font-weight: 600;
+  font-variation-settings: "SOFT" 80, "WONK" 1;
+  letter-spacing: -0.028em;
+  line-height: 1;
 }
 
 .type-heading-3 {
   font-family: var(--font-display);
-  font-size: clamp(1.85rem, 3.4vw, 2.85rem);
-  font-weight: 760;
-  letter-spacing: -0.048em;
-  line-height: 1;
+  font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+  font-weight: 600;
+  font-variation-settings: "SOFT" 50;
+  letter-spacing: -0.022em;
+  line-height: 1.05;
 }
 
 .type-heading-4 {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2.125rem);
-  font-weight: 730;
-  letter-spacing: -0.025em;
-  line-height: 1.08;
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.15;
 }
 
 .type-heading-5 {
-  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
-  font-weight: 600;
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  font-weight: 500;
   line-height: 1.55;
 }
 
 .type-overline {
-  color: var(--color-secondary);
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.26em;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
   line-height: 1.4;
   text-transform: uppercase;
 }
 
 .type-caption {
-  font-size: 0.75rem;
-  line-height: 1.66;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+}
+
+.type-hand {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  line-height: 1.05;
 }
 
 .text-muted {
-  color: var(--color-text-secondary);
+  color: var(--ink-soft);
 }
 
-.museum-page {
-  min-height: 100vh;
-  color: var(--color-text-primary);
-  background: var(--museum-page-background);
-  isolation: isolate;
+.text-ink {
+  color: var(--ink);
 }
 
-.museum-page-alt {
-  min-height: 100vh;
-  color: var(--color-text-primary);
-  background: var(--museum-page-background-alt);
-  isolation: isolate;
+.text-ocean {
+  color: var(--ocean);
 }
 
+.text-red-pen {
+  color: var(--red-pen);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.font-hand {
+  font-family: var(--font-hand);
+}
+
+/* === Page atmospheres === */
+
+.museum-page,
+.museum-page-alt,
 .museum-page-teal {
   min-height: 100vh;
-  color: var(--color-text-primary);
-  background: var(--museum-page-background-teal);
+  color: var(--ink);
+  background: var(--paper-base);
   isolation: isolate;
+}
+
+.paper {
+  position: relative;
+  background: var(--paper-base);
+  color: var(--ink);
+  isolation: isolate;
+}
+
+.paper-grid {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle, var(--graph-line) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  background-position: 0 0;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.65) 60%, rgba(0,0,0,0.45));
+  opacity: 0.9;
+}
+
+[data-theme="dark"] .paper-grid {
+  opacity: 0.7;
+}
+
+/* Faded red ruled-margin line down the left side, like a college-ruled notebook */
+.paper-margin {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--margin-red);
+  z-index: 0;
+  pointer-events: none;
+  box-shadow: 1px 0 0 rgba(193, 39, 45, 0.12);
+  opacity: 0.6;
+}
+
+@media (max-width: 880px) {
+  .paper-margin { display: none; }
 }
 
 .museum-grid-overlay {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.42;
+  z-index: 0;
+  opacity: 0.7;
   background-image:
-    linear-gradient(var(--museum-grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--museum-grid-line) 1px, transparent 1px),
-    linear-gradient(120deg, transparent 0 46%, color-mix(in srgb, var(--color-primary), transparent 84%) 46% 46.5%, transparent 46.5% 100%);
-  background-size: 56px 56px, 56px 56px, 340px 340px;
-  mask-image: linear-gradient(to bottom, black, transparent 90%);
+    radial-gradient(circle, var(--graph-line) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.55));
 }
 
 [data-theme="dark"] .museum-grid-overlay {
-  opacity: 0.22;
+  opacity: 0.55;
 }
 
-.archive-grain {
+/* Paper grain — faint multi-octave noise */
+.archive-grain,
+.paper-grain {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.13;
+  z-index: 0;
+  opacity: 0.32;
   mix-blend-mode: multiply;
   background-image:
-    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-secondary), transparent 72%) 0 1px, transparent 1px),
-    radial-gradient(circle at 70% 60%, color-mix(in srgb, var(--color-primary), transparent 78%) 0 1px, transparent 1px);
-  background-size: 17px 19px, 29px 31px;
+    radial-gradient(circle at 20% 30%, rgba(120, 95, 35, 0.5) 0 1px, transparent 1.2px),
+    radial-gradient(circle at 70% 60%, rgba(120, 95, 35, 0.4) 0 1px, transparent 1.2px),
+    radial-gradient(circle at 45% 80%, rgba(80, 60, 20, 0.45) 0 1px, transparent 1.2px);
+  background-size: 11px 13px, 19px 17px, 23px 31px;
 }
 
-[data-theme="dark"] .archive-grain {
-  opacity: 0.1;
+[data-theme="dark"] .archive-grain,
+[data-theme="dark"] .paper-grain {
+  opacity: 0.22;
   mix-blend-mode: screen;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(180, 220, 255, 0.5) 0 1px, transparent 1.2px),
+    radial-gradient(circle at 70% 60%, rgba(180, 220, 255, 0.4) 0 1px, transparent 1.2px),
+    radial-gradient(circle at 45% 80%, rgba(200, 230, 255, 0.45) 0 1px, transparent 1.2px);
 }
 
-.route-halo {
+/* Coffee ring — slow opacity rotation, single instance via class */
+.coffee-ring {
   position: absolute;
-  pointer-events: none;
-  border: 1px solid color-mix(in srgb, var(--color-primary), transparent 78%);
   border-radius: 999px;
+  pointer-events: none;
+  width: 220px;
+  height: 220px;
+  border: 14px solid rgba(135, 80, 25, 0.13);
+  box-shadow:
+    inset 0 0 0 4px rgba(135, 80, 25, 0.08),
+    0 0 60px rgba(135, 80, 25, 0.06);
   background:
-    conic-gradient(from 120deg, transparent 0 24%, color-mix(in srgb, var(--color-primary), transparent 72%) 25% 29%, transparent 30% 68%, color-mix(in srgb, var(--color-secondary), transparent 74%) 69% 72%, transparent 73% 100%),
-    radial-gradient(circle, color-mix(in srgb, var(--color-secondary), transparent 86%), transparent 62%),
-    radial-gradient(circle at 72% 30%, color-mix(in srgb, var(--color-primary), transparent 82%), transparent 52%);
-  filter: blur(0.1px);
+    radial-gradient(circle at 70% 60%, rgba(135, 80, 25, 0.1), transparent 60%);
+  filter: blur(0.4px);
+  opacity: 0.7;
 }
 
+[data-theme="dark"] .coffee-ring {
+  border-color: rgba(220, 230, 255, 0.06);
+  box-shadow:
+    inset 0 0 0 4px rgba(220, 230, 255, 0.04),
+    0 0 60px rgba(220, 230, 255, 0.03);
+  background:
+    radial-gradient(circle at 70% 60%, rgba(220, 230, 255, 0.05), transparent 60%);
+}
+
+/* === Ruled margin line — paper-only variant for cards === */
+.ruled-margin-line {
+  position: relative;
+}
+.ruled-margin-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 56px;
+  width: 1px;
+  background: var(--margin-red);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* === Notebook page card === */
+.notebook-page {
+  position: relative;
+  background:
+    linear-gradient(180deg, var(--paper-card) 0%, color-mix(in srgb, var(--paper-card), var(--paper-edge) 30%) 100%);
+  background-image:
+    radial-gradient(circle, var(--graph-line) 1px, transparent 1.4px),
+    linear-gradient(180deg, var(--paper-card) 0%, color-mix(in srgb, var(--paper-card), var(--paper-edge) 30%) 100%);
+  background-size: 22px 22px, 100% 100%;
+  border: 1px solid var(--museum-card-border);
+  border-radius: 8px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 14px 28px -10px rgba(13, 27, 42, 0.18),
+    0 4px 8px -4px rgba(13, 27, 42, 0.1);
+  color: var(--ink);
+}
+
+[data-theme="dark"] .notebook-page {
+  box-shadow:
+    0 1px 0 rgba(180, 220, 255, 0.06) inset,
+    0 18px 40px -12px rgba(0, 0, 0, 0.5),
+    0 6px 14px -6px rgba(0, 0, 0, 0.32);
+}
+
+.notebook-page--margin::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 56px;
+  width: 1px;
+  background: var(--margin-red);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* === Binding spiral (left edge of notebook page) === */
+.binding-spiral {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -10px;
+  width: 22px;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 16px,
+      rgba(13, 27, 42, 0.55) 16px 19px,
+      transparent 19px 32px
+    );
+  -webkit-mask: radial-gradient(circle at 11px 18px, black 0 5px, transparent 6px) 0 0/22px 32px;
+          mask: radial-gradient(circle at 11px 18px, black 0 5px, transparent 6px) 0 0/22px 32px;
+}
+
+[data-theme="dark"] .binding-spiral {
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 16px,
+      rgba(180, 220, 255, 0.5) 16px 19px,
+      transparent 19px 32px
+    );
+}
+
+/* === Cards (legacy bridge — used by existing UI) === */
 .case-plate {
   border: 1px solid var(--museum-soft-divider);
-  background:
-    linear-gradient(145deg, color-mix(in srgb, var(--color-paper), transparent 40%), color-mix(in srgb, var(--color-bg), transparent 70%));
-  box-shadow: inset 0 1px 0 color-mix(in srgb, white, transparent 82%);
-  backdrop-filter: blur(18px) saturate(1.25);
+  background: linear-gradient(160deg, var(--paper-card), color-mix(in srgb, var(--paper-card), var(--paper-edge) 50%));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  color: var(--ink);
 }
 
 .museum-card,
 .museum-static-card {
+  position: relative;
   border: 1px solid var(--museum-card-border);
-  border-radius: 1.35rem;
+  border-radius: 0.75rem;
   background: var(--museum-card-background);
   box-shadow: var(--museum-card-shadow);
-  backdrop-filter: blur(22px) saturate(1.2);
+  color: var(--ink);
 }
 
 .museum-card {
-  position: relative;
   overflow: hidden;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
 
 .museum-card::before {
@@ -302,17 +526,19 @@ a {
   position: absolute;
   inset: 0;
   background: var(--museum-card-sheen);
-  transform: translateX(-100%);
+  transform: translateX(-105%);
   transition: transform 700ms ease;
+  pointer-events: none;
 }
 
 .museum-card:hover::before {
-  transform: translateX(100%);
+  transform: translateX(105%);
 }
 
 .museum-card:hover {
-  border-color: color-mix(in srgb, var(--color-primary), transparent 56%);
-  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--ocean), transparent 50%);
+  transform: translateY(-2px) rotate(-0.2deg);
+  box-shadow: 0 22px 40px -16px rgba(13, 27, 42, 0.24);
 }
 
 .museum-card-content {
@@ -320,92 +546,39 @@ a {
   z-index: 1;
 }
 
+/* === Dot for timeline / list bullets === */
 .museum-dot {
   flex-shrink: 0;
   border-radius: 999px;
-  background: radial-gradient(circle, var(--color-secondary-light), var(--color-secondary) 58%, var(--color-primary) 100%);
+  background: radial-gradient(circle, var(--highlighter) 0 35%, var(--highlighter-deep) 70%, var(--ink) 100%);
   box-shadow: var(--museum-dot-glow);
 }
 
-.campus-contour {
-  border: 1px solid color-mix(in srgb, var(--color-primary), transparent 68%);
-  border-radius: 62% 38% 52% 48% / 44% 55% 45% 56%;
-  background:
-    radial-gradient(circle at 32% 38%, color-mix(in srgb, var(--color-primary), transparent 86%), transparent 30%),
-    radial-gradient(circle at 70% 62%, color-mix(in srgb, var(--color-secondary), transparent 88%), transparent 28%);
-  opacity: 0.82;
-  transform: rotate(-8deg);
+/* === App bar / drawer (legacy bridge) === */
+.museum-appbar {
+  color: var(--ink);
+  background: var(--museum-app-bar-background);
+  border: 1px solid var(--museum-card-border);
+  box-shadow: 0 8px 18px rgba(13, 27, 42, 0.12);
 }
 
-.campus-contour::before,
-.campus-contour::after {
-  content: "";
-  position: absolute;
-  inset: 8%;
-  border: 1px solid color-mix(in srgb, var(--color-primary), transparent 78%);
-  border-radius: inherit;
-}
-
-.campus-contour::after {
-  inset: 18%;
-  border-color: color-mix(in srgb, var(--color-secondary), transparent 78%);
-}
-
-.route-loop,
-.route-loop-secondary {
-  border: 2px solid var(--museum-route-line);
-  box-shadow:
-    0 0 30px color-mix(in srgb, var(--color-secondary), transparent 72%),
-    inset 0 0 30px color-mix(in srgb, var(--color-primary), transparent 82%);
-  transform: rotate(-12deg);
-}
-
-.route-loop-secondary {
-  border-color: color-mix(in srgb, var(--color-primary), transparent 42%);
-  border-style: dashed;
-  transform: rotate(17deg);
-}
-
-.scanline {
-  animation: scanline-drift 5.6s ease-in-out infinite;
-  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-primary), transparent 78%), transparent);
-  opacity: 0.86;
-}
-
-@keyframes scanline-drift {
-  0%, 100% {
-    transform: translateY(-70%);
-  }
-  50% {
-    transform: translateY(280%);
-  }
+.museum-drawer {
+  color: var(--ink);
+  background: var(--museum-drawer-background);
+  border-left: 1px solid var(--museum-card-border);
 }
 
 .museum-map-panel {
-  color: var(--museum-map-panel-text);
+  color: var(--ink);
   border: 1px solid var(--museum-card-border);
   background: var(--museum-map-panel-background);
   box-shadow: var(--museum-card-shadow);
-  backdrop-filter: blur(18px);
 }
 
 .museum-alert {
   border: 1px solid var(--museum-map-alert-border);
   background: var(--museum-map-alert-background);
-}
-
-.museum-appbar {
-  color: var(--color-text-primary);
-  background-image: var(--museum-app-bar-background);
-  border: 1px solid var(--museum-card-border);
-  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(24px) saturate(1.4);
-}
-
-.museum-drawer {
-  color: var(--color-text-primary);
-  background-image: var(--museum-drawer-background);
-  border-left: 1px solid var(--museum-card-border);
+  color: var(--ink);
 }
 
 .museum-focus {
@@ -413,9 +586,419 @@ a {
 }
 
 .museum-focus:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-secondary), transparent 55%);
+  box-shadow: 0 0 0 3px var(--highlighter), 0 0 0 4px var(--ink);
 }
 
+/* === Marker highlight — yellow rough swipe behind text === */
+.marker-highlight {
+  position: relative;
+  display: inline;
+  background:
+    linear-gradient(
+      180deg,
+      transparent 8%,
+      var(--highlighter-soft) 22%,
+      var(--highlighter-soft) 86%,
+      transparent 96%
+    );
+  padding: 0 0.18em;
+  background-size: 100% 88%;
+  background-repeat: no-repeat;
+  background-position: 0 60%;
+}
+
+.marker-highlight--strong {
+  background:
+    linear-gradient(
+      180deg,
+      transparent 8%,
+      var(--highlighter) 22%,
+      var(--highlighter) 86%,
+      transparent 96%
+    );
+  background-size: 100% 88%;
+  background-repeat: no-repeat;
+  background-position: 0 60%;
+  color: #0d1b2a;
+}
+
+/* === Marker circle — rough red oval around content === */
+.marker-circle {
+  position: relative;
+  display: inline-block;
+  padding: 0.15em 0.55em;
+}
+
+.marker-circle::before {
+  content: "";
+  position: absolute;
+  inset: -10% -8%;
+  border: 2px solid var(--red-pen);
+  border-radius: 64% 36% 58% 42% / 56% 44% 56% 44%;
+  transform: rotate(-2.4deg);
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.marker-circle::after {
+  content: "";
+  position: absolute;
+  inset: -16% -2%;
+  border: 1.5px solid var(--red-pen);
+  border-radius: 60% 40% 52% 48% / 48% 56% 44% 52%;
+  transform: rotate(3deg);
+  pointer-events: none;
+  opacity: 0.42;
+}
+
+/* === Sticky note === */
+.sticky-note {
+  position: relative;
+  display: inline-block;
+  min-width: 180px;
+  padding: 18px 18px 22px;
+  background: linear-gradient(180deg, #fff296 0%, #ffe25c 100%);
+  color: var(--ink);
+  font-family: var(--font-hand);
+  font-weight: 500;
+  line-height: 1.18;
+  font-size: 1.4rem;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    8px 14px 18px -8px rgba(13, 27, 42, 0.32),
+    2px 4px 6px -2px rgba(13, 27, 42, 0.18);
+  transform: rotate(-1.6deg);
+  transform-origin: top left;
+}
+
+.sticky-note--blue {
+  background: linear-gradient(180deg, #c5e9f5 0%, #99d4e8 100%);
+}
+
+.sticky-note--pink {
+  background: linear-gradient(180deg, #ffd1e0 0%, #ffb3cc 100%);
+}
+
+.sticky-note--rotate-right {
+  transform: rotate(2.2deg);
+}
+
+.sticky-note--rotate-flat {
+  transform: rotate(-0.4deg);
+}
+
+[data-theme="dark"] .sticky-note {
+  color: #1d1606;
+}
+
+/* === Polaroid === */
+.polaroid {
+  position: relative;
+  display: inline-block;
+  padding: 14px 14px 56px;
+  background: #fbf9f0;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    10px 18px 28px -10px rgba(13, 27, 42, 0.32),
+    3px 6px 10px -4px rgba(13, 27, 42, 0.22);
+  transform: rotate(-2deg);
+  transform-origin: center;
+}
+
+.polaroid--rotate-right { transform: rotate(2.4deg); }
+.polaroid--rotate-flat  { transform: rotate(-0.5deg); }
+
+[data-theme="dark"] .polaroid {
+  background: #f3ead3;
+}
+
+/* === Tape (washi/masking) === */
+.tape {
+  position: absolute;
+  width: 88px;
+  height: 22px;
+  background: var(--tape-yellow);
+  border-left: 1px dashed var(--tape-yellow-edge);
+  border-right: 1px dashed var(--tape-yellow-edge);
+  box-shadow: 0 2px 4px rgba(13, 27, 42, 0.15);
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+.tape--blue {
+  background: var(--tape-blue);
+  border-color: var(--tape-blue-edge);
+}
+
+.tape--long { width: 128px; }
+.tape--short { width: 60px; }
+
+/* === Stamp === */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--red-pen);
+  color: var(--red-pen);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.42em 0.95em;
+  border-radius: 4px;
+  transform: rotate(-7deg);
+  background: transparent;
+  position: relative;
+  filter: contrast(0.9);
+  opacity: 0.9;
+}
+
+.stamp::before,
+.stamp::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border: 1.5px solid var(--red-pen);
+  border-radius: 4px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.stamp::after {
+  inset: 4px 6px;
+  border-style: dashed;
+  opacity: 0.25;
+  border-radius: 2px;
+}
+
+.stamp--ink {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.stamp--ocean {
+  border-color: var(--ocean);
+  color: var(--ocean);
+}
+
+.stamp--circular {
+  border-radius: 999px;
+  padding: 0.85em 1.35em;
+  text-align: center;
+  font-size: 0.8em;
+  line-height: 1.05;
+}
+
+.stamp--circular::before {
+  border-radius: 999px;
+}
+
+.stamp--circular::after {
+  border-radius: 999px;
+  border-style: dashed;
+  inset: 6px;
+}
+
+[data-theme="dark"] .stamp {
+  filter: contrast(1) brightness(1.1);
+}
+
+/* === Bus ticket (perforated edges) === */
+.bus-ticket {
+  position: relative;
+  background:
+    radial-gradient(circle at 0 50%, transparent 9px, var(--paper-card) 9.5px),
+    radial-gradient(circle at 100% 50%, transparent 9px, var(--paper-card) 9.5px);
+  background-blend-mode: normal;
+  border: 1px dashed var(--museum-card-border);
+  box-shadow: var(--museum-card-shadow);
+  color: var(--ink);
+  --ticket-notch: 9px;
+}
+
+.bus-ticket::before,
+.bus-ticket::after {
+  content: "";
+  position: absolute;
+  width: var(--ticket-notch);
+  height: var(--ticket-notch);
+  background: var(--paper);
+  border-radius: 999px;
+  border: 1px dashed var(--museum-card-border);
+  top: calc(50% - var(--ticket-notch) / 2);
+  pointer-events: none;
+}
+
+.bus-ticket::before { left: -5px; }
+.bus-ticket::after { right: -5px; }
+
+/* === News clipping (torn newsprint) === */
+.news-clipping {
+  position: relative;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(13, 27, 42, 0.04) 0 1px,
+      transparent 1px 4px
+    ),
+    linear-gradient(180deg, #efe7d2 0%, #e6dcc0 100%);
+  color: var(--ink);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 14px 28px -12px rgba(13, 27, 42, 0.32);
+  filter: contrast(0.96) saturate(0.85);
+}
+
+[data-theme="dark"] .news-clipping {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(180, 220, 255, 0.05) 0 1px,
+      transparent 1px 4px
+    ),
+    linear-gradient(180deg, #1a2a3e 0%, #14243a 100%);
+}
+
+/* Torn top + bottom edges via clip-path */
+.news-clipping--torn {
+  clip-path: polygon(
+    0% 4px, 4% 0%, 8% 6px, 14% 0%, 22% 5px, 30% 0%, 38% 7px, 46% 0%,
+    54% 6px, 62% 0%, 70% 5px, 78% 0%, 86% 6px, 94% 0%, 100% 4px,
+    100% calc(100% - 5px), 96% 100%, 88% calc(100% - 6px), 80% 100%,
+    72% calc(100% - 5px), 64% 100%, 56% calc(100% - 7px), 48% 100%,
+    40% calc(100% - 5px), 32% 100%, 24% calc(100% - 6px), 16% 100%,
+    8% calc(100% - 5px), 0% 100%
+  );
+}
+
+/* === Pencil arrow squiggle (used as background asset) === */
+.pencil-arrow {
+  display: inline-block;
+  color: var(--ink);
+}
+
+/* === Folder tabs (TopBar nav) === */
+.folder-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1.1rem 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: color-mix(in srgb, var(--paper-card), var(--paper-edge) 60%);
+  border: 1px solid var(--museum-card-border);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  margin-bottom: -1px;
+  transition: transform 180ms ease, color 180ms ease, background 180ms ease;
+  cursor: pointer;
+}
+
+.folder-tab:hover {
+  color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.folder-tab--active {
+  background: var(--paper-card);
+  color: var(--ink);
+  transform: translateY(-3px);
+  box-shadow: 0 -4px 14px -8px rgba(13, 27, 42, 0.32);
+  z-index: 2;
+}
+
+/* === Tape button === */
+.tape-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.62rem 1.15rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--highlighter);
+  border: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 0 rgba(13, 27, 42, 0.5),
+    4px 8px 12px -4px rgba(13, 27, 42, 0.32);
+  transform: rotate(-1.2deg);
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.tape-button:hover {
+  transform: rotate(-0.4deg) translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 2px 0 rgba(13, 27, 42, 0.5),
+    6px 12px 18px -4px rgba(13, 27, 42, 0.32);
+}
+
+.tape-button::before,
+.tape-button::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 100%;
+  top: 0;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.35) 0 2px,
+      transparent 2px 4px
+    );
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.tape-button::before { left: 0; }
+.tape-button::after { right: 0; }
+
+[data-theme="dark"] .tape-button {
+  color: var(--paper);
+}
+
+/* === Slug doodle hover (decorative SVG sizing helper) === */
+.slug-doodle {
+  width: 28px;
+  height: 28px;
+  color: var(--ocean);
+  flex-shrink: 0;
+}
+
+/* Subtle paper-rustle nudge for polaroids on hover */
+.polaroid--hover {
+  transition: transform 280ms ease, box-shadow 280ms ease;
+}
+.polaroid--hover:hover {
+  transform: rotate(-0.4deg) translateY(-3px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    14px 24px 36px -12px rgba(13, 27, 42, 0.36),
+    3px 6px 10px -4px rgba(13, 27, 42, 0.22);
+}
+
+@keyframes stamp-press {
+  0%   { transform: scale(1.4) rotate(-12deg); opacity: 0; filter: blur(4px); }
+  50%  { transform: scale(0.96) rotate(-7deg); opacity: 1; filter: blur(0); }
+  70%  { transform: scale(1.04) rotate(-7deg); }
+  100% { transform: scale(1) rotate(-7deg); opacity: 0.92; }
+}
+
+.stamp-animate {
+  animation: stamp-press 480ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* === Reduced motion === */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -424,5 +1007,12 @@ a {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
+  }
+
+  .polaroid,
+  .sticky-note,
+  .stamp,
+  .tape-button {
+    transform: none !important;
   }
 }

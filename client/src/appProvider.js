@@ -12,18 +12,18 @@ const applyDocumentTheme = (isDarkMode) => {
 
 const getInitialDarkMode = () => {
   if (typeof window === 'undefined') {
-    return true
+    return false
   }
 
   const storedMode = window.localStorage.getItem(THEME_STORAGE_KEY)
   if (storedMode === 'dark') return true
   if (storedMode === 'light') return false
 
-  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
 }
 
 const AppProvider = ({children}) => {
-  const [darkMode, setDarkMode] = useState(true)
+  const [darkMode, setDarkMode] = useState(false)
   const [hasHydrated, setHasHydrated] = useState(false)
 
   useEffect(() => {

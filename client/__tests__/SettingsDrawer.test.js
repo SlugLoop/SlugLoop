@@ -29,12 +29,12 @@ test('controls map settings and route navigation', async () => {
   )
 
   await user.click(screen.getByRole('button', {name: /menu/i}))
-  await user.click(screen.getByText('Hide Time'))
+  await user.click(screen.getByText(/hide time/i))
   expect(toggleDisplayTime).toHaveBeenCalledTimes(1)
 
-  await user.click(screen.getByText('Show Past Buses'))
+  await user.click(screen.getByText(/show past buses/i))
   expect(handleFilterToggle).toHaveBeenCalledTimes(1)
 
-  await user.click(screen.getByText('Archive'))
-  expect(push).toHaveBeenCalledWith('/timeline')
+  await user.click(screen.getByText(/^field log$/i))
+  expect(push).toHaveBeenCalledWith('/journey')
 })

@@ -1,6 +1,7 @@
-const CACHE_NAME = 'slugloop-next-v1'
-const CORE_ASSETS = [
+const CACHE_NAME = 'slugloop-next-v2'
+const APP_SHELL = [
   '/',
+  '/map',
   '/timeline',
   '/about',
   '/contact',
@@ -10,11 +11,20 @@ const CORE_ASSETS = [
   '/icons/android-chrome-512x512.png',
 ]
 
+const STATIC_ASSET_PATTERN =
+  /\.(?:css|js|mjs|png|jpg|jpeg|svg|webp|ico|woff2?)$/i
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(CORE_ASSETS))
+      .then((cache) =>
+        Promise.all(
+          APP_SHELL.map((asset) =>
+            cache.add(new Request(asset, {cache: 'reload'})).catch(() => undefined),
+          ),
+        ),
+      )
       .then(() => self.skipWaiting()),
   )
 })
@@ -37,6 +47,35 @@ self.addEventListener('fetch', (event) => {
 
   const requestUrl = new URL(event.request.url)
   if (requestUrl.origin !== self.location.origin) {
+    return
+  }
+
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone()
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache)
+            })
+          }
+
+          return networkResponse
+        })
+        .catch(() =>
+          caches
+            .match(event.request)
+            .then((cachedResponse) => cachedResponse || caches.match('/')),
+        ),
+    )
+    return
+  }
+
+  if (
+    !STATIC_ASSET_PATTERN.test(requestUrl.pathname) &&
+    !APP_SHELL.includes(requestUrl.pathname)
+  ) {
     return
   }
 

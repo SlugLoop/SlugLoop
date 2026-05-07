@@ -1,66 +1,86 @@
 'use client'
 
 import React, {useContext} from 'react'
-import {useRouter} from 'next/navigation'
+import {usePathname} from 'next/navigation'
 import AppContext from '../../appContext'
 import Button from '../ui/Button'
-import {Moon, Sun} from '../ui/icons'
+import SlugDoodle from '../ui/SlugDoodle'
+import {cx} from '../ui/cx'
+import {ArrowRight, Moon, Sun} from '../ui/icons'
 
 const navItems = [
-  {label: 'Story', path: '/'},
-  {label: 'Archive', path: '/timeline'},
-  {label: 'Team', path: '/about'},
+  {label: 'Cover', path: '/'},
+  {label: 'Field log', path: '/journey'},
+  {label: 'Crew', path: '/about'},
   {label: 'Links', path: '/contact'},
 ]
 
-export default function DesktopTopBar() {
-  const router = useRouter()
+function isPathActive(pathname, target) {
+  if (target === '/') return pathname === '/'
+  if (target === '/journey') {
+    return pathname === '/journey' || pathname === '/timeline'
+  }
+  return pathname === target || pathname.startsWith(`${target}/`)
+}
 
+export default function DesktopTopBar() {
+  const pathname = usePathname() ?? '/'
   const {darkMode, toggleDarkMode} = useContext(AppContext)
 
   return (
-    <header className="sticky top-0 z-40 px-4 pt-3 md:px-6">
-      <nav className="museum-appbar mx-auto flex min-h-[64px] max-w-[1480px] items-center rounded-full px-5 lg:px-7">
-        <div className="flex flex-1 items-center gap-3">
-          <span className="museum-dot h-3 w-3" aria-hidden="true" />
-          <button
-            type="button"
-            onClick={() => router.push('/')}
-            className="museum-focus font-display text-2xl font-extrabold tracking-[-0.05em]"
-          >
-            SlugLoop
-          </button>
-          <span className="type-caption hidden rounded-full border border-[var(--museum-soft-divider)] px-2.5 py-1 uppercase tracking-[0.18em] text-muted lg:inline-flex">
-            Transit archive
+    <header className="sticky top-0 z-40 px-6 pt-4 pb-0 md:px-10">
+      <div className="mx-auto flex max-w-[1480px] items-end justify-between border-b-2 border-[var(--ink)]">
+        <a href="/" className="museum-focus flex items-end gap-3 pb-3 no-underline">
+          <SlugDoodle size={42} className="text-[var(--ocean)]" />
+          <span className="flex flex-col items-start leading-none">
+            <span className="font-display text-3xl font-semibold tracking-[-0.02em]">
+              SlugLoop.
+            </span>
+            <span className="type-hand text-[1.05rem] text-[var(--ink-soft)] -mt-1">
+              field notes &middot; ucsc &middot; 2023
+            </span>
           </span>
-        </div>
+        </a>
 
-        <div className="flex items-center gap-2">
-          {navItems.map((item) => (
+        <div className="flex items-end gap-2">
+          <nav className="flex items-end gap-1" aria-label="Primary">
+            {navItems.map((item) => {
+              const active = isPathActive(pathname, item.path)
+              return (
+                <a
+                  key={item.path}
+                  href={item.path}
+                  className={cx(
+                    'folder-tab no-underline',
+                    active && 'folder-tab--active',
+                  )}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              )
+            })}
+          </nav>
+
+          <div className="ml-3 flex items-end gap-3 pb-2">
             <Button
-              key={item.path}
-              href={item.path}
-              variant="ghost"
+              href="/map"
+              variant="solid"
+              endIcon={<ArrowRight size={14} />}
             >
-              {item.label}
+              Open map
             </Button>
-          ))}
-          <Button
-            href="/map"
-            variant="solid"
-          >
-            Open map
-          </Button>
-          <button
-            type="button"
-            onClick={toggleDarkMode}
-            aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-            className="museum-focus inline-flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-text-primary)] transition hover:bg-[color-mix(in_srgb,var(--color-secondary),transparent_88%)]"
-          >
-            {darkMode ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
-          </button>
+            <button
+              type="button"
+              onClick={toggleDarkMode}
+              aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="museum-focus inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-[var(--ink)] bg-[var(--paper-card)] text-[var(--ink)] transition hover:bg-[var(--highlighter-soft)]"
+            >
+              {darkMode ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
+            </button>
+          </div>
         </div>
-      </nav>
+      </div>
     </header>
   )
 }

@@ -1,18 +1,32 @@
 import React from 'react'
 import {cx} from './cx'
 
+/**
+ * Notebook-aesthetic button variants:
+ *  - solid:   yellow "tape" button with a slight rotation and offset shadow
+ *  - outline: inky bordered notebook stamp button
+ *  - ghost:   underlined link-style button
+ *  - map:     panel button used inside the map chrome
+ */
 const variantClasses = {
-  solid: 'border-transparent bg-[linear-gradient(135deg,var(--color-secondary),var(--color-secondary-light))] text-[var(--color-secondary-contrast)] shadow-[0_16px_42px_color-mix(in_srgb,var(--color-secondary),transparent_72%)] hover:-translate-y-0.5 hover:shadow-[0_22px_54px_color-mix(in_srgb,var(--color-secondary),transparent_66%)]',
-  outline: 'border-[var(--museum-card-border)] bg-[color-mix(in_srgb,var(--color-paper),transparent_70%)] text-[var(--color-text-primary)] backdrop-blur hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--color-primary),transparent_48%)] hover:bg-[color-mix(in_srgb,var(--color-primary),transparent_88%)]',
-  ghost: 'border-transparent bg-transparent text-[var(--color-text-primary)] hover:bg-[color-mix(in_srgb,var(--color-primary),transparent_88%)]',
-  map: 'border-[var(--museum-card-border)] bg-[var(--museum-map-panel-background)] text-[var(--museum-map-panel-text)] hover:bg-[color-mix(in_srgb,var(--color-primary),transparent_86%)]',
+  solid:
+    'tape-button border-0',
+  outline:
+    'border-2 border-[var(--ink)] bg-transparent text-[var(--ink)] font-mono uppercase tracking-[0.13em] hover:bg-[var(--highlighter-soft)] hover:-translate-y-0.5 transition',
+  ghost:
+    'border-0 bg-transparent text-[var(--ink)] font-mono uppercase tracking-[0.12em] underline-offset-[6px] decoration-[var(--ink-mute)] decoration-2 hover:underline hover:text-[var(--ocean)]',
+  map:
+    'border border-[var(--museum-card-border)] bg-[var(--paper-card)] text-[var(--ink)] hover:bg-[var(--highlighter-soft)] font-mono uppercase tracking-[0.13em]',
 }
 
 const sizeClasses = {
-  sm: 'min-h-9 px-3 py-1.5 text-xs',
-  md: 'min-h-11 px-4 py-2 text-sm',
-  lg: 'min-h-12 px-5 py-3 text-base',
+  sm: 'min-h-9 px-3 py-1.5 text-[0.7rem]',
+  md: 'min-h-11 px-4 py-2 text-[0.78rem]',
+  lg: 'min-h-12 px-5 py-3 text-[0.85rem]',
 }
+
+const baseClasses =
+  'museum-focus inline-flex items-center justify-center gap-2 font-bold no-underline cursor-pointer disabled:pointer-events-none disabled:opacity-50'
 
 export default function Button({
   children,
@@ -26,11 +40,12 @@ export default function Button({
   type = 'button',
   ...props
 }) {
+  const isSolid = variant === 'solid'
   const classes = cx(
-    'museum-focus inline-flex items-center justify-center gap-2 rounded-full border font-bold tracking-[0.01em] no-underline transition duration-300',
-    'disabled:pointer-events-none disabled:opacity-50',
+    baseClasses,
+    !isSolid && (sizeClasses[size] ?? sizeClasses.md),
     variantClasses[variant] ?? variantClasses.ghost,
-    sizeClasses[size] ?? sizeClasses.md,
+    !isSolid && 'rounded-md',
     className,
   )
 

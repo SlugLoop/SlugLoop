@@ -140,6 +140,6 @@ test('shows an empty-state warning when no selected route has visible buses', as
   renderWithProviders(<MapComponent center={{lat: 36.99, lng: -122.06}} zoom={15} />)
 
   expect(
-    await screen.findByText(/no recent vehicles match the selected routes/i),
+    await screen.findByText(/no buses match right now/i),
   ).toBeInTheDocument()
 })

@@ -1,16 +1,28 @@
 import { Analytics } from '@vercel/analytics/next'
-import { Bricolage_Grotesque, IBM_Plex_Sans } from 'next/font/google'
+import { Caveat, Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
 import Providers from './providers'
 import './globals.css'
 
-const bricolage = Bricolage_Grotesque({
-  variable: '--font-bricolage-grotesque',
+const fraunces = Fraunces({
+  variable: '--font-fraunces',
   subsets: ['latin'],
-  weight: ['500', '600', '700', '800'],
+  axes: ['SOFT', 'WONK', 'opsz'],
 })
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: '--font-ibm-plex-sans',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+})
+
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: '--font-ibm-plex-mono',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+})
+
+const caveat = Caveat({
+  variable: '--font-caveat',
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
 })
@@ -80,7 +92,7 @@ export const viewport = {
   minimumScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#ffc72c',
+  themeColor: '#ffd23f',
 }
 
 export default function RootLayout({ children }) {
@@ -88,7 +100,7 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${bricolage.variable} ${ibmPlexSans.variable}`}
+      className={`${fraunces.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} ${caveat.variable}`}
     >
       <body>
         <Providers>{children}</Providers>

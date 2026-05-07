@@ -1,6 +1,7 @@
 node_modules/
-/test-results/
+test-results/
 /playwright-report/
 /playwright/.cache/
+.playwright-mcp/
 .vercel
 .env*.local

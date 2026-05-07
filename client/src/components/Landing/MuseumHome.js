@@ -2,459 +2,430 @@
 
 import React from 'react'
 import {motion, useReducedMotion} from 'framer-motion'
-import {
-  architectureFlow,
-  exhibitSections,
-  externalLinks,
-  heroStats,
-  milestones,
-  pressLinks,
-  proofPoints,
-  teamMembers,
-} from '../slugloopMuseumData'
-import Avatar from '../ui/Avatar'
+import {externalLinks, journeyStats, pressLinks} from '../slugloopMuseumData'
 import Button from '../ui/Button'
-import Card from '../ui/Card'
+import BusTicket from '../ui/BusTicket'
 import Chip from '../ui/Chip'
-import {
-  ArrowRight,
-  Award,
-  Bus,
-  ExternalLink,
-  Github,
-  LocateFixed,
-  Map as MapIcon,
-  PlayCircle,
-  Route as RouteIcon,
-} from '../ui/icons'
-import {divider, linkText} from '../ui/museumClasses'
+import MarkerCircle from '../ui/MarkerCircle'
+import MarkerHighlight from '../ui/MarkerHighlight'
+import NewsClipping from '../ui/NewsClipping'
+import PencilArrow from '../ui/PencilArrow'
+import Polaroid from '../ui/Polaroid'
+import SlugDoodle from '../ui/SlugDoodle'
+import Stamp from '../ui/Stamp'
+import StickyNote from '../ui/StickyNote'
+import Tape from '../ui/Tape'
+import {ArrowRight, Github, MapPin, PlayCircle} from '../ui/icons'
 
-const fadeUp = {
-  hidden: {opacity: 0, y: 26, filter: 'blur(10px)'},
-  visible: {opacity: 1, y: 0, filter: 'blur(0px)'},
-}
-
-const signalCards = [
-  {label: 'Fleet signal', value: 'Realtime', detail: 'Firestore-backed vehicle state', icon: LocateFixed},
-  {label: 'Campus loop', value: 'UCSC', detail: 'Stops, hills, routes, and Metro overlap', icon: RouteIcon},
-  {label: 'Build mode', value: 'Student-led', detail: 'Hardware, backend, map, and product', icon: Bus},
+const stickerRow = [
+  {label: "cruzhacks '23", tone: 'ink'},
+  {label: 'gdsc top 10', tone: 'red'},
+  {label: 'student-built', tone: 'ocean'},
+  {label: 'open source', tone: 'ink'},
+  {label: '2023 archive', tone: 'red'},
 ]
 
-const controlStops = [
-  ['Science Hill', '18%', '34%'],
-  ['Quarry Plaza', '53%', '22%'],
-  ['East Field', '80%', '58%'],
-  ['Cowell', '32%', '75%'],
+const heroPolaroids = [
+  {
+    src: '/background/hackathon.png',
+    alt: 'CruzHacks 2023 — the team forms',
+    caption: 'cruzhacks, hour zero',
+    rotate: 'left',
+    tapeColor: 'yellow',
+  },
+  {
+    src: '/background/coding.png',
+    alt: 'Late-night hackathon coding',
+    caption: '4 am, library couch',
+    rotate: 'right',
+    tapeColor: 'blue',
+  },
+  {
+    src: '/background/competition.png',
+    alt: 'Top 10 demo day',
+    caption: 'demo day, top 10',
+    rotate: 'flat',
+    tapeColor: 'yellow',
+  },
 ]
 
-function ExhibitLabel({children}) {
-  return <p className="type-overline">{children}</p>
-}
+function HomeHero({reduceMotion}) {
+  const animation = reduceMotion
+    ? {}
+    : {
+        initial: {opacity: 0, y: 18},
+        animate: {opacity: 1, y: 0},
+        transition: {duration: 0.7, ease: [0.22, 1, 0.36, 1]},
+      }
 
-function SectionHeading({eyebrow, title, body, align = 'left', className = ''}) {
   return (
-    <div
-      className={`max-w-[880px] space-y-4 ${
-        align === 'center' ? 'mx-auto text-center' : ''
-      } ${className}`}
-    >
-      <ExhibitLabel>{eyebrow}</ExhibitLabel>
-      <h2 className="type-display-2">{title}</h2>
-      {body && <p className="type-heading-5 text-muted">{body}</p>}
-    </div>
+    <section className="relative mx-auto max-w-[1280px] px-5 pt-20 md:px-12 md:pt-28 lg:px-16">
+      {/* sticker row up top */}
+      <motion.div
+        {...animation}
+        className="flex flex-wrap items-center gap-3"
+      >
+        {stickerRow.map((sticker) => (
+          <Chip key={sticker.label} tone={sticker.tone} label={sticker.label} />
+        ))}
+      </motion.div>
+
+      <div className="grid gap-12 lg:grid-cols-[1.15fr_0.95fr] lg:items-end mt-10">
+        <motion.div
+          {...animation}
+          transition={{...(animation.transition ?? {}), delay: 0.04}}
+        >
+          <div className="flex items-center gap-4">
+            <SlugDoodle size={56} className="text-[var(--ocean)]" />
+            <span className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.22em] text-[var(--ink-soft)]">
+              field notes \\ ucsc transit \\ 2023
+            </span>
+          </div>
+
+          <h1 className="type-display-1 mt-6">
+            <span className="block">SlugLoop.</span>
+            <span className="block type-hand text-[var(--red-pen)]" style={{fontSize: '0.42em', lineHeight: 1, marginTop: '-0.15em'}}>
+              field notes from a hackathon
+            </span>
+            <span className="block type-hand text-[var(--ink-soft)]" style={{fontSize: '0.42em', lineHeight: 1}}>
+              that went further than expected.
+            </span>
+          </h1>
+
+          <p className="mt-7 max-w-[58ch] text-[clamp(1rem,1.5vw,1.18rem)] leading-[1.7] text-[var(--ink-soft)]">
+            Four UCSC engineering students rebuilt the campus loop bus tracker
+            over a hackathon weekend, took it public, and ended up as the
+            first U.S. team to make the Google Solution Challenge global Top 10
+            in three years. This site is the preserved field log + a frozen
+            demo of the map.
+          </p>
+
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <Button href="/journey" variant="solid" endIcon={<ArrowRight size={16} />}>
+              Read the field log
+            </Button>
+            <Button href="/map" variant="outline" startIcon={<MapPin size={14} />}>
+              Open the demo map
+            </Button>
+            <Button
+              href={externalLinks.githubRepo}
+              target="_blank"
+              rel="noopener"
+              variant="ghost"
+              startIcon={<Github size={14} />}
+            >
+              Source code
+            </Button>
+          </div>
+        </motion.div>
+
+        {/* hero polaroid stack */}
+        <motion.div
+          {...animation}
+          transition={{...(animation.transition ?? {}), delay: 0.12}}
+          className="relative h-[480px] md:h-[520px]"
+        >
+          {/* stack polaroids absolutely so they overlap like pinned to a corkboard */}
+          <div
+            className="absolute"
+            style={{top: 0, right: 30, transform: 'rotate(-6deg)', zIndex: 1}}
+          >
+            <Polaroid
+              src={heroPolaroids[0].src}
+              alt={heroPolaroids[0].alt}
+              caption={heroPolaroids[0].caption}
+              rotate="left"
+              width={260}
+              height={260}
+            />
+          </div>
+          <div
+            className="absolute"
+            style={{top: 130, left: 0, transform: 'rotate(4deg)', zIndex: 2}}
+          >
+            <Polaroid
+              src={heroPolaroids[1].src}
+              alt={heroPolaroids[1].alt}
+              caption={heroPolaroids[1].caption}
+              rotate="right"
+              tapeColor="blue"
+              width={240}
+              height={240}
+            />
+          </div>
+          <div
+            className="absolute"
+            style={{bottom: 0, right: 80, transform: 'rotate(-2deg)', zIndex: 3}}
+          >
+            <Polaroid
+              src={heroPolaroids[2].src}
+              alt={heroPolaroids[2].alt}
+              caption={heroPolaroids[2].caption}
+              rotate="flat"
+              width={250}
+              height={250}
+            />
+          </div>
+
+          {/* stamp on top of the stack */}
+          <div
+            className="absolute"
+            style={{top: 12, left: 40, zIndex: 5, pointerEvents: 'none'}}
+          >
+            <Stamp tone="red" size="lg" rotate={-12}>
+              top 10 finalist
+            </Stamp>
+          </div>
+
+          {/* pencil arrow pointing toward the polaroid stack */}
+          <PencilArrow
+            direction="curve"
+            width={170}
+            height={120}
+            className="absolute text-[var(--ink-soft)]"
+            style={{bottom: 230, left: -20, transform: 'rotate(-10deg)'}}
+          />
+        </motion.div>
+      </div>
+    </section>
   )
 }
 
-function MotionSection({children, className, animationProps}) {
+function ReadMeFirst() {
   return (
-    <motion.section className={className} {...animationProps}>
-      {children}
-    </motion.section>
-  )
-}
-
-function CommandDeck() {
-  return (
-    <Card className="relative min-h-[560px] overflow-hidden p-4 md:p-5" interactive={false}>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,color-mix(in_srgb,var(--color-primary),transparent_68%),transparent_30%),radial-gradient(circle_at_82%_12%,color-mix(in_srgb,var(--color-secondary),transparent_72%),transparent_26%)]" />
-      <div className="relative z-[1] grid h-full min-h-[528px] gap-4 lg:grid-rows-[auto_1fr_auto]">
-        <div className="case-plate flex flex-wrap items-center justify-between gap-3 rounded-[1.35rem] px-4 py-3">
-          <div>
-            <p className="type-caption uppercase tracking-[0.2em] text-muted">SlugLoop OS</p>
-            <p className="font-display text-xl font-extrabold tracking-[-0.03em]">
-              campus transit control
-            </p>
+    <section className="relative mx-auto mt-24 max-w-[1180px] px-5 md:mt-32 md:px-12 lg:px-16">
+      <div className="grid gap-10 lg:grid-cols-[1fr_360px] lg:items-start">
+        <article className="notebook-page notebook-page--margin relative px-6 py-8 md:px-10 md:py-12">
+          <p className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.22em] text-[var(--red-pen)]">
+            // read me first
+          </p>
+          <h2 className="type-display-2 mt-4">
+            The receivers don&rsquo;t ping anymore. <br />
+            <MarkerHighlight strong>This is the field log.</MarkerHighlight>
+          </h2>
+          <p className="mt-6 max-w-[64ch] text-[1.05rem] leading-[1.7] text-[var(--ink-soft)]">
+            SlugLoop shipped in 2023. The map ran on reprogrammed GPS hardware
+            on the campus loop fleet, base stations on top of buildings, an
+            Express + Firestore pipeline, and a React PWA. Some time after the
+            team graduated, the basestations stopped reporting. The map still
+            loads. The journey still happened. Both are preserved here as a
+            case study, not a commute tool.
+          </p>
+          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <Chip tone="red" label="status: archived demo" />
+            <Chip tone="ink" label="last live ping: ~2024" />
+            <Chip tone="ocean" label="apache 2.0" />
           </div>
-          <Chip label="Signal live" tone="primary" />
-        </div>
+        </article>
 
-        <div className="grid gap-4">
-          <div className="relative min-h-[390px] overflow-hidden rounded-[2rem] border border-[var(--museum-route-diagram-border)] bg-[image:var(--museum-route-diagram-background)]">
-            <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(var(--museum-grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--museum-grid-line)_1px,transparent_1px)] [background-size:34px_34px]" />
-            <div className="absolute left-5 top-5 z-[1] flex flex-wrap items-center gap-2">
-              <span className="rounded-full border border-[var(--museum-soft-divider)] bg-[color-mix(in_srgb,var(--color-bg),transparent_10%)] px-3 py-1 text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-[var(--color-primary-light)]">
-                Live artifact route
-              </span>
-              <span className="rounded-full border border-[var(--museum-soft-divider)] bg-[color-mix(in_srgb,var(--color-bg),transparent_10%)] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-muted">
-                UCSC loop
-              </span>
-            </div>
-            <div className="absolute bottom-5 left-5 z-[1] max-w-[260px] rounded-[1.25rem] border border-[var(--museum-soft-divider)] bg-[color-mix(in_srgb,var(--color-bg),transparent_12%)] p-3 backdrop-blur">
-              <p className="type-caption uppercase tracking-[0.18em] text-muted">Telemetry frame</p>
-              <p className="text-sm font-semibold">
-                Preserved map logic, abstracted into a command-view route.
-              </p>
-            </div>
-            <div className="campus-contour absolute inset-[16%_8%_12%_18%]" />
-            <div className="route-loop absolute inset-[18%_10%_16%_16%] rounded-[48%_52%_43%_57%]" />
-            <div className="route-loop-secondary absolute inset-[28%_20%_24%_25%] rounded-[54%_46%_58%_42%]" />
-            {controlStops.map(([label, left, top], index) => (
-              <div
-                key={label}
-                className="absolute -translate-x-1/2 -translate-y-1/2"
-                style={{left, top}}
-              >
-                <span
-                  className={`museum-dot mb-2 block ${
-                    index === 1 ? 'h-5 w-5' : 'h-3.5 w-3.5'
-                  }`}
-                />
-                <p className="rounded-full border border-[var(--museum-soft-divider)] bg-[color-mix(in_srgb,var(--color-bg),transparent_16%)] px-2 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em]">
-                  {label}
-                </p>
-              </div>
-            ))}
-            <div className="scanline absolute inset-x-0 top-0 h-24" />
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-3">
-            {[
-              ['ETA', '02:14'],
-              ['Route', 'Loop'],
-              ['Metro', '5 lines'],
-            ].map(([label, value]) => (
-              <div
-                key={label}
-                className="case-plate rounded-[1.25rem] px-4 py-4"
-              >
-                <p className="type-caption uppercase tracking-[0.18em] text-muted">{label}</p>
-                <p className="font-display text-2xl font-extrabold tracking-[-0.04em] text-[var(--color-primary-light)]">
-                  {value}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-3">
-          {signalCards.map(({label, value, icon: Icon}) => (
-            <div key={label} className="case-plate rounded-[1.25rem] p-4">
-              <Icon className="mb-4 text-[var(--color-secondary)]" size={20} aria-hidden="true" />
-              <p className="type-caption uppercase tracking-[0.18em] text-muted">{label}</p>
-              <p className="font-bold">{value}</p>
-            </div>
-          ))}
+        <div className="relative flex flex-col gap-6 lg:pt-8">
+          <StickyNote color="yellow" rotate="right" pin>
+            <span>
+              if the map looks <span style={{textDecoration: 'underline'}}>empty</span>, that&rsquo;s expected. it&rsquo;s the
+              archive, not the live feed.
+            </span>
+          </StickyNote>
+          <StickyNote color="blue" rotate="left">
+            scroll down → the journey is the main exhibit.
+          </StickyNote>
         </div>
       </div>
-    </Card>
+    </section>
+  )
+}
+
+function StatStrip() {
+  return (
+    <section
+      className="relative mx-auto mt-24 max-w-[1180px] px-5 md:mt-28 md:px-12 lg:px-16"
+    >
+      <p className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.22em] text-[var(--ink-soft)]">
+        // by the numbers
+      </p>
+      <div className="mt-6 flex flex-wrap items-end gap-x-12 gap-y-8 border-t-2 border-b-2 border-[var(--ink)] py-8">
+        {journeyStats.map((stat, index) => (
+          <div key={stat.label} className="min-w-[140px]">
+            <p className="font-display text-[clamp(2rem,4.4vw,3.8rem)] font-semibold leading-none tracking-[-0.02em]">
+              {index === 3 ? (
+                <MarkerHighlight strong>{stat.value}</MarkerHighlight>
+              ) : (
+                stat.value
+              )}
+            </p>
+            <p className="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-[var(--ink-soft)]">
+              {stat.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function JourneyCTA() {
+  return (
+    <section className="relative mx-auto mt-24 max-w-[1180px] px-5 md:mt-32 md:px-12 lg:px-16">
+      <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-20">
+        <div>
+          <p className="type-overline">// the main exhibit</p>
+          <h2 className="type-display-2 mt-4">
+            Read the journey.{' '}
+            <span className="type-hand text-[var(--red-pen)]" style={{fontSize: '0.6em'}}>
+              start at the top.
+            </span>
+          </h2>
+          <p className="mt-5 max-w-[58ch] text-[var(--ink-soft)]">
+            A scrolling field log of how SlugLoop got from a Reddit thread in
+            January 2023 to <MarkerCircle as="span">Google&rsquo;s global Top 10 finalist stage</MarkerCircle> by August.
+            Photos, sticky-note notes, news clippings, and the actual
+            competition demo videos.
+          </p>
+        </div>
+
+        <div className="flex flex-col items-start gap-4 lg:items-end">
+          <PencilArrow direction="right" width={220} height={60} className="text-[var(--ink-soft)]" />
+          <Button
+            href="/journey"
+            variant="solid"
+            size="lg"
+            endIcon={<ArrowRight size={18} />}
+          >
+            Open the field log
+          </Button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function PressRow() {
+  return (
+    <section
+      className="relative mx-auto mt-24 max-w-[1280px] px-5 md:mt-32 md:px-12 lg:px-16"
+    >
+      <p className="type-overline">// from the clippings file</p>
+      <h2 className="type-display-2 mt-4">
+        <MarkerHighlight>The press picked up the story.</MarkerHighlight>
+      </h2>
+
+      <div className="relative mt-12 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        {pressLinks.map((link, index) => (
+          <div key={link.href} className="relative">
+            <Tape
+              top={-8}
+              left={index % 2 === 0 ? 20 : 'auto'}
+              right={index % 2 === 1 ? 20 : 'auto'}
+              rotate={index % 2 === 0 ? -8 : 7}
+              color={index % 2 === 0 ? 'yellow' : 'blue'}
+            />
+            <NewsClipping
+              source={link.label}
+              date={index === 0 ? 'Jul 31, 2023' : index === 1 ? 'Jul 26, 2023' : index === 2 ? 'Jul 28, 2023' : '2023'}
+              headline={link.title}
+              href={link.href}
+              rotate={index % 2 === 0 ? -1.4 : 1.6}
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function VideoTickets() {
+  return (
+    <section className="relative mx-auto mt-24 max-w-[1180px] px-5 md:mt-32 md:px-12 lg:px-16">
+      <p className="type-overline">// archive: demo videos</p>
+      <h2 className="type-display-2 mt-4">
+        Two demos.{' '}
+        <span className="type-hand text-[var(--ink-soft)]" style={{fontSize: '0.55em'}}>
+          recorded a few weeks apart.
+        </span>
+      </h2>
+
+      <div className="mt-10 grid gap-6 md:grid-cols-2">
+        <BusTicket
+          serial="100"
+          label="GDSC top 100"
+          title="The submission demo."
+          body="A tighter walkthrough recorded for the Solution Challenge round-of-100 judging."
+          href={externalLinks.top100DemoVideo}
+          external
+        >
+          <p className="mt-3 inline-flex items-center gap-2 font-mono text-[0.72rem] font-bold uppercase tracking-[0.16em] text-[var(--ocean)]">
+            <PlayCircle size={14} aria-hidden="true" /> watch on youtube
+          </p>
+        </BusTicket>
+        <BusTicket
+          serial="010"
+          label="GDSC top 10"
+          title="The finalist demo."
+          body="The polished demo recorded after SlugLoop reached the global Top 10 finalist stage."
+          href={externalLinks.top10DemoVideo}
+          external
+        >
+          <p className="mt-3 inline-flex items-center gap-2 font-mono text-[0.72rem] font-bold uppercase tracking-[0.16em] text-[var(--red-pen)]">
+            <PlayCircle size={14} aria-hidden="true" /> watch on youtube
+          </p>
+        </BusTicket>
+      </div>
+    </section>
+  )
+}
+
+function FooterStrip() {
+  return (
+    <section className="relative mx-auto mt-24 mb-24 max-w-[1180px] px-5 md:mt-32 md:px-12 lg:px-16">
+      <div className="border-t border-dashed border-[var(--ink-soft)] pt-10">
+        <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <p className="type-hand text-[2rem] leading-tight">
+              that&rsquo;s the cover. flip the page.
+            </p>
+            <p className="mt-2 font-mono text-[0.72rem] uppercase tracking-[0.18em] text-[var(--ink-soft)]">
+              slugloop / preserved archive / 2023&ndash;present
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button href="/journey" variant="solid" endIcon={<ArrowRight size={14} />}>
+              Field log
+            </Button>
+            <Button href="/about" variant="outline">
+              The crew
+            </Button>
+            <Button href="/contact" variant="ghost">
+              Links
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
 export default function MuseumHome() {
   const reduceMotion = useReducedMotion()
-  const animationProps = reduceMotion
-    ? {}
-    : {
-        initial: 'hidden',
-        whileInView: 'visible',
-        viewport: {once: true, amount: 0.16},
-        variants: fadeUp,
-        transition: {duration: 0.72, ease: [0.22, 1, 0.36, 1]},
-      }
 
   return (
-    <div className="museum-page overflow-hidden">
-      <div className="museum-grid-overlay" />
-      <div className="archive-grain" />
+    <main className="paper relative min-h-screen overflow-hidden">
+      <div className="paper-grid" />
+      <div className="paper-grain" />
 
-      <main className="relative z-[1]">
-        <section className="relative grid min-h-[calc(100vh-72px)] items-center gap-10 overflow-hidden px-5 pb-14 pt-20 md:px-10 md:pb-20 md:pt-28 xl:grid-cols-[0.94fr_1.06fr] xl:px-16 2xl:px-24">
-          <div className="route-halo -left-36 top-8 h-80 w-80 md:h-[34rem] md:w-[34rem]" />
-          <div className="route-halo -right-24 bottom-4 h-64 w-64 opacity-80 md:h-[28rem] md:w-[28rem]" />
+      {/* decorative coffee rings */}
+      <span className="coffee-ring" aria-hidden="true" style={{top: 200, right: -60}} />
+      <span
+        className="coffee-ring hidden md:block"
+        aria-hidden="true"
+        style={{top: '60%', left: -80, opacity: 0.4}}
+      />
 
-          <motion.div {...animationProps}>
-            <div className="max-w-[860px] space-y-8">
-              <div className="space-y-5">
-                <Chip label="Preserved transit system / finalist case study" tone="primary" />
-                <h1 className="type-display-1">
-                  Campus transit, rebuilt as a kinetic control system.
-                </h1>
-                <p className="max-w-[720px] text-[clamp(1.08rem,1.7vw,1.32rem)] leading-[1.7] text-muted">
-                  SlugLoop turned live GPS hardware, Firestore, Express, React,
-                  and Google Maps into a student-built shuttle tracker for UCSC.
-                  This archive now frames the project like the system it was:
-                  operational, precise, and moving.
-                </p>
-              </div>
-
-              <div className="grid max-w-[760px] gap-3 sm:grid-cols-3">
-                {signalCards.map(({label, detail, icon: Icon}) => (
-                  <div key={label} className="case-plate rounded-[1.35rem] p-4">
-                    <Icon className="mb-4 text-[var(--color-secondary)]" size={22} aria-hidden="true" />
-                    <p className="font-display text-lg font-extrabold tracking-[-0.03em]">{label}</p>
-                    <p className="text-sm text-muted">{detail}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <Button href="/map" variant="solid" size="lg" endIcon={<ArrowRight size={18} />}>
-                  Launch map artifact
-                </Button>
-                <Button
-                  href={externalLinks.demoVideo}
-                  target="_blank"
-                  rel="noopener"
-                  variant="outline"
-                  size="lg"
-                  startIcon={<PlayCircle size={18} />}
-                >
-                  Watch system demo
-                </Button>
-                <Button
-                  href={externalLinks.githubRepo}
-                  target="_blank"
-                  rel="noopener"
-                  variant="ghost"
-                  size="lg"
-                  startIcon={<Github size={18} />}
-                >
-                  Inspect source
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div {...animationProps} transition={{duration: 0.84, delay: 0.08}}>
-            <CommandDeck />
-          </motion.div>
-        </section>
-
-        <section className="px-5 pb-14 md:px-10 md:pb-20 xl:px-16 2xl:px-24">
-          <div className="grid gap-3 md:grid-cols-4">
-            {heroStats.map((stat, index) => (
-              <Card
-                key={stat.label}
-                className={`p-5 md:p-6 ${index % 2 ? 'md:translate-y-6' : ''}`}
-                interactive={false}
-              >
-                <p className="type-caption mb-5 uppercase tracking-[0.18em] text-muted">
-                  0{index + 1}
-                </p>
-                <h3 className="type-heading-3 text-[var(--color-secondary)]">{stat.value}</h3>
-                <p className="mt-2 text-sm text-muted">{stat.label}</p>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <MotionSection
-          className="grid gap-10 px-5 py-16 md:px-10 md:py-24 xl:grid-cols-[0.72fr_1.28fr] xl:px-16 2xl:px-24"
-          animationProps={animationProps}
-        >
-          <div className="xl:sticky xl:top-28 xl:self-start">
-            <SectionHeading
-              eyebrow="System profile"
-              title="A practical app with real operational depth."
-              body="The flow now follows the product story: pressure, signal, software, public proof. Each section has room to breathe while still feeling like one continuous route."
-            />
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {exhibitSections.map((section, index) => (
-              <Card
-                key={section.title}
-                className={`p-6 md:p-8 ${index === 1 || index === 2 ? 'md:translate-y-8' : ''}`}
-              >
-                <div className="space-y-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="type-overline">{section.eyebrow}</p>
-                    <span className="rounded-full border border-[var(--museum-soft-divider)] px-3 py-1 text-xs font-bold text-[var(--color-primary-light)]">
-                      {section.accent}
-                    </span>
-                  </div>
-                  <h3 className="type-heading-4">{section.title}</h3>
-                  <p className="text-muted">{section.body}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </MotionSection>
-
-        <MotionSection
-          className="px-5 py-16 md:px-10 md:py-24 xl:px-16 2xl:px-24"
-          animationProps={animationProps}
-        >
-          <div className="museum-static-card overflow-hidden rounded-[2.25rem] border-[var(--museum-teal-border)]">
-            <div className="grid gap-0 xl:grid-cols-[0.42fr_0.58fr]">
-              <div className="p-6 md:p-10 xl:p-12">
-                <SectionHeading
-                  eyebrow="Architecture"
-                  title="From bus ping to moving pixel."
-                  body="The preserved map still mirrors the original system shape: physical hardware produced the signal, the backend normalized it, Firestore carried state, and React rendered campus movement."
-                />
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Chip label="GPS" />
-                  <Chip label="Express" tone="primary" />
-                  <Chip label="Firestore" />
-                  <Chip label="Google Maps" tone="primary" />
-                </div>
-              </div>
-              <div className="relative border-t border-[var(--museum-soft-divider)] p-4 md:p-6 xl:border-l xl:border-t-0">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_18%,color-mix(in_srgb,var(--color-primary),transparent_76%),transparent_30%)]" />
-                <div className="relative grid gap-3">
-                  {architectureFlow.map((item) => (
-                    <Card key={item.step} className="p-5" interactive={false}>
-                      <div className="grid gap-4 sm:grid-cols-[72px_1fr]">
-                        <p className="font-display text-4xl font-extrabold tracking-[-0.06em] text-[var(--color-secondary)]">
-                          {item.step}
-                        </p>
-                        <div>
-                          <h3 className="type-heading-5 text-[var(--color-text-primary)]">{item.title}</h3>
-                          <p className="text-muted">{item.detail}</p>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </MotionSection>
-
-        <MotionSection
-          className="px-5 py-16 md:px-10 md:py-24 xl:px-16 2xl:px-24"
-          animationProps={animationProps}
-        >
-          <SectionHeading
-            eyebrow="Recognition"
-            title="Public proof, not portfolio filler."
-            body="Coverage from campus and local outlets gave the project external weight, while Google's finalist stage proved the student system could travel beyond Santa Cruz."
-            align="center"
-          />
-          <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {pressLinks.map((link, index) => (
-              <Card
-                key={link.href}
-                className={`min-h-[220px] p-6 ${index % 2 ? 'xl:translate-y-8' : ''}`}
-                interactive={false}
-              >
-                <div className="flex h-full flex-col gap-5">
-                  <Award className="text-[var(--color-secondary)]" size={22} aria-hidden="true" />
-                  <p className="type-overline">{link.label}</p>
-                  <h3 className="text-lg font-bold leading-snug">{link.title}</h3>
-                  <div className="flex-1" />
-                  <a href={link.href} target="_blank" rel="noopener" className={linkText}>
-                    Read source <ExternalLink size={14} className="inline" aria-hidden="true" />
-                  </a>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </MotionSection>
-
-        <MotionSection
-          className="grid gap-10 px-5 py-16 md:px-10 md:py-24 xl:grid-cols-[0.9fr_1.1fr] xl:px-16 2xl:px-24"
-          animationProps={animationProps}
-        >
-          <SectionHeading
-            eyebrow="Route log"
-            title="The build story now reads like motion."
-            body="A compressed path through discovery, prototype, beta, finalist stage, and archive mode. The full timeline keeps the longer record intact."
-          />
-          <div className="space-y-3">
-            {milestones.slice(0, 5).map((milestone, index) => (
-              <div
-                key={`${milestone.date}-${milestone.title}`}
-                className="case-plate grid gap-4 rounded-[1.5rem] p-5 sm:grid-cols-[108px_1fr]"
-              >
-                <div className="flex items-center gap-3 sm:block">
-                  <span className="museum-dot h-2.5 w-2.5 sm:mb-3 sm:block" />
-                  <p className="type-caption font-bold text-[var(--color-secondary)]">{milestone.date}</p>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold">{index + 1}. {milestone.title}</h3>
-                  <p className="text-sm text-muted">{milestone.description}</p>
-                </div>
-              </div>
-            ))}
-            <Button href="/timeline" variant="ghost" endIcon={<ArrowRight size={18} />}>
-              Visit the archive route
-            </Button>
-          </div>
-        </MotionSection>
-
-        <MotionSection
-          className="px-5 py-16 md:px-10 md:py-24 xl:px-16 2xl:px-24"
-          animationProps={animationProps}
-        >
-          <SectionHeading
-            eyebrow="Crew"
-            title="Four students carried the whole stack."
-            body="The team section is deliberately compact: enough personality to humanize the system without breaking the forward momentum of the page."
-            align="center"
-          />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {teamMembers.map((member) => (
-              <Card key={member.name} className="p-5" interactive={false}>
-                <div className="flex h-full flex-col items-start gap-4">
-                  <Avatar src={member.img} alt={member.name} size={72} />
-                  <div>
-                    <h3 className="text-lg font-bold">{member.name}</h3>
-                    <p className="text-sm text-muted">{member.role}</p>
-                  </div>
-                  <div className="flex-1" />
-                  <a href={member.linkedin} target="_blank" rel="noopener" className={linkText}>
-                    LinkedIn
-                  </a>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </MotionSection>
-
-        <MotionSection
-          className="px-5 py-16 md:px-10 md:py-24 xl:px-16 2xl:px-24"
-          animationProps={animationProps}
-        >
-          <Card className="relative overflow-hidden p-6 md:p-10 xl:p-12">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,color-mix(in_srgb,var(--color-secondary),transparent_76%),transparent_26%),radial-gradient(circle_at_82%_72%,color-mix(in_srgb,var(--color-primary),transparent_78%),transparent_30%)]" />
-            <div className="relative grid gap-10 xl:grid-cols-[0.85fr_1.15fr]">
-              <SectionHeading
-                eyebrow="Retrospective"
-                title="A map demo, a case study, and a signal that still holds."
-                body="SlugLoop is no longer positioned as a commuter utility. It now works as a polished archive of shipped work, public impact, and technical range."
-              />
-              <div className="space-y-4">
-                {proofPoints.map((point) => (
-                  <div key={point} className="flex items-start gap-4">
-                    <span className="museum-dot mt-2 h-2.5 w-2.5" />
-                    <p className="text-muted">{point}</p>
-                  </div>
-                ))}
-                <div className={divider} />
-                <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-                  <Button href="/map" variant="solid" startIcon={<MapIcon size={18} />}>
-                    Open map demo
-                  </Button>
-                  <Button href="/contact" variant="outline" endIcon={<ArrowRight size={18} />}>
-                    Browse all links
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </MotionSection>
-      </main>
-    </div>
+      <HomeHero reduceMotion={reduceMotion} />
+      <ReadMeFirst />
+      <StatStrip />
+      <JourneyCTA />
+      <PressRow />
+      <VideoTickets />
+      <FooterStrip />
+    </main>
   )
 }
