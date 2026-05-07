@@ -41,10 +41,10 @@ const signalCards = [
 ]
 
 const controlStops = [
-  ['Science Hill', '17%', '28%'],
-  ['Quarry Plaza', '58%', '18%'],
-  ['East Field', '78%', '64%'],
-  ['Cowell', '27%', '74%'],
+  ['Science Hill', '18%', '34%'],
+  ['Quarry Plaza', '53%', '22%'],
+  ['East Field', '80%', '58%'],
+  ['Cowell', '32%', '75%'],
 ]
 
 function ExhibitLabel({children}) {
@@ -88,11 +88,26 @@ function CommandDeck() {
           <Chip label="Signal live" tone="primary" />
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-[1fr_160px]">
-          <div className="relative min-h-[330px] overflow-hidden rounded-[2rem] border border-[var(--museum-route-diagram-border)] bg-[image:var(--museum-route-diagram-background)]">
+        <div className="grid gap-4">
+          <div className="relative min-h-[390px] overflow-hidden rounded-[2rem] border border-[var(--museum-route-diagram-border)] bg-[image:var(--museum-route-diagram-background)]">
             <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(var(--museum-grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--museum-grid-line)_1px,transparent_1px)] [background-size:34px_34px]" />
-            <div className="route-loop absolute inset-[12%] rounded-[44%_56%_47%_53%]" />
-            <div className="route-loop-secondary absolute inset-[22%_18%] rounded-[54%_46%_58%_42%]" />
+            <div className="absolute left-5 top-5 z-[1] flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-[var(--museum-soft-divider)] bg-[color-mix(in_srgb,var(--color-bg),transparent_10%)] px-3 py-1 text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-[var(--color-primary-light)]">
+                Live artifact route
+              </span>
+              <span className="rounded-full border border-[var(--museum-soft-divider)] bg-[color-mix(in_srgb,var(--color-bg),transparent_10%)] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-muted">
+                UCSC loop
+              </span>
+            </div>
+            <div className="absolute bottom-5 left-5 z-[1] max-w-[260px] rounded-[1.25rem] border border-[var(--museum-soft-divider)] bg-[color-mix(in_srgb,var(--color-bg),transparent_12%)] p-3 backdrop-blur">
+              <p className="type-caption uppercase tracking-[0.18em] text-muted">Telemetry frame</p>
+              <p className="text-sm font-semibold">
+                Preserved map logic, abstracted into a command-view route.
+              </p>
+            </div>
+            <div className="campus-contour absolute inset-[16%_8%_12%_18%]" />
+            <div className="route-loop absolute inset-[18%_10%_16%_16%] rounded-[48%_52%_43%_57%]" />
+            <div className="route-loop-secondary absolute inset-[28%_20%_24%_25%] rounded-[54%_46%_58%_42%]" />
             {controlStops.map(([label, left, top], index) => (
               <div
                 key={label}
@@ -112,7 +127,7 @@ function CommandDeck() {
             <div className="scanline absolute inset-x-0 top-0 h-24" />
           </div>
 
-          <div className="grid gap-3">
+          <div className="grid gap-3 sm:grid-cols-3">
             {[
               ['ETA', '02:14'],
               ['Route', 'Loop'],

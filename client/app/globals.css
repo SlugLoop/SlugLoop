@@ -327,6 +327,30 @@ a {
   box-shadow: var(--museum-dot-glow);
 }
 
+.campus-contour {
+  border: 1px solid color-mix(in srgb, var(--color-primary), transparent 68%);
+  border-radius: 62% 38% 52% 48% / 44% 55% 45% 56%;
+  background:
+    radial-gradient(circle at 32% 38%, color-mix(in srgb, var(--color-primary), transparent 86%), transparent 30%),
+    radial-gradient(circle at 70% 62%, color-mix(in srgb, var(--color-secondary), transparent 88%), transparent 28%);
+  opacity: 0.82;
+  transform: rotate(-8deg);
+}
+
+.campus-contour::before,
+.campus-contour::after {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border: 1px solid color-mix(in srgb, var(--color-primary), transparent 78%);
+  border-radius: inherit;
+}
+
+.campus-contour::after {
+  inset: 18%;
+  border-color: color-mix(in srgb, var(--color-secondary), transparent 78%);
+}
+
 .route-loop,
 .route-loop-secondary {
   border: 2px solid var(--museum-route-line);
