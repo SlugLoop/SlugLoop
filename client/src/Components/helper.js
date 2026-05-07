@@ -1,3 +1,5 @@
+'use client'
+
 import {Timestamp} from 'firebase/firestore'
 
 export function headingBetweenPoints({lat1, lon1}, {lat2, lon2}) {

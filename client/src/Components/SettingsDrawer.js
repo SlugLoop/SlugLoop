@@ -1,180 +1,92 @@
-import React, {useState, useContext} from 'react'
-import {
-  List,
-  ListItemButton,
-  Drawer,
-  IconButton,
-  Typography,
-  Divider,
-  useTheme,
-} from '@mui/material'
-import {useNavigate} from 'react-router-dom'
-import {Info as InfoIcon} from '@mui/icons-material'
-import {Mail as MailIcon} from '@mui/icons-material'
-import {FilterList as FilterListIcon} from '@mui/icons-material'
-import {
-  Brightness4 as Brightness4Icon,
-  Brightness7 as Brightness7Icon,
-} from '@mui/icons-material'
-import {AccessTime as AccessTimeIcon} from '@mui/icons-material'
-import {Menu as MenuIcon} from '@mui/icons-material'
-import HomeIcon from '@mui/icons-material/Home'
-import TimelineIcon from '@mui/icons-material/Timeline'
+'use client'
+
+import React, {useContext, useState} from 'react'
+import {useRouter} from 'next/navigation'
 import AppContext from '../appContext'
+import Drawer from './ui/Drawer'
+import {
+  Clock,
+  Info,
+  ListFilter,
+  Mail,
+  Menu,
+  Moon,
+  Route,
+  Sun,
+} from 'lucide-react'
+import {cx} from './ui/cx'
+
+const navItems = [
+  {label: 'Story', path: '/', icon: Route},
+  {label: 'Archive', path: '/timeline', icon: Clock},
+  {label: 'Links', path: '/contact', icon: Mail},
+  {label: 'Team', path: '/about', icon: Info},
+]
+
+function MenuButton({children, className, icon: Icon, onClick}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cx(
+        'museum-focus flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left font-semibold transition hover:bg-[color-mix(in_srgb,var(--color-secondary),transparent_88%)]',
+        className,
+      )}
+    >
+      {Icon && <Icon size={19} aria-hidden="true" />}
+      <span>{children}</span>
+    </button>
+  )
+}
 
 export default function SettingsDrawer(props) {
   const [isDrawerOpen, setDrawerOpen] = useState(false)
-  const navigate = useNavigate()
-  const {darkMode, setDarkMode} = useContext(AppContext)
-  const theme = useTheme()
+  const router = useRouter()
+  const {darkMode, toggleDarkMode} = useContext(AppContext)
 
-  const handleDrawerOpen = () => {
-    setDrawerOpen(true)
-  }
-
-  const handleDrawerClose = () => {
+  const navigate = (path) => {
     setDrawerOpen(false)
+    router.push(path)
   }
 
   return (
-    <>
-      <IconButton
-        edge="start"
-        color="primary"
-        aria-label="menu"
-        onClick={handleDrawerOpen}
-        sx={{
-          position: 'absolute',
-          right: '30px',
-          top: '90px',
-          borderRadius: '50%',
-          backgroundColor: theme.palette.background.paper,
-        }}
-      >
-        <MenuIcon />
-      </IconButton>
-      <Drawer anchor="right" open={isDrawerOpen} onClose={handleDrawerClose}>
-        <List
-          sx={{
-            width: '200px',
-          }}
+    <Drawer
+      open={isDrawerOpen}
+      onOpenChange={setDrawerOpen}
+      title="Menu"
+      trigger={
+        <button
+          type="button"
+          aria-label="menu"
+          className="museum-focus absolute right-[30px] top-[90px] z-[3] inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-paper)] text-[var(--color-primary)] shadow-[var(--museum-card-shadow)]"
         >
-          <Typography
-            variant="h5"
-            component="div"
-            sx={{
-              fontWeight: 'bold',
-              textAlign: 'center',
-              marginTop: '10px',
-              marginBottom: '20px',
-            }}
-          >
-            Menu
-          </Typography>
-          <Divider />
-          <ListItemButton
-            onClick={() => {
-              handleDrawerClose()
-              navigate('/')
-            }}
-          >
-            <HomeIcon
-              sx={{
-                mr: 2,
-              }}
-            />
-            Home
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              handleDrawerClose()
-              navigate('/timeline')
-            }}
-          >
-            <TimelineIcon
-              sx={{
-                mr: 2,
-              }}
-            />
-            Timeline
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              handleDrawerClose()
-              navigate('/contact')
-            }}
-          >
-            <MailIcon
-              sx={{
-                mr: 2,
-              }}
-            />
-            Contact Us
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              handleDrawerClose()
-              navigate('/about')
-            }}
-            autoFocus
-            sx={{
-              paddingBottom: '6%',
-            }}
-          >
-            <InfoIcon
-              sx={{
-                mr: 2,
-              }}
-            />
-            About Us
-          </ListItemButton>
-          <Divider />
-          <ListItemButton
-            onClick={() => {
-              props.toggleDisplayTime()
-            }}
-          >
-            <AccessTimeIcon
-              sx={{
-                mr: 2,
-              }}
-            />
+          <Menu size={22} aria-hidden="true" />
+        </button>
+      }
+    >
+      <div className="space-y-4">
+        <div className="space-y-1">
+          {navItems.map((item) => (
+            <MenuButton key={item.path} icon={item.icon} onClick={() => navigate(item.path)}>
+              {item.label}
+            </MenuButton>
+          ))}
+        </div>
+
+        <div className="h-px bg-[var(--museum-soft-divider)]" />
+
+        <div className="space-y-1">
+          <MenuButton icon={Clock} onClick={props.toggleDisplayTime}>
             {props.displayTime ? 'Hide Time' : 'Show Time'}
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              setDarkMode(!darkMode)
-            }}
-          >
-            {props.darkMode ? (
-              <Brightness7Icon
-                sx={{
-                  mr: 2,
-                }}
-              />
-            ) : (
-              <Brightness4Icon
-                sx={{
-                  mr: 2,
-                }}
-              />
-            )}
-            {props.darkMode ? 'Light Mode' : 'Dark Mode'}
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              props.handleFilterToggle()
-            }}
-          >
-            <FilterListIcon
-              sx={{
-                mr: 2,
-              }}
-            />
+          </MenuButton>
+          <MenuButton icon={darkMode ? Sun : Moon} onClick={toggleDarkMode}>
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </MenuButton>
+          <MenuButton icon={ListFilter} onClick={props.handleFilterToggle}>
             {props.filter ? 'Show Past Buses' : 'Show Recent Buses'}
-          </ListItemButton>
-        </List>
-      </Drawer>
-    </>
+          </MenuButton>
+        </div>
+      </div>
+    </Drawer>
   )
 }

@@ -1,43 +1,32 @@
-import {Box, Stack, Typography} from '@mui/material';
-import React, {useState} from 'react';
+'use client'
+
+import React, {useState} from 'react'
 
 export default function Legend(props) {
-  const [open, setOpen] = useState(false);
-  // Meant to be a legend for the map
-  return (
-    <Box
-      maxWidth="150px"
-      onClick={() => setOpen(!open)}
-      sx={{
-        padding: 2,
-        position: 'absolute',
-        bottom: '100px',
-        left: '20px',
-        backgroundColor: 'white',
-        borderRadius: '5px',
-        opacity: '0.7',
+  const [open, setOpen] = useState(false)
 
-        // Animation children being rendered
-        transition: 'all 0.5s ease-in-out',
-      }}
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen(!open)}
+      className="museum-map-panel absolute bottom-[100px] left-5 max-w-[150px] rounded-lg p-4 text-left opacity-80 transition"
     >
-      <Stack direction="column" spacing={3}>
-        <Typography variant="h7">Legend</Typography>
-        {open &&
-          Object.keys(props.legendItems).map((route) => (
-            <Stack direction="row" spacing={2} key={route}>
+      <span className="font-bold">Legend</span>
+      {open && (
+        <span className="mt-4 flex flex-col gap-3">
+          {Object.keys(props.legendItems).map((route) => (
+            <span key={route} className="flex items-center gap-2 text-sm">
               <img
                 src={props.legendItems[route].icon}
                 alt="Bus Icon"
-                width="20px"
-                height="20px"
+                width="20"
+                height="20"
               />
-              <Typography variant="body2">
-                {props.legendItems[route].name}
-              </Typography>
-            </Stack>
+              <span>{props.legendItems[route].name}</span>
+            </span>
           ))}
-      </Stack>
-    </Box>
-  );
+        </span>
+      )}
+    </button>
+  )
 }

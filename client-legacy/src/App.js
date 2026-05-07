@@ -1,0 +1,130 @@
+import {useEffect, useState} from 'react'
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useLocation,
+  useOutlet,
+} from 'react-router-dom'
+import {AnimatePresence, motion} from 'framer-motion'
+import CssBaseline from '@mui/material/CssBaseline'
+import {ThemeProvider} from '@mui/material/styles'
+import {signIn} from './Components/Auth'
+import Map from './Components/Map'
+import About from './Components/About/AboutUs'
+import AboutDesktop from './Components/About/AboutUsDesktop'
+import Contact from './Components/Contact'
+import {RouteProvider} from './Route'
+import MainMobile from './Components/Landing/MainMobile'
+import MainDesktop from './Components/Landing/MainDesktop'
+import MyTimeline from './Components/TimeLine/TimeLine'
+import Wrapper from './Components/UIWrapper/Wrapper'
+import AppContext from './appContext'
+import AppProvider from './appProvider'
+import {themeOptions} from './Components/Theme/theme'
+
+const AnimatedOutlet = () => {
+  const outlet = useOutlet()
+  const [renderedOutlet] = useState(outlet)
+
+  return <>{renderedOutlet}</>
+}
+
+const RootContainer = () => {
+  const location = useLocation()
+
+  return (
+    <AnimatePresence mode="popLayout">
+      <motion.div
+        key={location.pathname}
+        initial={{opacity: 0}}
+        animate={{opacity: 1}}
+        exit={{opacity: 0}}
+        transition={{duration: 0.28}}
+      >
+        <AnimatedOutlet />
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+function App() {
+  const viewportWidth = useViewportWidth()
+
+  useEffect(() => {
+    signIn()
+  }, [])
+
+  const router = createBrowserRouter([
+    {
+      element: <RootContainer />,
+      children: [
+        {
+          index: true,
+          element: (
+            <Wrapper>
+              {viewportWidth > 600 ? <MainDesktop /> : <MainMobile />}
+            </Wrapper>
+          ),
+        },
+        {
+          path: 'timeline',
+          element: (
+            <Wrapper>
+              <MyTimeline />
+            </Wrapper>
+          ),
+        },
+        {
+          path: 'map',
+          element: <Map />,
+        },
+        {
+          path: 'about',
+          element: (
+            <Wrapper>
+              {viewportWidth > 600 ? <AboutDesktop /> : <About />}
+            </Wrapper>
+          ),
+        },
+        {
+          path: 'contact',
+          element: (
+            <Wrapper>
+              <Contact />
+            </Wrapper>
+          ),
+        },
+      ],
+    },
+  ])
+
+  return (
+    <AppProvider>
+      <AppContext.Consumer>
+        {({darkMode}) => (
+          <ThemeProvider theme={themeOptions(darkMode)}>
+            <CssBaseline />
+            <RouteProvider>
+              <RouterProvider router={router} />
+            </RouteProvider>
+          </ThemeProvider>
+        )}
+      </AppContext.Consumer>
+    </AppProvider>
+  )
+}
+
+export const useViewportWidth = () => {
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth)
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return viewportWidth
+}
+
+export default App

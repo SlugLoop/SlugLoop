@@ -1,95 +1,43 @@
-import {Box, Button, Stack, Typography} from '@mui/material'
+'use client'
+
 import AppContext from '../../appContext'
 import {motion} from 'framer-motion'
 import React, {useContext} from 'react'
+import Button from '../ui/Button'
 
 export default function HeroDesktop() {
   const {darkMode} = useContext(AppContext)
-  console.log('HeroDesktop')
+
   return (
-    <Box
-      width="100%"
-      height="100vh"
-      sx={{
-        position: 'relative',
-      }}
-    >
-      <Box
-        width="100%"
-        height="100vh"
-        sx={{
-          backgroundImage: 'url(background/landingDesktop.png)',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          overflow: 'hidden',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          zIndex: -1,
+    <section className="relative h-screen w-full overflow-hidden">
+      <div
+        className="absolute inset-0 -z-[1] bg-[url('/background/landingDesktop.png')] bg-cover bg-center bg-no-repeat"
+        style={{filter: darkMode ? 'brightness(0.5)' : 'brightness(1)'}}
+      >
+        {!darkMode && <div className="absolute inset-0 bg-white/40" />}
+      </div>
 
-          filter: darkMode ? 'brightness(0.5)' : 'brightness(1)',
-
-          '::after': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: darkMode ? 'none' : 'rgba(255, 255, 255, 0.4)',
-          },
-        }}
-      />
-
-      <Stack
-        component={motion.div}
-        direction="column"
-        spacing={2}
-        alignItems="center"
-        justifyContent="flex-start"
-        paddingTop="20vh"
+      <motion.div
+        className="flex flex-col items-center justify-start gap-4 pt-[20vh] text-center"
         initial={{y: -50, opacity: 0}}
         animate={{y: 0, opacity: 1}}
         transition={{delay: 0, duration: 0.5}}
       >
-        <Typography variant="h2" color="text.primary">
-          Slug Loop
-        </Typography>
-        <Typography
-          variant="h5"
-          color="text.primary"
-          sx={{
-            paddingBottom: '20px',
-          }}
-        >
-          Bus Tracking. Simplified.
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          href="/map"
-          sx={{
-            '&:hover': {
-              backgroundColor: 'secondary.main',
-            },
-          }}
-        >
+        <h1 className="type-display-2">Slug Loop</h1>
+        <p className="type-heading-5 pb-5">Bus Tracking. Simplified.</p>
+        <Button variant="solid" href="/map">
           Map
         </Button>
         <motion.div
           initial={{opacity: 0}}
           animate={{opacity: 1}}
           transition={{delay: 0.5, duration: 0.5}}
+          className="type-heading-5"
         >
-          <Typography variant="h5" align="center" color="text.primary">
-            Made By Students
-          </Typography>
-          <Typography variant="h5" align="center" color="text.primary">
-            For Students
-          </Typography>
+          <p>Made By Students</p>
+          <p>For Students</p>
         </motion.div>
-      </Stack>
-    </Box>
+      </motion.div>
+    </section>
   )
 }

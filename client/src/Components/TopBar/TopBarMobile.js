@@ -1,187 +1,88 @@
+'use client'
+
 import React, {useContext} from 'react'
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Box,
-  useTheme,
-  IconButton,
-} from '@mui/material'
-import {useNavigate} from 'react-router-dom'
+import {useRouter} from 'next/navigation'
 import {AnimatePresence, motion} from 'framer-motion'
-import './topbar.css'
 import AppContext from '../../appContext'
+import Button from '../ui/Button'
+import {Menu, Moon, Sun, X} from '../ui/icons'
 
-import Brightness4Icon from '@mui/icons-material/Brightness4'
-import Brightness7Icon from '@mui/icons-material/Brightness7'
+const MotionDiv = motion.create('div')
 
-const MotionBox = motion(Box)
-const MotionTypography = motion(Typography)
+const navItems = [
+  {label: 'Story', path: '/'},
+  {label: 'Archive', path: '/timeline'},
+  {label: 'Team', path: '/about'},
+  {label: 'Links', path: '/contact'},
+  {label: 'Open map', path: '/map', primary: true},
+]
 
 export default function MobileTopBar() {
   const [isOpen, setIsOpen] = React.useState(false)
-  const navigate = useNavigate()
-  const theme = useTheme()
-  const {darkMode, setDarkMode} = useContext(AppContext)
-
-  const handleMenuToggle = () => {
-    setIsOpen(!isOpen)
-  }
+  const router = useRouter()
+  const {darkMode, toggleDarkMode} = useContext(AppContext)
 
   const handlePageChange = (path) => {
     setIsOpen(false)
-    navigate(path)
-  }
-
-  const handleDarkModeToggle = () => {
-    setDarkMode(!darkMode)
+    router.push(path)
   }
 
   return (
     <>
-      <AppBar
-        position="sticky"
-        sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}
-      >
-        <Toolbar>
-          <Typography
-            variant="h6"
-            onClick={() => navigate('/')}
-            style={{flexGrow: 1, cursor: 'pointer'}}
-            color="text.primary"
-          >
-            SlugLoop
-          </Typography>
-
-          <IconButton
-            onClick={handleDarkModeToggle}
-            color="inherit"
-            sx={{
-              marginRight: 7,
-            }}
-          >
-            {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
-
-          <div
-            className="container"
-            onClick={handleMenuToggle}
-            style={{
-              position: 'fixed',
-              right: theme.spacing(2),
-              top: theme.spacing(1),
-              zIndex: theme.zIndex.drawer + 2,
-            }}
-          >
-            <div className={`burger ${isOpen ? 'open' : ''}`}>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
+      <header className="museum-appbar sticky top-0 z-50">
+        <nav className="flex min-h-[68px] items-center px-4">
+          <div className="flex flex-1 items-center gap-2.5">
+            <span className="museum-dot h-2.5 w-2.5" aria-hidden="true" />
+            <button
+              type="button"
+              onClick={() => router.push('/')}
+              className="museum-focus font-display text-2xl font-extrabold tracking-[-0.03em]"
+            >
+              SlugLoop
+            </button>
           </div>
-        </Toolbar>
-      </AppBar>
+          <button
+            type="button"
+            onClick={toggleDarkMode}
+            aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="museum-focus inline-flex h-11 w-11 items-center justify-center rounded-full transition hover:bg-[color-mix(in_srgb,var(--color-secondary),transparent_88%)]"
+          >
+            {darkMode ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsOpen((open) => !open)}
+            aria-label="toggle navigation"
+            className="museum-focus inline-flex h-11 w-11 items-center justify-center rounded-full transition hover:bg-[color-mix(in_srgb,var(--color-secondary),transparent_88%)]"
+          >
+            {isOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
+          </button>
+        </nav>
+      </header>
 
       <AnimatePresence>
         {isOpen && (
-          <MotionBox
-            initial={{height: 0, opacity: 0}}
-            animate={{height: '100vh', opacity: 1}}
-            exit={{height: 0, opacity: 0}}
-            transition={{
-              type: 'spring',
-              stiffness: 200,
-              damping: 30,
-            }}
-            sx={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              bgcolor: theme.palette.primary.main,
-              zIndex: (theme) => theme.zIndex.drawer,
-            }}
+          <MotionDiv
+            initial={{opacity: 0, y: -16}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: -16}}
+            transition={{duration: 0.24}}
+            className="fixed inset-0 z-40 bg-[var(--color-bg)] px-6 pt-28"
           >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                gap: 2,
-              }}
-            >
-              <MotionTypography
-                initial={{x: -100, opacity: 0}}
-                animate={{x: 0, opacity: 1}}
-                exit={{x: -100, opacity: 0}}
-                transition={{
-                  delay: 0.1,
-                  duration: 0.3,
-                  type: 'spring',
-                  stiffness: 80,
-                }}
-                variant="h6"
-                color="text.primary"
-                onClick={() => handlePageChange('/about')}
-              >
-                About
-              </MotionTypography>
-              <MotionTypography
-                initial={{x: -100, opacity: 0}}
-                animate={{x: 0, opacity: 1}}
-                exit={{x: -100, opacity: 0}}
-                transition={{
-                  delay: 0.3,
-                  duration: 0.3,
-                  type: 'spring',
-                  stiffness: 80,
-                }}
-                variant="h6"
-                color="text.primary"
-                onClick={() => handlePageChange('/Map')}
-              >
-                Map
-              </MotionTypography>
-              <MotionTypography
-                initial={{x: -100, opacity: 0}}
-                animate={{x: 0, opacity: 1}}
-                exit={{x: -100, opacity: 0}}
-                transition={{
-                  delay: 0.5,
-                  duration: 0.3,
-                  type: 'spring',
-                  stiffness: 80,
-                }}
-                variant="h6"
-                color="text.primary"
-                onClick={() => handlePageChange('/timeline')}
-              >
-                Timeline
-              </MotionTypography>
-              <MotionTypography
-                initial={{x: -100, opacity: 0}}
-                animate={{x: 0, opacity: 1}}
-                exit={{x: -100, opacity: 0}}
-                transition={{
-                  delay: 0.7,
-                  duration: 0.3,
-                  type: 'spring',
-                  stiffness: 80,
-                }}
-                variant="h6"
-                color="text.primary"
-                onClick={() => handlePageChange('/contact')}
-              >
-                Contact
-              </MotionTypography>
-            </Box>
-          </MotionBox>
+            <div className="flex flex-col gap-3">
+              {navItems.map((item) => (
+                <Button
+                  key={item.path}
+                  onClick={() => handlePageChange(item.path)}
+                  variant={item.primary ? 'solid' : 'outline'}
+                  size="lg"
+                  className="justify-start"
+                >
+                  {item.label}
+                </Button>
+              ))}
+            </div>
+          </MotionDiv>
         )}
       </AnimatePresence>
     </>

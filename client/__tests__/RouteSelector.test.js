@@ -1,0 +1,30 @@
+import {screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import RouteSelector from '../src/components/RouteSelector'
+import {renderWithProviders} from '../src/test/renderWithProviders'
+
+test('toggles loop and metro route filters', async () => {
+  const user = userEvent.setup()
+  renderWithProviders(<RouteSelector />)
+
+  await user.click(screen.getByRole('button', {name: /menu/i}))
+  expect(screen.getByText('Bus Routes')).toBeInTheDocument()
+
+  await user.click(screen.getByText('Loop'))
+  const loopCheckbox = screen.getAllByRole('checkbox')[0]
+  expect(loopCheckbox).toBeChecked()
+
+  await user.click(screen.getByText('LOOP'))
+  expect(loopCheckbox).not.toBeChecked()
+
+  await user.click(screen.getByText('Metro'))
+  expect(screen.getByText('3A')).toBeInTheDocument()
+  const metroCheckbox = screen.getAllByRole('checkbox')[0]
+  expect(metroCheckbox).not.toBeChecked()
+
+  await user.click(screen.getByText('3A'))
+  expect(metroCheckbox).toBeChecked()
+
+  await user.click(screen.getByText('Clear Routes'))
+  expect(metroCheckbox).not.toBeChecked()
+})

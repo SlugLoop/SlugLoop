@@ -1,3 +1,5 @@
+'use client'
+
 import React, {useState, useEffect, useContext} from 'react'
 import {
   getAllBuses,
@@ -5,19 +7,16 @@ import {
   getAllMetroBuses,
   getUpdatedMetroBuses,
   getBusEtas,
-} from './firebase'
+} from '../lib/busData'
 import GoogleMap from 'google-maps-react-markers'
-import {Box} from '@mui/material'
 import MapMarker from './MapMarker'
-import {isBusUpdatedWithinPast30Minutes} from './helper'
 import RouteSelector from './RouteSelector'
 import {RouteContext} from '../Route'
-import MainWizard from './Wizard/MainWizard'
-import InstallPWAButton from './PwaButton'
 import SettingsDrawer from './SettingsDrawer'
 import AppContext from '../appContext'
-import {AnimatePresence} from 'framer-motion'
 import StopMarker from './StopMarkers'
+import Chip from './ui/Chip'
+import {formatStopName, getVisibleBuses, mergeUpdatedBuses} from '../lib/mapHelpers'
 const busStops = require('../data/client-bus-stops.json')
 
 export default function MapComponent({center, zoom}) {
@@ -25,17 +24,11 @@ export default function MapComponent({center, zoom}) {
   const {darkMode} = useContext(AppContext)
   const [filter, setFilter] = useState(true) // If true, only displays buses from last 30 minutes
 
-  // Wizard State
-  const [wizardOpen, setWizardOpen] = useState(
-    localStorage.getItem('wizard') !== 'false',
-  )
-
-  // Stores the buses in a state variable to rerender
   const [buses, setBuses] = useState([])
   const [metroBuses, setMetroBuses] = useState([])
-  const combinedBuses = buses.concat(metroBuses)
   const [selectedRoute] = useContext(RouteContext)
   const [stopsEta, setStopsEta] = useState({cw: {}, ccw: {}})
+  const visibleBuses = getVisibleBuses({buses, metroBuses, filter, selectedRoute})
 
   function toggleDisplayTime() {
     setDisplayTime(!displayTime)
@@ -61,24 +54,13 @@ export default function MapComponent({center, zoom}) {
 
     const fetchUpdatedData = () => {
       getUpdatedBuses().then((newBuses) => {
-        setBuses((oldBuses) => {
-          return oldBuses.map((oldBus) => {
-            const newBus = newBuses.find((bus) => bus.id === oldBus.id)
-            return newBus || oldBus
-          })
-        })
+        setBuses((oldBuses) => mergeUpdatedBuses(oldBuses, newBuses))
       })
     }
 
     const fetchUpdatedMetroData = () => {
       getUpdatedMetroBuses().then((newBuses) => {
-        console.log(newBuses)
-        setMetroBuses((oldBuses) => {
-          return oldBuses.map((oldBus) => {
-            const newBus = newBuses.find((bus) => bus.id === oldBus.id)
-            return newBus || oldBus
-          })
-        })
+        setMetroBuses((oldBuses) => mergeUpdatedBuses(oldBuses, newBuses))
       })
     }
 
@@ -124,93 +106,104 @@ export default function MapComponent({center, zoom}) {
     }
   }, [center])
 
+  const markers = (
+    <>
+      {visibleBuses.map((bus, index) => {
+        return (
+          <MapMarker
+            key={`${bus.id || bus.fleetId || bus.route}-${index}`}
+            lat={parseFloat(bus.lastLatitude)}
+            lng={parseFloat(bus.lastLongitude)}
+            lastPing={bus.lastPing}
+            fleetId={bus.fleetId}
+            direction={bus.direction}
+            route={bus.route}
+            heading={bus.heading}
+            displayTime={displayTime}
+            darkMode={darkMode}
+          />
+        )
+      })}
+      {busStops.bstop['CW'].map((currStop) => {
+        const stopName = Object.keys(currStop)[0]
+        return (
+          <StopMarker
+            key={`cw${stopName}`}
+            lat={parseFloat(currStop[stopName].lat)}
+            lng={parseFloat(currStop[stopName].lon)}
+            name={formatStopName(stopName)}
+            eta={stopName in stopsEta.cw ? stopsEta.cw[stopName] : null}
+            displayTime={displayTime}
+            darkMode={darkMode}
+          />
+        )
+      })}
+      {busStops.bstop['CCW'].map((currStop) => {
+        const stopName = Object.keys(currStop)[0]
+        return (
+          <StopMarker
+            key={`ccw${stopName}`}
+            lat={parseFloat(currStop[stopName].lat)}
+            lng={parseFloat(currStop[stopName].lon)}
+            name={formatStopName(stopName)}
+            eta={stopName in stopsEta.ccw ? stopsEta.ccw[stopName] : null}
+            displayTime={displayTime}
+            darkMode={darkMode}
+          />
+        )
+      })}
+    </>
+  )
+
   return (
     <>
-      <Box id="map" width="100%" height="100vh" data-testid="map">
-        <GoogleMap
-          apiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
-          defaultCenter={center}
-          defaultZoom={zoom}
-          onGoogleApiLoaded={() => {}}
-          key={darkMode ? 'dark' : 'light'}
-          options={{
-            zoomControl: false,
-            streetViewControl: false,
-            fullscreenControl: false,
-            mapTypeControl: false,
-            styles: getStyle(darkMode),
-          }}
-        >
-          {Object.keys(combinedBuses)
-            .filter(
-              // Filter out buses that haven't updated in the last 30 minutes
-              (key) => {
-                return !filter || isBusUpdatedWithinPast30Minutes(combinedBuses[key].lastPing)
-              }
-            )
-            .filter(
-              // Filter out buses that don't match the selected routes
-              (key) => selectedRoute.includes(combinedBuses[key].route),
-            )
-            .map((key) => {
-              const bus = combinedBuses[key]
-              return (
-                <MapMarker
-                  key={key}
-                  lat={parseFloat(bus.lastLatitude)}
-                  lng={parseFloat(bus.lastLongitude)}
-                  lastPing={bus.lastPing}
-                  fleetId={bus.fleetId}
-                  direction={bus.direction}
-                  route={bus.route}
-                  heading={bus.heading}
-                  displayTime={displayTime}
-                  darkMode={darkMode}
-                />
-              )
-            })}
-            {/* Bus Stops Markers */}
-            {busStops.bstop["CW"].map((currStop) => {
-              const stopName = Object.keys(currStop)[0]
-              return (
-                <StopMarker
-                  key={"cw" + stopName}
-                  lat={parseFloat(currStop[stopName].lat)}
-                  lng={parseFloat(currStop[stopName].lon)}
-                  name={(stopName[0].toUpperCase() + stopName.slice(1))}
-                  eta={stopName in stopsEta.cw ? stopsEta.cw[stopName] : null}
-                  displayTime={displayTime}
-                  darkMode={darkMode}
-                />
-              )
-            })}
-            {busStops.bstop["CCW"].map((currStop) => {
-              const stopName = Object.keys(currStop)[0]
-              return (
-                <StopMarker
-                  key={"ccw" + stopName}
-                  lat={parseFloat(currStop[stopName].lat)}
-                  lng={parseFloat(currStop[stopName].lon)}
-                  name={(stopName[0].toUpperCase() + stopName.slice(1))}
-                  eta={stopName in stopsEta.ccw ? stopsEta.ccw[stopName] : null}
-                  displayTime={displayTime}
-                  darkMode={darkMode}
-                />
-              )
-            })}
-        </GoogleMap>
-      </Box>
-      <AnimatePresence mode="wait">
-        {wizardOpen && (
-          <MainWizard
-            closeWizard={() => setWizardOpen(false)}
-            neverShowAgain={() => {
-              localStorage.setItem('wizard', false)
-              setWizardOpen(false)
+      <div id="map" data-testid="map" className="h-screen w-full">
+        {process.env.NEXT_PUBLIC_SLUGLOOP_TEST_MODE === '1' ? (
+          <div data-testid="google-map" className="h-full w-full">
+            {markers}
+          </div>
+        ) : (
+          <GoogleMap
+            apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}
+            defaultCenter={center}
+            defaultZoom={zoom}
+            onGoogleApiLoaded={() => {}}
+            key={darkMode ? 'dark' : 'light'}
+            options={{
+              zoomControl: false,
+              streetViewControl: false,
+              fullscreenControl: false,
+              mapTypeControl: false,
+              styles: getStyle(darkMode),
             }}
-          />
+          >
+            {markers}
+          </GoogleMap>
         )}
-      </AnimatePresence>
+      </div>
+      <div className="museum-map-panel absolute left-4 top-5 z-[2] max-w-[calc(100vw-110px)] rounded-3xl p-4 md:left-7 md:top-7 md:max-w-[430px]">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Chip label="Map artifact" />
+            <span className="type-caption text-[var(--museum-map-panel-subtle)]">
+              Preserved demo
+            </span>
+          </div>
+          <p className="text-sm">
+            This keeps the original Firestore and Google Maps flow. Vehicle data
+            may be stale if the hardware or sync jobs are no longer running.
+          </p>
+        </div>
+      </div>
+      {visibleBuses.length === 0 && (
+        <div
+          role="alert"
+          className="museum-alert absolute bottom-5 left-4 z-[2] max-w-[440px] rounded-2xl px-4 py-3 text-sm text-[#7a4a00] shadow-xl md:bottom-7 md:left-7"
+        >
+          No recent vehicles match the selected routes. Try showing past buses
+          from the menu, or treat this as a static demo moment.
+        </div>
+      )}
       <SettingsDrawer
         filter={filter}
         handleFilterToggle={handleFilterToggle}
@@ -218,7 +211,6 @@ export default function MapComponent({center, zoom}) {
         toggleDisplayTime={toggleDisplayTime}
         darkMode={darkMode}
       />
-      <InstallPWAButton />
       <RouteSelector />
     </>
   )
@@ -301,6 +293,44 @@ const getStyle = (darkMode) => {
     ]
   }
   return [
+    {elementType: 'geometry', stylers: [{color: '#f1ead8'}]},
+    {elementType: 'labels.text.stroke', stylers: [{color: '#fff8e8'}]},
+    {elementType: 'labels.text.fill', stylers: [{color: '#526272'}]},
+    {
+      featureType: 'administrative.locality',
+      elementType: 'labels.text.fill',
+      stylers: [{color: '#6e4b00'}],
+    },
+    {
+      featureType: 'road',
+      elementType: 'geometry',
+      stylers: [{color: '#ffffff'}],
+    },
+    {
+      featureType: 'road',
+      elementType: 'geometry.stroke',
+      stylers: [{color: '#d5c7aa'}],
+    },
+    {
+      featureType: 'road',
+      elementType: 'labels.text.fill',
+      stylers: [{color: '#526272'}],
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'geometry',
+      stylers: [{color: '#f4d995'}],
+    },
+    {
+      featureType: 'water',
+      elementType: 'geometry',
+      stylers: [{color: '#c9d9d1'}],
+    },
+    {
+      featureType: 'water',
+      elementType: 'labels.text.fill',
+      stylers: [{color: '#5b716e'}],
+    },
     {
       featureType: 'poi',
       stylers: [{visibility: 'off'}],

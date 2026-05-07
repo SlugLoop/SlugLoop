@@ -1,74 +1,41 @@
-import {Dialog, DialogTitle, IconButton} from '@mui/material'
-import React, {useState} from 'react'
-import HelpOutlineSharpIcon from '@mui/icons-material/HelpOutlineSharp'
-import {useNavigate} from 'react-router-dom'
-import Button from '@mui/material/Button'
-//import makeStyles from "@mui/styles/makeStyles";
+'use client'
 
-//import ListItemButton from "@mui/material";
+import React, {useState} from 'react'
+import {CircleHelp} from 'lucide-react'
+import {useRouter} from 'next/navigation'
+import Button from './ui/Button'
+import Modal from './ui/Modal'
 
 export default function AboutButton(props) {
-  const navigate = useNavigate()
+  const router = useRouter()
   const [open, setOpen] = useState(false)
 
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
+  const navigate = (path) => {
     setOpen(false)
+    router.push(path)
   }
 
   return (
     <>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          sx: {
-            position: 'absolute',
-            bottom: '30px',
-            left: '20px',
-            paddingBottom: '10px',
-          },
-        }}
+      <Modal open={open} onOpenChange={setOpen} title="Information" className="bottom-8 left-5 top-auto translate-x-0 translate-y-0">
+        <div className="flex flex-col gap-3">
+          <Button variant="ghost" onClick={() => navigate('/contact')}>
+            Contact Us
+          </Button>
+          <Button variant="ghost" onClick={() => navigate('/about')}>
+            About Us
+          </Button>
+        </div>
+      </Modal>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Information"
+        className="museum-focus absolute bottom-[30px] left-5 inline-flex h-[60px] w-[60px] items-center justify-center rounded-full"
+        style={{color: props.darkMode ? 'white' : 'black'}}
       >
-        <DialogTitle position="center">Information</DialogTitle>
-        <Button
-          onClick={() => {
-            navigate('/contact')
-          }}
-        >
-          Contact Us
-        </Button>
-        <Button
-          onClick={() => {
-            navigate('/about')
-          }}
-          autoFocus
-          sx={{
-            paddingBottom: '6%',
-          }}
-        >
-          About Us
-        </Button>
-      </Dialog>
-      <IconButton
-        onClick={handleClickOpen}
-        sx={{
-          position: 'absolute',
-          bottom: '30px',
-          left: '20px',
-        }}
-      >
-        <HelpOutlineSharpIcon
-          sx={{
-            width: '60px',
-            height: '60px',
-            color: props.darkMode ? 'white' : 'black',
-          }}
-        />
-      </IconButton>
+        <CircleHelp size={52} aria-hidden="true" />
+      </button>
     </>
   )
 }

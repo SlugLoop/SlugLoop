@@ -1,14 +1,18 @@
-import React from 'react'
+'use client'
 
-// This is a wrapper component that can be used to wrap non map elements
+import React from 'react'
 import MobileTopBar from '../TopBar/TopBarMobile'
 import DesktopTopBar from '../TopBar/TopBarDesktop'
-import {useViewportWidth} from '../../App'
-export default function Wrapper({children, sx}) {
-  const viewportWidth = useViewportWidth()
+
+export default function Wrapper({children, className}) {
   return (
-    <div style={sx}>
-      {viewportWidth > 600 ? <DesktopTopBar /> : <MobileTopBar />}
+    <div className={className}>
+      <div className="hidden md:block">
+        <DesktopTopBar />
+      </div>
+      <div className="block md:hidden">
+        <MobileTopBar />
+      </div>
       {children}
     </div>
   )

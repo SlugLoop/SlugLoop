@@ -1,110 +1,78 @@
-import {Wizard, useWizard} from 'react-use-wizard'
-import {Step1, Step2, Step3, Step4, Step5} from './Steps'
-import {Button, Box, Grid, IconButton, useTheme} from '@mui/material'
-import {
-  NavigateNext as NavigateNextIcon,
-  NavigateBefore as NavigateBeforeIcon,
-  Close as CloseIcon,
-} from '@mui/icons-material'
-import {useViewportWidth} from '../../App'
+'use client'
+
+import React, {useState} from 'react'
 import {AnimatePresence, motion} from 'framer-motion'
+import {ChevronLeft, ChevronRight, X} from 'lucide-react'
+import {Step1, Step2, Step3, Step4, Step5} from './Steps'
+import Button from '../ui/Button'
 
-const MotionBox = motion(Box)
+const steps = [Step1, Step2, Step3, Step4, Step5]
 
-const WizardFooter = ({closeWizard, neverShowAgain}) => {
-  const {isFirstStep, isLastStep, previousStep, nextStep} = useWizard()
-  const theme = useTheme()
+const WizardFooter = ({closeWizard, currentStep, neverShowAgain, setCurrentStep}) => {
+  const isFirstStep = currentStep === 0
+  const isLastStep = currentStep === steps.length - 1
 
   return (
-    <Grid container justifyContent="space-between">
-      <Grid item>
-        <IconButton
+    <div className="mt-5 flex items-center justify-between gap-4">
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
           disabled={isFirstStep}
-          onClick={previousStep}
-          sx={{
-            color: theme.palette.text.primary,
-
-            '&.Mui-disabled': {
-              color: theme.palette.text.primary + '80',
-            },
-          }}
+          onClick={() => setCurrentStep((step) => Math.max(0, step - 1))}
+          className="museum-focus inline-flex h-10 w-10 items-center justify-center rounded-full disabled:opacity-45"
+          aria-label="Previous step"
         >
-          <NavigateBeforeIcon />
-        </IconButton>
+          <ChevronLeft size={22} aria-hidden="true" />
+        </button>
         {isLastStep ? (
-          <IconButton
+          <button
+            type="button"
             onClick={closeWizard}
-            sx={{
-              color: theme.palette.text.primary,
-            }}
+            className="museum-focus inline-flex h-10 w-10 items-center justify-center rounded-full"
+            aria-label="Close wizard"
           >
-            <CloseIcon />
-          </IconButton>
+            <X size={22} aria-hidden="true" />
+          </button>
         ) : (
-          <IconButton
-            onClick={nextStep}
-            sx={{
-              color: theme.palette.text.primary,
-            }}
+          <button
+            type="button"
+            onClick={() => setCurrentStep((step) => Math.min(steps.length - 1, step + 1))}
+            className="museum-focus inline-flex h-10 w-10 items-center justify-center rounded-full"
+            aria-label="Next step"
           >
-            <NavigateNextIcon />
-          </IconButton>
+            <ChevronRight size={22} aria-hidden="true" />
+          </button>
         )}
-      </Grid>
-      <Grid item>
-        <Button
-          onClick={neverShowAgain}
-          sx={{
-            color: theme.palette.text.primary,
-          }}
-        >
-          Never Show Again
-        </Button>
-      </Grid>
-    </Grid>
+      </div>
+      <Button variant="ghost" onClick={neverShowAgain}>
+        Never Show Again
+      </Button>
+    </div>
   )
 }
 
 const MainWizard = ({closeWizard, neverShowAgain}) => {
-  const viewportWidth = useViewportWidth()
+  const [currentStep, setCurrentStep] = useState(0)
+  const Step = steps[currentStep]
+
   return (
-    <MotionBox
-      width={viewportWidth > 600 ? '50%' : '70%'}
+    <motion.div
       initial={{opacity: 0}}
       animate={{opacity: 1}}
-      transition={{
-        delay: 0.5,
-        duration: 0.2,
-      }}
+      transition={{delay: 0.5, duration: 0.2}}
       exit={{opacity: 0}}
-      sx={{
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 100,
-        backgroundColor: 'background.default',
-        borderRadius: 1,
-        p: 2,
-        boxShadow: 3,
-      }}
+      className="museum-static-card fixed left-1/2 top-1/2 z-[100] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-lg p-4 shadow-xl md:w-1/2"
     >
-      <Wizard
-        footer={
-          <WizardFooter
-            closeWizard={closeWizard}
-            neverShowAgain={neverShowAgain}
-          />
-        }
-        wrapper={<AnimatePresence initial={false} mode="wait" />}
-      >
-        <Step1 />
-        <Step2 />
-        <Step3 />
-        <Step4 />
-        <Step5 />
-      </Wizard>
-    </MotionBox>
+      <AnimatePresence initial={false} mode="wait">
+        <Step key={currentStep} />
+      </AnimatePresence>
+      <WizardFooter
+        closeWizard={closeWizard}
+        currentStep={currentStep}
+        neverShowAgain={neverShowAgain}
+        setCurrentStep={setCurrentStep}
+      />
+    </motion.div>
   )
 }
 

@@ -4,7 +4,12 @@
   "description": "[![Demo Link](https://img.shields.io/badge/-Demo%20Link-blue)](https://slugloop.tech/)\r [![Demo Video](https://img.shields.io/badge/-Demo%20Video-red)](https://www.youtube.com/watch?v=fEAl8MajeOs)",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test"
+    "test": "playwright test",
+    "dev:next": "pnpm --dir client dev",
+    "build:next": "pnpm --dir client build",
+    "start:next": "pnpm --dir client start",
+    "test:next": "pnpm --dir client test",
+    "test:e2e:next": "pnpm --dir client test:e2e"
   },
   "repository": {
     "type": "git",

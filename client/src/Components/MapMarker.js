@@ -1,91 +1,61 @@
-import {Box, Typography, Tooltip} from '@mui/material'
+'use client'
+
 import React, {useState} from 'react'
+import {Timestamp} from 'firebase/firestore'
 import busColors from './bus.json'
-import { Timestamp } from "firebase/firestore"
+import Tooltip from './ui/Tooltip'
 
 export default function MapMarker(props) {
   const [isImageLoaded, setIsImageLoaded] = useState(false)
 
-  /*
-  Bus Marker Component
-  Returns a marker that rotates based on the heading of the bus and will be placed on the map
-  Props: bus, heading
-  Bus object contains id, lat, lon, route, timestamp
-  */
   function convertDateToHumanReadableTime(timestamp) {
     const currentTimestamp = Timestamp.now()
     const diffInMilliseconds = currentTimestamp.toMillis() - timestamp.toMillis()
-
     const seconds = Math.floor(diffInMilliseconds / 1000)
     const minutes = Math.floor(seconds / 60)
     const hours = Math.floor(minutes / 60)
     const days = Math.floor(hours / 24)
 
-    if (seconds < 60) {
-      return `${seconds} seconds ago`
-    } else if (minutes < 60) {
-      return `${minutes} minutes ago`
-    } else if (hours < 24) {
-      return `${hours} hours ago`
-    } else {
-      return `${days} days ago`
-    }
+    if (seconds < 60) return `${seconds} seconds ago`
+    if (minutes < 60) return `${minutes} minutes ago`
+    if (hours < 24) return `${hours} hours ago`
+    return `${days} days ago`
   }
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+    <div className="flex flex-col items-center justify-center">
       <img
         src={busColors[props.route]}
-        alt="bus"
+        alt=""
         onLoad={() => setIsImageLoaded(true)}
-        style={{display: 'none'}}
+        className="hidden"
       />
       {isImageLoaded && (
         <>
           {props.displayTime && (
-            <Typography
-              variant="body2"
-              noWrap
-              sx={{
-                color: props.darkMode ? 'white' : 'black',
-                position: 'absolute',
-                top: '-20px',
-              }}
+            <p
+              className="absolute top-[-20px] whitespace-nowrap text-sm"
+              style={{color: props.darkMode ? 'white' : 'black'}}
             >
               {convertDateToHumanReadableTime(props.lastPing)}
-            </Typography>
+            </p>
           )}
           <Tooltip
-            title={
-              <Box>
-                <Typography variant="caption" display="block">
-                  Fleet ID: {props.fleetId}
-                </Typography>
-                <Typography variant="caption" display="block">
-                  Direction: {props.direction}
-                </Typography>
-              </Box>
+            content={
+              <div>
+                <p className="type-caption">Fleet ID: {props.fleetId}</p>
+                <p className="type-caption">Direction: {props.direction}</p>
+              </div>
             }
-            placement="top"
           >
-            <Box
-              component="img"
+            <img
               src={busColors[props.route]}
               alt="bus"
-              sx={{
-                //Rotate the marker based on the heading of the bus in radians
-                transform: `rotate(${props.heading}deg)`,
-              }}
+              style={{transform: `rotate(${props.heading}deg)`}}
             />
           </Tooltip>
         </>
       )}
-    </Box>
+    </div>
   )
 }
