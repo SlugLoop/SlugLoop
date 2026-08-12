@@ -27,22 +27,22 @@ const stickerRow = [
 
 const heroPolaroids = [
   {
-    src: '/background/hackathon.png',
-    alt: 'CruzHacks 2023 — the team forms',
-    caption: 'cruzhacks, hour zero',
+    src: '/media/live-map-2023.jpg',
+    alt: 'iPhone screenshot of slugloop.tech live in 2023, with two buses tracked on the UCSC campus map',
+    caption: 'slugloop.tech, live — spring ’23',
     rotate: 'left',
     tapeColor: 'yellow',
   },
   {
-    src: '/background/coding.png',
-    alt: 'Late-night hackathon coding',
-    caption: '4 am, library couch',
+    src: '/media/brand-splash-2023.jpg',
+    alt: 'Original SlugLoop splash screen — bus tracking, made easy',
+    caption: 'the original splash screen',
     rotate: 'right',
     tapeColor: 'blue',
   },
   {
-    src: '/background/competition.png',
-    alt: 'Top 10 demo day',
+    src: 'https://i.ytimg.com/vi/DlAGp-IjtJM/hqdefault.jpg',
+    alt: 'Frame from the Google Solution Challenge Top 10 demo video',
     caption: 'demo day, top 10',
     rotate: 'flat',
     tapeColor: 'yellow',
