@@ -150,8 +150,9 @@ export const milestones = [
 
 /**
  * Rich journey entries used by /journey. Each entry can carry a photo,
- * pull-quote, stamp, and optional embedded video. Photos reference assets in
- * client/public/background/ and client/public/about/.
+ * pull-quote, stamp, and optional embedded video. Photos reference real 2023
+ * project artifacts in client/public/media/ and client/public/about/, plus
+ * frames from the actual demo videos.
  */
 export const journeyEntries = [
   {
@@ -174,9 +175,9 @@ export const journeyEntries = [
     title: 'CruzHacks: four engineers, one weekend, one team.',
     body:
       'Bill, Alex, Annie, and Nick met up at CruzHacks and decided to attack the bus problem. Roles fell out fast: product and full\u2011stack lead, backend and data pipeline, frontend and UX, hardware and embedded. The team formed in maybe an hour. The repo went up shortly after.',
-    photo: '/background/hackathon.png',
-    photoAlt: 'CruzHacks team coding on laptops at the hackathon',
-    photoCaption: 'CruzHacks \u2014 hour zero',
+    photo: '/media/logo-est-2023.png',
+    photoAlt: 'Early Slug Loop logo \u2014 bananas in an orbit ring, Est. 2023',
+    photoCaption: 'the first logo in the repo',
     stamp: 'team formed',
     stampTone: 'ink',
     side: 'right',
@@ -189,12 +190,12 @@ export const journeyEntries = [
     title: 'A prototype, taped together, but actually working.',
     body:
       'In a day and a half we wired Express to Firestore, taught the React client to read live vehicle docs, mocked the GPS pings while the real hardware was still pending, and stuck a Google Map underneath. The hackathon judges gave the project a GitHub recognition. The repo never really stopped after that.',
-    photo: '/background/coding.png',
-    photoAlt: 'Late-night coding at the hackathon',
-    photoCaption: 'late night, library couch',
-    secondaryPhoto: '/background/planning.png',
-    secondaryPhotoAlt: 'Whiteboard planning session',
-    secondaryPhotoCaption: 'sticky-note architecture',
+    photo: '/media/about-page-2023.jpg',
+    photoAlt: 'The original SlugLoop about page listing the four team members',
+    photoCaption: 'the original about page — four names',
+    secondaryPhoto: '/media/contact-page-2023.jpg',
+    secondaryPhotoAlt: 'The original SlugLoop contact page',
+    secondaryPhotoCaption: 'contact page, v1',
     quote: 'we built the whole stack before the snacks ran out',
     quoteAttribution: 'team note, post-CruzHacks',
     stamp: 'shipped at 4 am',
@@ -209,9 +210,6 @@ export const journeyEntries = [
     title: 'Permission to touch the hardware that was already on the buses.',
     body:
       'UCSC had GPS\u2011emitting devices on the loop fleet from a project nearly a decade earlier. Most were dormant. After conversations with campus staff and a Baskin Engineering professor, we got the green light to reprogram the units and the basestations on top of campus buildings. The signal stopped being theoretical.',
-    photo: '/background/staircase.png',
-    photoAlt: 'UCSC campus stairs',
-    photoCaption: 'climbing to a basestation',
     margin: 'campus said yes \u2192 the network turned on',
     side: 'right',
   },
@@ -223,9 +221,9 @@ export const journeyEntries = [
     title: 'A real beta, with real people standing at real stops.',
     body:
       'Slugloop.tech went public. We posted in r/UCSC. Friends checked it before walking down to Bay Tree. The PWA install banner stopped feeling theoretical and started feeling like a tool people pulled their phones out for in the rain.',
-    photo: '/background/waitingBus.png',
-    photoAlt: 'Students waiting for a bus on campus',
-    photoCaption: 'first real users \u2192',
+    photo: '/media/live-map-2023.jpg',
+    photoAlt: 'iPhone screenshot of slugloop.tech live in Safari \u2014 two buses tracked on the UCSC campus map',
+    photoCaption: 'slugloop.tech, live in safari \u2192',
     quote: 'first time the bus actually showed up when the app said it would.',
     quoteAttribution: 'beta tester, may 2023',
     stamp: 'beta live',
@@ -302,9 +300,9 @@ export const journeyEntries = [
     title: 'Demo day in front of Google\u2019s panel.',
     body:
       'The team presented at the Google Solution Challenge Demo Day with the Top 10 cohort. The campus loop bus and the basestation\u2011on\u2011a\u2011roof became a global presentation. After demo day the project shifted into maintenance: dependency updates, small bug fixes, and a steady GitHub trickle into 2024.',
-    photo: '/background/competition.png',
-    photoAlt: 'Top 10 demo day setup',
-    photoCaption: 'demo day, global finalists',
+    photo: 'https://i.ytimg.com/vi/DlAGp-IjtJM/hqdefault.jpg',
+    photoAlt: 'Frame from the Top 10 finalist demo video',
+    photoCaption: 'from the top 10 demo reel',
     stamp: 'shipped',
     stampTone: 'ocean',
     side: 'left',
